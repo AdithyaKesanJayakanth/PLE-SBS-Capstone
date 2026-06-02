@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.DS_Store
+paper/paper.html
+site/dist/
+private/
+site/deploy/
