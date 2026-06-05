@@ -185,8 +185,68 @@
     };
   }
 
+  // ---------------------------------------------------------------------------
+  // 2. Cable: counterweight-tensioned taut string (constant horizontal tension T)
+  //    carrying its own weight w (N/m) and pods as point loads P_j at x_j.
+  //    Deflection below the chord: δ(x) = [w x (L-x)/2 + Σ P_j G(x, x_j)] / T
+  //    G(x,a) = x (L-a)/L for x<=a, a (L-x)/L for x>=a  (influence line).
+  // ---------------------------------------------------------------------------
+
+  function cableProps(cfg) {
+    const d = cfg.cableDiameter; // mm
+    const massPerM = 0.00426 * d * d; // kg/m, 6x36 IWRC steel rope (approx.)
+    const mbs = 0.70 * d * d * 1000; // N, minimum breaking strength (EIPS approx.)
+    return { massPerM, w: massPerM * G, mbs, allow: mbs / cfg.cableSF };
+  }
+
+  function makeWire(cfg) {
+    const L = cfg.span;
+    const H = cfg.accessHeight;
+    const hb = cfg.terminusHeight;
+    const cp = cableProps(cfg);
+    return { L, H, hb, T: cfg.tension * 1000, w: cp.w, cable: cp, chord: (hb - H) / L };
+  }
+
+  function deflection(wire, x, loads) {
+    const { L, T, w } = wire;
+    let d = (w * x * (L - x)) / 2;
+    for (const ld of loads) {
+      const a = ld.x;
+      d += ld.P * (x <= a ? (x * (L - a)) / L : (a * (L - x)) / L);
+    }
+    return d / T;
+  }
+
+  // dy/dx of the cable at x. `self` is the index of the load sitting at x (its kink
+  // is averaged), or -1 for a point not under a pod.
+  function slopeAt(wire, x, loads, self) {
+    const { L, T, w } = wire;
+    let dd = (w * (L - 2 * x)) / 2;
+    for (let j = 0; j < loads.length; j++) {
+      const a = loads[j].x;
+      let g;
+      if (j === self) g = (L - 2 * a) / (2 * L);
+      else g = x < a ? (L - a) / L : -a / L;
+      dd += loads[j].P * g;
+    }
+    return wire.chord - dd / T;
+  }
+
+  function heightAt(wire, x, loads) {
+    return wire.H + wire.chord * x - deflection(wire, x, loads);
+  }
+
+  // Peak tension: T * sqrt(1 + max slope^2); the steepest point is one of the ends.
+  function peakTension(wire, loads) {
+    const s0 = slopeAt(wire, 0, loads, -1);
+    const sL = slopeAt(wire, wire.L, loads, -1);
+    const s = Math.max(Math.abs(s0), Math.abs(sL));
+    return wire.T * Math.sqrt(1 + s * s);
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS,
     hazard, overpressurePsi, kForPsi,
+    cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
   };
 });
