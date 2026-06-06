@@ -244,9 +244,228 @@
     return wire.T * Math.sqrt(1 + s * s);
   }
 
+  // ---------------------------------------------------------------------------
+  // 3. Pod dynamics on one wire (all pods on that wire integrated together,
+  //    because each pod's weight changes the slope the others feel).
+  //    m dv/dt = m g sinθ − μ m g cosθ − ½ ρ CdA (v − u cosθ)|v − u cosθ| − k_b v [brake zone]
+  //    dx/dt = v cosθ
+  // ---------------------------------------------------------------------------
+
+  function podMass(cfg, nPeople, personMasses) {
+    let m = cfg.podMass;
+    if (personMasses) for (const pm of personMasses) m += pm;
+    else m += nPeople * cfg.personMass;
+    return m;
+  }
+
+  function podCdA(cfg, n) { return cfg.cdaPod + n * cfg.cdaPerson; }
+
+  /**
+   * pods: [{ depart, m, cda, n }] in dispatch order on this wire.
+   * opts: { mu, wind (along-wire tailwind m/s), brakeK, rho, dt, sample, tMax }
+   */
+  function simulateWire(cfg, wire, pods, opts) {
+    const o = Object.assign(
+      { mu: cfg.mu, wind: cfg.wind, brakeK: cfg.brakeK, rho: cfg.rho, dt: cfg.dt, sample: 0.1, tMax: 600 },
+      opts || {}
+    );
+    const L = wire.L;
+    // eddy-current brake fins from xBrake to xBrakeEnd, then an unbraked run-out to the dock
+    const xBrakeEnd = L - cfg.brakeRunout;
+    const xBrake = xBrakeEnd - cfg.brakeLength;
+    // with a switch yard the magnetic brake sits in each receiving bay, not on the wire
+    const wireBrake = cfg.terminal !== 'switchyard';
+    const n = pods.length;
+    const st = pods.map((p) => ({
+      x: 0, v: 0, active: false, done: false, stalled: false,
+      arrive: null, vArr: null, vPeak: 0, aPeak: 0, minSep: Infinity,
+      traj: { t: [], x: [], v: [] },
+    }));
+
+    // forces -> acceleration along the path for pod i, given current x of active pods
+    function accel(i, xs, vs, loads, loadIndexOf) {
+      const p = pods[i];
+      const dydx = slopeAt(wire, xs[i], loads, loadIndexOf[i]);
+      const c = 1 / Math.sqrt(1 + dydx * dydx); // cosθ
+      const s = -dydx * c; // sinθ, positive downhill
+      const v = vs[i];
+      const vr = v - o.wind * c;
+      let a = G * s - o.mu * G * c * (v >= 0 ? 1 : -1) - (0.5 * o.rho * p.cda * vr * Math.abs(vr)) / p.m;
+      if (wireBrake && xs[i] >= xBrake && xs[i] < xBrakeEnd) a -= (o.brakeK * (p.brakeScale ?? 1) * v) / p.m;
+      return { a, c };
+    }
+
+    function buildLoads(xs) {
+      const loads = [], loadIndexOf = new Array(n).fill(-1);
+      for (let j = 0; j < n; j++) {
+        if (st[j].active && !st[j].done && !st[j].stalled) {
+          loadIndexOf[j] = loads.length;
+          loads.push({ x: xs[j], P: pods[j].m * G });
+        }
+      }
+      return { loads, loadIndexOf };
+    }
+
+    function deriv(xs, vs) {
+      const { loads, loadIndexOf } = buildLoads(xs);
+      const dx = new Array(n).fill(0), dv = new Array(n).fill(0);
+      for (let i = 0; i < n; i++) {
+        if (loadIndexOf[i] < 0) continue;
+        const { a, c } = accel(i, xs, vs, loads, loadIndexOf);
+        dx[i] = vs[i] * c;
+        dv[i] = a;
+      }
+      return { dx, dv };
+    }
+
+    let t = Math.min(...pods.map((p) => p.depart));
+    const dt = o.dt;
+    let nextSample = t;
+    let peakT = 0;
+    const tEnd = t + o.tMax;
+    while (t < tEnd) {
+      for (let i = 0; i < n; i++) {
+        // block dispatch: the lever stays locked until the pod ahead passes the
+        // block marker at blockX (or has arrived); a stalled pod ahead keeps it locked
+        const b = pods[i].blockAfter;
+        const blockClear = b == null || st[b].done || (st[b].active && !st[b].stalled && st[b].x >= pods[i].blockX);
+        if (!st[i].active && t >= pods[i].depart && blockClear) {
+          st[i].active = true;
+          st[i].departT = t;
+          st[i].x = 1e-6;
+        }
+      }
+      if (st.every((s) => s.done || s.stalled)) break;
+      if (st.every((s, i) => s.done || s.stalled || (!s.active && pods[i].blockAfter != null && st[pods[i].blockAfter].stalled))) break;
+
+      const xs = st.map((s) => s.x), vs = st.map((s) => s.v);
+      // RK4
+      const k1 = deriv(xs, vs);
+      const x2 = xs.map((x, i) => x + 0.5 * dt * k1.dx[i]), v2 = vs.map((v, i) => v + 0.5 * dt * k1.dv[i]);
+      const k2 = deriv(x2, v2);
+      const x3 = xs.map((x, i) => x + 0.5 * dt * k2.dx[i]), v3 = vs.map((v, i) => v + 0.5 * dt * k2.dv[i]);
+      const k3 = deriv(x3, v3);
+      const x4 = xs.map((x, i) => x + dt * k3.dx[i]), v4 = vs.map((v, i) => v + dt * k3.dv[i]);
+      const k4 = deriv(x4, v4);
+
+      const { loads } = buildLoads(xs);
+      peakT = Math.max(peakT, peakTension(wire, loads));
+
+      for (let i = 0; i < n; i++) {
+        const s = st[i];
+        if (!s.active || s.done || s.stalled) continue;
+        const nx = xs[i] + (dt / 6) * (k1.dx[i] + 2 * k2.dx[i] + 2 * k3.dx[i] + k4.dx[i]);
+        const nv = vs[i] + (dt / 6) * (k1.dv[i] + 2 * k2.dv[i] + 2 * k3.dv[i] + k4.dv[i]);
+        const a = (nv - vs[i]) / dt;
+        if (a < 0) s.aPeak = Math.max(s.aPeak, -a);
+        s.vPeak = Math.max(s.vPeak, nv);
+        if (nx >= L) {
+          const frac = (L - xs[i]) / Math.max(nx - xs[i], 1e-9);
+          s.arrive = t + frac * dt;
+          s.vArr = vs[i] + frac * (nv - vs[i]);
+          s.x = L; s.v = 0; s.done = true;
+        } else if (nv < cfg.creepSpeed && t > (s.departT ?? pods[i].depart) + 5) {
+          // creeping below creepSpeed short of the dock counts as a stall: the pod
+          // would need to be hauled in by hand, which is not an evacuation
+          s.x = nx; s.v = 0; s.stalled = true;
+        } else {
+          s.x = nx; s.v = Math.max(nv, 0);
+        }
+      }
+
+      // spacing between consecutive pods on this wire (leader i-1 ahead of follower i)
+      for (let i = 1; i < n; i++) {
+        if (st[i].active && !st[i].done && st[i - 1].active && !st[i - 1].done) {
+          st[i].minSep = Math.min(st[i].minSep, st[i - 1].x - st[i].x);
+        }
+      }
+
+      t += dt;
+      if (t >= nextSample) {
+        for (let i = 0; i < n; i++) {
+          const s = st[i];
+          if (!s.active) continue;
+          if (s.traj.t.length && s.traj.x[s.traj.x.length - 1] >= L && s.done) continue;
+          s.traj.t.push(+t.toFixed(3));
+          s.traj.x.push(s.x);
+          s.traj.v.push(s.v);
+        }
+        nextSample += o.sample;
+      }
+    }
+
+    const out = st.map((s, i) => ({
+      depart: s.departT ?? pods[i].depart,
+      held: !s.active,
+      arrive: s.arrive,
+      vArr: s.vArr,
+      vPeak: s.vPeak,
+      aPeakG: s.aPeak / G,
+      impactG: s.vArr != null ? arrest(Object.assign({}, cfg, { brakeK: o.brakeK }), pods[i].m, s.vArr, pods[i].brakeScale).peakG : null,
+      stalled: s.stalled,
+      stallX: s.stalled ? s.x : null,
+      minSep: s.minSep,
+      traj: s.traj,
+    }));
+    out.peakTension = peakT;
+    return out;
+  }
+
+  // Auto-size the eddy-current brake (k_b in N·s/m). Two passive-brake constraints:
+  //   (a) a FULL pod should reach the dock no faster than dockSpeed;
+  //   (b) the LIGHTEST pod we expect to dispatch must still reach the dock at
+  //       >= 1 m/s (a linear eddy brake over-brakes light pods: decel = k v / m).
+  // k_b = min(k_a, k_b). If (a) cannot be met, the terminal buffer takes the rest
+  // and the evacuation flags the buffer deceleration.
+  function designBrake(cfg) {
+    if (cfg.terminal === 'switchyard') return designBayBrake(cfg);
+    const wire = makeWire(cfg);
+    const P = cfg.crew + cfg.ground;
+    const nPods = Math.max(1, Math.ceil(P / cfg.podCapacity));
+    const nLight = cfg.loading === 'balance' ? Math.max(1, Math.floor(P / nPods)) : Math.max(1, P - (nPods - 1) * cfg.podCapacity);
+    const xBrake = wire.L - cfg.brakeRunout - cfg.brakeLength;
+    // arrival speed, or -1 if the pod stalls or crawls below 1 m/s anywhere in the brake zone
+    const arr = (k, n, wind) => {
+      const pod = [{ depart: 0, m: podMass(cfg, n), cda: podCdA(cfg, n) }];
+      const r = simulateWire(cfg, wire, pod, { brakeK: k, wind, sample: 0.25 })[0];
+      if (r.stalled) return -1;
+      for (let i = 0; i < r.traj.x.length; i++) if (r.traj.x[i] > xBrake + 5 && r.traj.x[i] < wire.L - 0.5 && r.traj.v[i] < 1) return -1;
+      return r.vArr;
+    };
+    // largest k that satisfies "arrives at >= vMin" for occupancy n (monotone in k)
+    const kMaxFor = (n, vMin, wind) => {
+      let lo = 0, hi = 20000;
+      if (arr(hi, n, wind) >= vMin) return hi;
+      for (let it = 0; it < 24; it++) {
+        const mid = 0.5 * (lo + hi);
+        if (arr(mid, n, wind) >= vMin) lo = mid; else hi = mid;
+      }
+      return lo;
+    };
+    // design corners: the full pod with a tailwind (fastest case), the lightest pod
+    // into a headwind (slowest case); designWind = 17.5 m/s (34 kn, Shuttle-era [R3])
+    const kFull = kMaxFor(cfg.podCapacity, cfg.dockSpeed, cfg.designWind);
+    const kLight = kMaxFor(nLight, 1.0, -cfg.designWind);
+    return Math.round(Math.min(kFull, kLight));
+  }
+
+  // Bay brake (switch yard): pods reach the points unbraked. Size k_b so the lightest
+  // pod arriving at the fastest speed (design tailwind) decelerates at <= aMax.
+  function designBayBrake(cfg) {
+    const wire = makeWire(cfg);
+    const P = cfg.crew + cfg.ground;
+    const nPods = Math.max(1, Math.ceil(P / cfg.podCapacity));
+    const nLight = cfg.loading === 'balance' ? Math.max(1, Math.floor(P / nPods)) : Math.max(1, P - (nPods - 1) * cfg.podCapacity);
+    const mL = podMass(cfg, nLight);
+    const r = simulateWire(cfg, wire, [{ depart: 0, m: mL, cda: podCdA(cfg, nLight) }], { brakeK: 0, wind: cfg.designWind, sample: 5 })[0];
+    if (!r.vArr) return 0;
+    return Math.round((0.97 * cfg.aMaxG * G * mL) / r.vArr); // 3 % margin
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
+    podMass, podCdA, simulateWire, designBrake,
   };
 });
