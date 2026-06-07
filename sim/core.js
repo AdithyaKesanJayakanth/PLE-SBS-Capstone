@@ -462,10 +462,68 @@
     return Math.round((0.97 * cfg.aMaxG * G * mL) / r.vArr); // 3 % margin
   }
 
+  // ---------------------------------------------------------------------------
+  // Terminal arrester: what stops a pod at the end of the wire.
+  //  'net'   ideal catch net with stroke s: a = v^2 / 2s, t = 2s / v.
+  //  'chain' drag-chain bed (Shuttle heritage): heavier chains are picked up as the
+  //          pod advances, k_c kg per metre, dragged over sand with friction mu_s.
+  //          F = mu_s g k_c s  ->  simple-harmonic stop with w^2 = mu_s g k_c / m:
+  //          stop distance v/w, peak deceleration v w, stop time pi / (2w).
+  //          Speed only matters through v, so it stops a pod whose magnetic brake
+  //          has failed. If the bed is overrun, a short backup net takes the rest.
+  // ---------------------------------------------------------------------------
+  function arrest(cfg, m, v, brakeScale) {
+    if (v == null) return null;
+    if (cfg.terminal === 'switchyard') return bayStop(cfg, m, v, (cfg.brakeK || 0) * (brakeScale ?? 1));
+    return endStop(cfg, m, v);
+  }
+
+  // Switch-yard bay: level rail with the magnetic brake (length brakeLength), then the
+  // arrester. Linear eddy brake on the level: m dv/dx = -k  ->  v falls linearly with
+  // distance (dv = k L / m) and exponentially with time (v = v0 e^(-k t / m)).
+  function bayStop(cfg, m, v0, k) {
+    const Lb = cfg.brakeLength;
+    const magG = (k * v0) / m / G;
+    const vStop = 0.5; // m/s: counts as stopped
+    if (k > 0 && (k * Lb) / m >= v0 - vStop) {
+      return { type: 'bay brake', dist: (m * (v0 - vStop)) / k, peakG: magG, t: (m / k) * Math.log(v0 / vStop), vOver: 0, vExit: 0 };
+    }
+    const v1 = k > 0 ? v0 - (k * Lb) / m : v0;
+    const tMag = k > 0 ? (m / k) * Math.log(v0 / v1) : Lb / v0;
+    const end = endStop(cfg, m, v1);
+    return { type: k > 0 ? 'bay brake + ' + end.type : end.type + ' (brake failed)', dist: Lb + end.dist, peakG: Math.max(magG, end.peakG), t: tMag + end.t, vOver: end.vOver, vExit: v1 };
+  }
+
+  function endStop(cfg, m, v) {
+    if (cfg.arrester === 'chain') {
+      const w = Math.sqrt((cfg.chainMu * G * cfg.chainKc) / m);
+      const s = v / w;
+      if (s <= cfg.bedLength) return { type: 'chain', dist: s, peakG: (v * w) / G, t: Math.PI / (2 * w), vOver: 0 };
+      const vEnd = Math.sqrt(v * v - w * w * cfg.bedLength * cfg.bedLength);
+      const aNet = (vEnd * vEnd) / (2 * cfg.netStroke);
+      const t1 = Math.asin(Math.min(1, (w * cfg.bedLength) / v)) / w;
+      return { type: 'chain+net', dist: cfg.bedLength + cfg.netStroke, peakG: Math.max(w * cfg.bedLength, aNet) / G, t: t1 + (2 * cfg.netStroke) / vEnd, vOver: vEnd };
+    }
+    const a = (v * v) / (2 * cfg.bufferLength);
+    return { type: 'net', dist: cfg.bufferLength, peakG: a / G, t: v > 0 ? (2 * cfg.bufferLength) / v : 0, vOver: 0 };
+  }
+
+  // Which pods have a working magnetic brake (multiplier on k_b).
+  //  'ok' all work; 'one' the second pod to leave has failed (the hardest case on a
+  //  single wire: a fast pod behind a normal one); 'all' every brake failed; 'half' all at 50%.
+  function brakeHealth(cfg, podIndex) {
+    switch (cfg.brakeCondition) {
+      case 'all': return 0;
+      case 'half': return 0.5;
+      case 'one': return podIndex === 1 || (podIndex === 0 && cfg.wires * cfg.podsPerWire === 1) ? 0 : 1;
+      default: return 1;
+    }
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
-    podMass, podCdA, simulateWire, designBrake,
+    podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth,
   };
 });
