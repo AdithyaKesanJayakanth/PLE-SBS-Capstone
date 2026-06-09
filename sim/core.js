@@ -520,10 +520,122 @@
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // 4. Evacuation: people -> pods -> wires -> terminus -> safety
+  // ---------------------------------------------------------------------------
+
+  const DEFAULTS = {
+    vehicle: 'REF',
+    stages: null, // null -> from vehicle preset
+    dangerLevel: 4,
+    participation: null, // override f
+    warnTime: null, // override warning time
+    kFactor: 40,
+    solidTntFraction: 0,
+    sep: 200, // fireball surface emissive power, kW/m^2
+    thermalDoseLimit: 100, // (kW/m^2)^(4/3)·s — first-degree-burn threshold region
+
+    accessHeight: 42,
+    terminusHeight: -3, // landing pit 3 m below grade
+    span: 300,
+    towerOffset: 15,
+
+    cableDiameter: 36, // mm
+    tension: 150, // kN, horizontal, held by counterweight
+    cableSF: 5,
+
+    wires: 2,
+    podsPerWire: 2,
+    podCapacity: 4,
+    podMass: 300, // kg, empty basket + trolley
+    personMass: 100, // kg incl. suit / gear
+    cdaPod: 1.0, // m^2
+    cdaPerson: 0.15, // m^2 per occupant
+    mu: 0.02, // trolley rolling resistance
+    rho: 1.2,
+    wind: 0, // along-wire tailwind, m/s
+    designWind: 17.5, // m/s, brake is sized for ± this along-wire wind
+
+    brakeLength: 60,
+    brakeRunout: 15, // m of unbraked track between the brake fins and the dock
+    brakeK: null, // null -> auto (designBrake)
+    dockSpeed: 4, // m/s target arrival speed for a full pod
+    creepSpeed: 0.2, // m/s; slower than this before the dock = stalled
+    bufferLength: 10, // m, catch-net stroke at the dock (arrester 'net')
+    arrester: 'net', // 'net' | 'chain' (drag-chain bed + short backup net)
+    chainKc: 40, // kg of chain picked up per metre of bed
+    chainMu: 0.6, // steel chain sliding on sand
+    bedLength: 50, // m: a full pod with a failed brake in the design tailwind stops inside it
+    netStroke: 3, // m, backup net at the end of the chain bed
+    brakeCondition: 'ok', // 'ok' | 'one' | 'all' | 'half'
+    aMaxG: 1.5, // human deceleration limit used for checks
+
+    crew: 3, // flight crew in the capsule
+    ground: 6, // close-out crew in the white room
+    tReact: 10, // alarm -> start moving
+    tHatch: 60, // capsule hatch open + crew unstrap
+    tWalk: 20, // white room -> pod platform
+    tGap: 3, // single-file spacing through the access arm
+    tBoard: 5, // per person
+    tRelease: 3, // occupant pulls the release lever inside the pod (lever unlocks only after the headway)
+    headway: null, // null -> auto (minHeadway)
+    loading: 'balance', // 'balance' | 'fill'
+    tClear: 20, // single dock: pod stopped, unloaded and moved off the dock
+    terminal: 'dock', // 'dock' (unload in place) | 'switchyard' (points send each pod to its own bay)
+    bays: 4, // switch-yard receiving bays (each with its own arrester) per wire
+    tSwitch: 3, // s: pod clears the points and they index to the next bay
+    tBayReset: 20, // s: unloaded pod pushed out of its bay before the bay can be reused
+    bayWalk: 15, // m: bay to bunker door
+    failSafeHeadway: false, // also space pods so a follower with a failed brake cannot catch up
+    dispatch: 'timed', // 'timed' (fixed headway) | 'block' (lever unlocks when the pod ahead passes a marker)
+    blockX: null, // m along the wire; null -> auto (minBlock)
+    podLength: 3,
+
+    tUnload: 15,
+    safeMode: 'bunker', // 'bunker' | 'vehicle'
+    vehicleLoad: 20, // s to board the armoured vehicle
+    vehicleSpeed: 12, // m/s average
+    bunkerWalk: 40, // m terminus -> bunker door
+    runSpeed: 3, // m/s
+    bunkerPsi: 10, // bunker blast rating
+
+    costWire: 10, // relative cost units per wire (cable, anchors, brake, counterweight)
+    costPod: 2, // per pod
+    costBay: 1.5, // per switch-yard bay (rail, points, bay brake, chain bed)
+
+    dt: 0.02,
+  };
+
+  function resolve(cfgIn) {
+    const cfg = Object.assign({}, DEFAULTS, cfgIn || {});
+    const veh = VEHICLES[cfg.vehicle];
+    if (!cfg.stages) cfg.stages = veh ? veh.stages : VEHICLES.REF.stages;
+    return cfg;
+  }
+
+  function arrivals(cfg, rnd) {
+    // returns sorted arrival times at the pod platform
+    const people = [];
+    const r = rnd || {};
+    for (let i = 0; i < cfg.ground; i++) {
+      people.push({ group: 'ground', t: (r.tReact ?? cfg.tReact) + (r.tWalk ?? cfg.tWalk) + i * (r.tGap ?? cfg.tGap) });
+    }
+    for (let i = 0; i < cfg.crew; i++) {
+      people.push({ group: 'crew', t: (r.tReact ?? cfg.tReact) + (r.tHatch ?? cfg.tHatch) + (r.tWalk ?? cfg.tWalk) + i * (r.tGap ?? cfg.tGap) });
+    }
+    people.sort((a, b) => a.t - b.t);
+    // the access arm is single file: nobody arrives closer than tGap behind the person ahead
+    for (let i = 1; i < people.length; i++) {
+      people[i].t = Math.max(people[i].t, people[i - 1].t + (r.tGap ?? cfg.tGap));
+    }
+    return people;
+  }
+
   return {
-    G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS,
+    G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
     podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth,
+    resolve, arrivals,
   };
 });
