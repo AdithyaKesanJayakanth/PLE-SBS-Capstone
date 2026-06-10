@@ -65,6 +65,23 @@ test('hazard: bigger danger level never shrinks the required distance', () => {
   }
 });
 
+test('series pods: auto headway keeps followers off the leader and out of the dock', () => {
+  const r = S.evacuate({ wires: 1, podsPerWire: 3, crew: 3, ground: 6, podCapacity: 3 });
+  assert.equal(r.flags.filter((f) => /dock|within/.test(f.msg)).length, 0, JSON.stringify(r.flags));
+  for (let i = 1; i < r.pods.length; i++) assert.ok(r.pods[i].arrive >= r.pods[i - 1].arrive + r.cfg.tClear - 1e-6);
+});
+
+test('a zero headway on one wire is caught as a conflict', () => {
+  const r = S.evacuate({ wires: 1, podsPerWire: 3, podCapacity: 3, headway: 0, tGap: 0.5, tHatch: 0 });
+  assert.ok(r.flags.some((f) => /dock|within/.test(f.msg)));
+});
+
+test('more wires never make the evacuation slower (same pods per wire)', () => {
+  const t1 = S.evacuate({ wires: 3, podsPerWire: 1 }).tAll;
+  const t2 = S.evacuate({ wires: 5, podsPerWire: 1 }).tAll;
+  assert.ok(t2 <= t1 + 1e-9);
+});
+
 test('drag-chain bed: simple-harmonic stop, distance v/w and peak v*w', () => {
   const cfg = S.resolve({ arrester: 'chain', terminal: 'dock', chainKc: 40, chainMu: 0.6, bedLength: 100 });
   const m = 600, v = 20, w = Math.sqrt((0.6 * S.G * 40) / m);
@@ -78,6 +95,13 @@ test('switch-yard bay brake on level rail loses k L / m of speed', () => {
   const cfg = S.resolve({ terminal: 'switchyard', arrester: 'chain', brakeLength: 60, brakeK: 100 });
   const st = S.arrest(cfg, 600, 20, 1);
   close(st.vExit, 20 - (100 * 60) / 600, 1e-9, 'exit speed');
+});
+
+test('D5 tolerates a failed magnetic brake on every pod (stops below 1.5 g, no failures)', () => {
+  const cfg = S.prepare({ wires: 1, podsPerWire: 3, terminal: 'switchyard', bays: 3, arrester: 'chain', dispatch: 'block', failSafeHeadway: true, tWalk: 8, tBoard: 3, tUnload: 8, bayWalk: 15 });
+  const r = S.evacuate(Object.assign({}, cfg, { brakeCondition: 'all' }));
+  assert.equal(r.flags.filter((f) => f.level === 'fail').length, 0, JSON.stringify(r.flags));
+  for (const p of r.pods) assert.ok(p.stop.peakG <= 1.5, `pod ${p.id} ${p.stop.peakG}`);
 });
 
 test('block marker holds the next pod at the platform if the pod ahead stalls', () => {

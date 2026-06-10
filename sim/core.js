@@ -631,11 +631,332 @@
     return people;
   }
 
+  // ---------------------------------------------------------------------------
+  // Where the bunker is, measured from the rocket:
+  //   d_B = x_tower + L_span + L_stop + d_run
+  // x_tower: rocket to tower; L_span: horizontal wire span; L_stop: track the pod uses
+  // after the end of the wire (single dock: arrester stroke; switch yard: bay brake +
+  // arrester + 5 m); d_run: walk/run from where the pod stops to the bunker door.
+  // ---------------------------------------------------------------------------
+  function stopLength(cfg) {
+    const arr = cfg.arrester === 'chain' ? cfg.bedLength + cfg.netStroke : cfg.bufferLength;
+    return cfg.terminal === 'switchyard' ? cfg.brakeLength + arr + 5 : arr;
+  }
+  function runDistance(cfg) { return cfg.terminal === 'switchyard' ? cfg.bayWalk : cfg.bunkerWalk; }
+  function bunkerDistance(cfg) { return cfg.towerOffset + cfg.span + stopLength(cfg) + runDistance(cfg); }
+
+  function terminusToSafe(cfg, hz, dTerm, rnd) {
+    const r = rnd || {};
+    if (dTerm >= hz.rReq) return { mode: 'terminus', t: 0 };
+    if (cfg.safeMode === 'bunker') {
+      // lower limit on the bunker distance: outside 1.5 fireball radii, and where the
+      // blast overpressure is within the bunker's rating
+      const rB = Math.max(hz.rForPsi(cfg.bunkerPsi), hz.fireballD * 0.75);
+      const dB = bunkerDistance(cfg);
+      const t = runDistance(cfg) / (r.runSpeed ?? cfg.runSpeed);
+      return { mode: 'bunker', t, ok: dB >= rB, rBunker: rB, dBunker: dB };
+    }
+    const t = (r.vehicleLoad ?? cfg.vehicleLoad) + (hz.rReq - dTerm) / cfg.vehicleSpeed;
+    return { mode: 'vehicle', t };
+  }
+
+  /**
+   * Full evacuation for one configuration.
+   * rnd (optional) supplies sampled values for Monte Carlo runs.
+   */
+  function evacuate(cfgIn, rnd) {
+    const cfg = resolve(cfgIn);
+    const r = rnd || {};
+    const hz = hazard(cfg);
+    const wire = makeWire(cfg);
+    const flags = [];
+    if (cfg.brakeK == null) cfg.brakeK = designBrake(cfg);
+    const brakeK = cfg.brakeK * (r.brakeScale ?? 1);
+
+    // people & pods
+    const people = arrivals(cfg, r).map((p, i) => Object.assign(p, {
+      id: i, mass: r.personMasses ? r.personMasses[i % r.personMasses.length] : cfg.personMass,
+    }));
+    const P = people.length;
+    const c = cfg.podCapacity;
+    const nPodsNeeded = Math.ceil(P / c);
+    const nPodsAvail = cfg.wires * cfg.podsPerWire;
+    if (nPodsNeeded > nPodsAvail) flags.push({ level: 'fail', msg: `Not enough seats: ${P} people, ${nPodsAvail} pods × ${c} = ${nPodsAvail * c}` });
+
+    // 'fill': c, c, ..., remainder. 'balance': spread people evenly over the pods
+    // needed (9 people, c=4 -> 3,3,3 instead of 4,4,1) so no pod runs nearly empty.
+    const nPods = Math.min(nPodsNeeded, nPodsAvail);
+    const sizes = [];
+    for (let j = 0; j < nPods; j++) {
+      sizes.push(cfg.loading === 'balance'
+        ? Math.floor(P / nPods) + (j < P % nPods ? 1 : 0)
+        : Math.min(c, P - j * c));
+    }
+    const pods = [];
+    let first = 0;
+    for (let j = 0; j < nPods; j++) {
+      const occ = people.slice(first, first + sizes[j]);
+      first += sizes[j];
+      let done = 0;
+      for (const p of occ) {
+        done = Math.max(done, p.t) + (r.tBoard ?? cfg.tBoard);
+        p.boarded = done;
+        p.pod = j;
+      }
+      pods.push({
+        id: j, wire: j % cfg.wires, slot: Math.floor(j / cfg.wires),
+        n: occ.length, people: occ.map((p) => p.id),
+        m: cfg.podMass + occ.reduce((s, p) => s + p.mass, 0),
+        cda: podCdA(cfg, occ.length) * (r.cdaScale ?? 1),
+        ready: done + (r.tRelease ?? cfg.tRelease),
+        brakeScale: brakeHealth(cfg, j),
+      });
+    }
+
+    const block = cfg.dispatch === 'block';
+    const headway = block ? 0 : cfg.headway != null ? cfg.headway : (cfg.podsPerWire > 1 ? minHeadway(cfg) : 0);
+    const blockX = block ? (cfg.blockX != null ? cfg.blockX : (cfg.podsPerWire > 1 ? minBlock(cfg) : 0)) : null;
+
+    // dispatch with headway on each wire (series pods leave in slot order)
+    const byWire = Array.from({ length: cfg.wires }, () => []);
+    for (const p of pods) byWire[p.wire].push(p);
+    let peakTension = 0;
+    for (let w = 0; w < cfg.wires; w++) {
+      const list = byWire[w];
+      let last = -Infinity;
+      for (const [i, p] of list.entries()) {
+        if (cfg.dispatch === 'block') {
+          p.depart = p.ready;
+          if (i > 0) { p.blockAfter = i - 1; p.blockX = blockX; }
+        } else {
+          p.depart = Math.max(p.ready, last + headway);
+          last = p.depart;
+        }
+      }
+      if (!list.length) continue;
+      const res = simulateWire(cfg, wire, list, {
+        mu: r.mu ?? cfg.mu, wind: r.wind ?? cfg.wind, brakeK,
+      });
+      peakTension = Math.max(peakTension, res.peakTension);
+      list.forEach((p, i) => Object.assign(p, res[i]));
+      // terminus: the follower must not arrive before the leader has cleared the main
+      // line (single dock: stopped + unloaded + moved off; switch yard: past the points)
+      const clear = cfg.terminal === 'switchyard' ? cfg.tSwitch : cfg.tClear;
+      for (let i = 1; i < list.length; i++) {
+        const a = list[i - 1], b = list[i];
+        if (a.arrive != null && b.arrive != null && b.arrive < a.arrive + clear - 0.05) {
+          b.dockConflict = true;
+          flags.push({ level: 'fail', msg: `Wire ${w + 1}: pod ${b.id + 1} reaches the ${cfg.terminal === 'switchyard' ? 'points' : 'dock'} ${(a.arrive + clear - b.arrive).toFixed(1)} s before pod ${a.id + 1} clears it` });
+        }
+        if (b.minSep < cfg.podLength + 2) {
+          flags.push({ level: 'fail', msg: `Wire ${w + 1}: pods ${a.id + 1}/${b.id + 1} come within ${b.minSep.toFixed(1)} m on the wire` });
+        }
+      }
+    }
+
+    // arrester stop for every pod; switch-yard bay assignment (points index per pod)
+    for (const p of pods) {
+      p.stop = p.arrive != null ? arrest(Object.assign({}, cfg, { brakeK: brakeK }), p.m, p.vArr, p.brakeScale) : null;
+      p.impactG = p.stop ? p.stop.peakG : null;
+    }
+    if (cfg.terminal === 'switchyard') {
+      for (let w = 0; w < cfg.wires; w++) {
+        const bayFree = new Array(cfg.bays).fill(-Infinity);
+        byWire[w].forEach((p, i) => {
+          p.bay = i % cfg.bays;
+          if (p.arrive == null) return;
+          if (p.arrive < bayFree[p.bay]) {
+            flags.push({ level: 'fail', msg: `Wire ${w + 1}: pod ${p.id + 1} reaches bay ${p.bay + 1} ${(bayFree[p.bay] - p.arrive).toFixed(0)} s before it is empty; add bays` });
+          }
+          bayFree[p.bay] = p.arrive + p.stop.t + (r.tUnload ?? cfg.tUnload) + cfg.tBayReset;
+        });
+      }
+    }
+
+    const dTerm = cfg.towerOffset + cfg.span;
+    const leg = terminusToSafe(cfg, hz, dTerm, r);
+    if (leg.mode === 'bunker' && !leg.ok) flags.push({ level: 'fail', msg: `The bunker (${leg.dBunker.toFixed(0)} m from the rocket) is closer than its ${leg.rBunker.toFixed(0)} m minimum (fireball margin or ${cfg.bunkerPsi} psi rating)` });
+
+    let tAll = 0;
+    for (const p of pods) {
+      if (p.held) {
+        flags.push({ level: 'fail', msg: cfg.dispatch === 'block' ? `Pod ${p.id + 1} is held at the platform: the pod ahead never cleared the block marker` : `Pod ${p.id + 1} never leaves the platform within the simulated time` });
+        p.safe = Infinity;
+      } else if (p.stalled) {
+        flags.push({ level: 'fail', msg: `Pod ${p.id + 1} stalls ${(wire.L - p.stallX).toFixed(0)} m short of the terminus` });
+        p.safe = Infinity;
+      } else {
+        p.unloaded = p.arrive + p.stop.t + (r.tUnload ?? cfg.tUnload);
+        p.safe = p.unloaded + leg.t;
+      }
+      if (p.aPeakG > cfg.aMaxG) flags.push({ level: 'warn', msg: `Pod ${p.id + 1}: braking peak ${p.aPeakG.toFixed(2)} g > ${cfg.aMaxG} g limit` });
+      if (p.stop && p.stop.peakG > 2 * cfg.aMaxG) flags.push({ level: 'fail', msg: `Pod ${p.id + 1}: ${p.stop.type === 'net' ? 'catch-net' : 'arrester'} stop of ${p.stop.peakG.toFixed(1)} g at ${p.vArr.toFixed(1)} m/s could injure occupants${p.brakeScale < 1 ? ' (magnetic brake ' + (p.brakeScale === 0 ? 'failed' : 'weak') + ')' : ''}` });
+      else if (p.stop && p.stop.peakG > cfg.aMaxG) flags.push({ level: 'warn', msg: `Pod ${p.id + 1}: arrester stop ${p.stop.peakG.toFixed(2)} g (arrives at ${p.vArr.toFixed(1)} m/s)` });
+      if (p.stop && p.stop.vOver > 0) flags.push({ level: 'warn', msg: `Pod ${p.id + 1} overruns the chain bed at ${p.stop.vOver.toFixed(1)} m/s; backup net stops it` });
+      for (const id of p.people) people[id].safe = p.safe;
+      tAll = Math.max(tAll, p.safe);
+    }
+    if (nPodsNeeded > nPodsAvail) tAll = Infinity;
+    if (peakTension > wire.cable.allow) {
+      flags.push({ level: 'fail', msg: `Cable tension ${(peakTension / 1000).toFixed(0)} kN exceeds allowable ${(wire.cable.allow / 1000).toFixed(0)} kN (SF ${cfg.cableSF})` });
+    }
+
+    const margin = hz.warn - tAll;
+    // effective headway actually flown (block dispatch varies with wind and load)
+    let gaps = [];
+    for (const list of byWire) for (let i = 1; i < list.length; i++) if (list[i].depart != null && !list[i].held) gaps.push(list[i].depart - list[i - 1].depart);
+    const headwayFlown = gaps.length ? Math.max(...gaps) : 0;
+    return {
+      cfg, hazard: hz, wire, people, pods, headway: block ? headwayFlown : headway, blockX, brakeK,
+      dTerminus: dTerm, leg, peakTension, tAll, margin, flags,
+      status: !isFinite(tAll) || flags.some((f) => f.level === 'fail') ? 'fail' : margin < 0 ? 'unsafe' : margin < 0.25 * hz.warn ? 'marginal' : 'safe',
+      cost: cfg.wires * cfg.costWire + cfg.wires * cfg.podsPerWire * cfg.costPod + (cfg.terminal === 'switchyard' ? cfg.wires * cfg.bays * cfg.costBay : 0),
+    };
+  }
+
+  // Smallest dispatch interval between consecutive pods on one wire such that the
+  // follower never closes within podLength+2 m and reaches the dock only after the
+  // leader has been cleared. Checked for the worst pairing (a light, slow leader
+  // followed by a full, fast pod), for two full pods, and at both wind corners;
+  // +1 s operating margin.
+  // Size the brake and the dispatch rule once, so repeated runs (Monte Carlo, trade
+  // study, sensitivity) reuse them instead of re-deriving them every time.
+  function prepare(cfgIn) {
+    const cfg = resolve(cfgIn);
+    if (cfg.brakeK == null) cfg.brakeK = designBrake(cfg);
+    if (cfg.dispatch === 'block') { if (cfg.blockX == null) cfg.blockX = cfg.podsPerWire > 1 ? minBlock(cfg) : 0; }
+    else if (cfg.headway == null) cfg.headway = cfg.podsPerWire > 1 ? minHeadway(cfg) : 0;
+    return cfg;
+  }
+
+  // Pairs and winds used to prove a dispatch rule safe (see minHeadway / minBlock).
+  function dispatchCases(cfg) {
+    const P = cfg.crew + cfg.ground;
+    const nPods = Math.max(1, Math.ceil(P / cfg.podCapacity));
+    const nLight = Math.max(1, cfg.loading === 'balance' ? Math.floor(P / nPods) : P - (nPods - 1) * cfg.podCapacity);
+    const pod = (n, brakeScale) => ({ m: podMass(cfg, n), cda: podCdA(cfg, n), brakeScale: brakeScale ?? 1 });
+    const pairs = [[pod(cfg.podCapacity), pod(cfg.podCapacity)], [pod(nLight), pod(cfg.podCapacity)]];
+    if (cfg.failSafeHeadway) pairs.push([pod(nLight), pod(cfg.podCapacity, 0)]);
+    // a wind in which a pod stalls even on its own cannot be fixed by spacing; that
+    // stall is reported by evacuate(), so such winds are left out here
+    const wire = makeWire(cfg);
+    const alone = (p, wind) => !simulateWire(cfg, wire, [{ depart: 0, ...p }], { sample: 5, wind })[0].stalled;
+    const winds = [0, -cfg.designWind, cfg.designWind].filter((wind) => alone(pod(nLight), wind) && alone(pod(cfg.podCapacity), wind));
+    return { pairs, winds, clear: cfg.terminal === 'switchyard' ? cfg.tSwitch : cfg.tClear };
+  }
+
+  // Block dispatch: smallest marker position (m along the wire) such that a follower
+  // released when its leader passes the marker is safe for every case in dispatchCases.
+  function minBlock(cfgIn) {
+    const cfg = resolve(cfgIn);
+    if (cfg.brakeK == null) cfg.brakeK = designBrake(cfg);
+    const wire = makeWire(cfg);
+    const { pairs, winds, clear } = dispatchCases(cfg);
+    const ok = (xb) => pairs.every(([a, b]) => winds.every((wind) => {
+      const res = simulateWire(cfg, wire, [{ depart: 0, ...a }, { depart: 0, blockAfter: 0, blockX: xb, ...b }], { sample: 5, wind });
+      // a leader stall here is caused by the follower's weight on the cable (alone it
+      // would arrive: designBrake guarantees that), so the marker is too early
+      if (res[0].stalled || res[1].stalled) return false;
+      return res[1].arrive >= res[0].arrive + clear && res[1].minSep >= cfg.podLength + 2;
+    }));
+    let lo = 0, hi = wire.L;
+    if (!ok(hi)) return wire.L;
+    for (let it = 0; it < 16; it++) {
+      const mid = 0.5 * (lo + hi);
+      if (ok(mid)) hi = mid; else lo = mid;
+    }
+    return Math.min(wire.L, Math.ceil(hi / 5) * 5 + 10); // round up + 10 m margin
+  }
+
+  function minHeadway(cfgIn) {
+    const cfg = resolve(cfgIn);
+    if (cfg.brakeK == null) cfg.brakeK = designBrake(cfg);
+    const wire = makeWire(cfg);
+    // checked for every pairing in dispatchCases (incl. a failed-brake follower when
+    // failSafeHeadway) in calm air and at both design-wind corners
+    const { pairs, winds, clear } = dispatchCases(cfg);
+    const okPair = (a, b, h) => winds.every((wind) => okPairWind(a, b, h, wind));
+    const okPairWind = (a, b, h, wind) => {
+      const res = simulateWire(cfg, wire, [{ depart: 0, ...a }, { depart: h, ...b }], { sample: 5, wind });
+      // the follower's weight flattens the end of the cable under the leader, so a
+      // too-short headway can stall the leader short of the dock (cable coupling)
+      if (res[0].stalled || res[1].stalled) return false; // a pair that stalls is never safe
+      return res[1].arrive >= res[0].arrive + clear && res[1].minSep >= cfg.podLength + 2;
+    };
+    let worst = 0;
+    for (const [a, b] of pairs) {
+      const ok = (h) => okPair(a, b, h);
+      let lo = 0, hi = 5;
+      while (!ok(hi) && hi < 400) hi *= 2;
+      for (let it = 0; it < 18; it++) {
+        const mid = 0.5 * (lo + hi);
+        if (ok(mid)) hi = mid; else lo = mid;
+      }
+      worst = Math.max(worst, hi);
+    }
+    return Math.ceil(worst) + 1;
+  }
+
+  // ---------------------------------------------------------------------------
+  // The bunker window: how close and how far from the rocket the bunker may be.
+  //  minimum  d_min = max( R(p_rating), 1.5 R_fireball )          (hazard)
+  //  maximum  d_max = x_tower + L_span + L_stop + v_run (T_warn - t_out)   (time)
+  //           with L_span <= L_reach, the longest span on which a light pod with no
+  //           magnetic brake still reaches the end in the design headwind and the
+  //           rope stays within its allowable tension (reach)
+  // t_out = time the last person steps out of a pod; T_warn = warning window.
+  // ---------------------------------------------------------------------------
+  function maxSpan(cfgIn) {
+    const cfg = resolve(cfgIn);
+    const P = cfg.crew + cfg.ground;
+    const nPods = Math.max(1, Math.ceil(P / cfg.podCapacity));
+    const nLight = Math.max(1, cfg.loading === 'balance' ? Math.floor(P / nPods) : P - (nPods - 1) * cfg.podCapacity);
+    const ok = (span) => {
+      const c = Object.assign({}, cfg, { span });
+      const wire = makeWire(c);
+      const run = simulateWire(c, wire, [{ depart: 0, m: podMass(c, nLight), cda: podCdA(c, nLight) }], { brakeK: 0, wind: -c.designWind, sample: 5 })[0];
+      if (run.stalled) return { ok: false, why: 'stall' };
+      const T = peakTension(wire, [{ x: span / 2, P: podMass(c, c.podCapacity) * G }]);
+      return T <= wire.cable.allow ? { ok: true } : { ok: false, why: 'tension' };
+    };
+    // very short, steep spans overload the rope (T sqrt(1 + slope^2)), so first find a
+    // span that works, then search outwards for the longest
+    let lo = 50;
+    while (lo < 3000 && !ok(lo).ok) lo += 25;
+    if (lo >= 3000) return { span: null, limit: 'none' };
+    let hi = lo * 2;
+    while (ok(hi).ok && hi < 20000) hi *= 2;
+    const limit = ok(hi).why;
+    for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; if (ok(mid).ok) lo = mid; else hi = mid; }
+    return { span: lo, limit };
+  }
+
+  function bunkerWindow(cfgIn, res, tOutOverride) {
+    const cfg = prepare(cfgIn);
+    const r = res || evacuate(cfg);
+    const hz = r.hazard;
+    const rMinBlast = hz.rForPsi(cfg.bunkerPsi);
+    const rMinFire = 0.75 * hz.fireballD;
+    const reach = maxSpan(cfg);
+    const run = runDistance(cfg) / cfg.runSpeed;
+    const tOut = tOutOverride != null ? tOutOverride : r.tAll - run;   // last person out of a pod
+    const runMax = Math.max(0, cfg.runSpeed * (hz.warn - tOut));
+    const fixed = cfg.towerOffset + stopLength(cfg);
+    return {
+      rMinBlast, rMinFire, dMin: Math.max(rMinBlast, rMinFire), rReq: hz.rReq,
+      towerOffset: cfg.towerOffset, span: cfg.span, stopLength: stopLength(cfg), run: runDistance(cfg),
+      dBunker: bunkerDistance(cfg), spanReach: reach.span, reachLimit: reach.limit,
+      tOut, warn: hz.warn, runMax, dMax: fixed + cfg.span + runMax,
+      dMaxReach: reach.span != null ? fixed + reach.span + runMax : null,
+    };
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
     podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth,
-    resolve, arrivals,
+    stopLength, bunkerDistance, maxSpan, bunkerWindow,
+    resolve, prepare, arrivals, evacuate, minHeadway, minBlock,
   };
 });
