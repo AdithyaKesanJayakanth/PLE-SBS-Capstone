@@ -951,11 +951,75 @@
     };
   }
 
+  // ---------------------------------------------------------------------------
+  // Materials and bill of materials (typical handbook values; final design must use
+  // certified mill data). BOM quantities are computed from the chosen design.
+  // ---------------------------------------------------------------------------
+  const MATERIALS = {
+    rope: { name: 'Steel wire rope, 6×36 IWRC, EIPS, galvanised', standard: 'ASTM A1023; wire grade ≈ 1,960 MPa', density: 'rope 0.0043 d² kg/m (d in mm)', E: 'rope modulus ≈ 100 GPa', strength: 'MBS ≈ 0.70 d² kN', why: 'Keeps about half its strength at 550 °C, unlike polymer ropes; zinc coating for salt air' },
+    al6061: { name: 'Aluminium 6061-T6', standard: 'ASTM B221 (extrusions)', density: '2,700 kg/m³', E: '69 GPa', strength: 'σy 276 MPa, σu 310 MPa', why: 'Light, weldable pod frame; does not spark; good corrosion resistance' },
+    s355: { name: 'Structural steel S355, hot-dip galvanised', standard: 'EN 10025-2; ISO 1461', density: '7,850 kg/m³', E: '210 GPa', strength: 'σy 355 MPa, σu 470–630 MPa', why: 'Anchors, magnet back-iron, rails; tough and easy to weld' },
+    ss316: { name: 'Stainless steel 316', standard: 'ASTM A276', density: '8,000 kg/m³', E: '193 GPa', strength: 'σy 205 MPa, σu 515 MPa; PREN ≈ 24', why: 'Axles, pins and fasteners in marine air' },
+    ph174: { name: 'Stainless steel 17-4PH (H1025)', standard: 'ASTM A564', density: '7,800 kg/m³', E: '197 GPa', strength: 'σy ≈ 1,000 MPa, σu ≈ 1,070 MPa', why: 'Release-latch pawl and pin: high strength, small parts' },
+    ndfeb: { name: 'NdFeB magnet, grade N42SH, Ni-Cu-Ni coated', standard: 'IEC 60404-8-1', density: '7,500 kg/m³', E: '≈ 160 GPa', strength: 'Br 1.29–1.32 T; HcJ ≥ 1,592 kA/m; max 150 °C', why: 'Strong permanent field with no power; SH grade resists heat and demagnetising' },
+    copper: { name: 'Copper C11000 (ETP)', standard: 'ASTM B152', density: '8,960 kg/m³', E: '117 GPa', strength: 'σ = 58 MS/m (100 % IACS)', why: 'Brake fin: eddy-current force grows with conductivity (aluminium gives ≈ 43 %)' },
+    pa6: { name: 'Cast nylon PA6 sheave liner', standard: 'ISO 1874', density: '1,150 kg/m³', E: '3 GPa', strength: 'σt ≈ 80 MPa', why: 'Quiet, low-wear contact on the rope; protects rope wires' },
+    chain: { name: 'Steel chain, graded 14–32 kg/m (proof-coil to stud-link)', standard: 'ASTM A413 / A391', density: '7,850 kg/m³', E: '210 GPa', strength: 'μ on dry sand ≈ 0.5–0.7', why: 'Drag-chain arrester: stopping force depends on chain picked up, not on speed' },
+    pet: { name: 'Polyester (PET) webbing, UV-stabilised', standard: 'EN 1492-1 (webbing slings)', density: '1,380 kg/m³', E: '≈ 10 GPa (fibre)', strength: '50 mm strap MBS ≈ 50 kN', why: 'Backup catch net and 4-point harnesses; low stretch, does not rot' },
+    concrete: { name: 'Reinforced concrete C30/37 with B500B rebar', standard: 'EN 206; EN 10080', density: '2,400 kg/m³', E: '33 GPa', strength: 'fck 30 MPa; rebar fy 500 MPa', why: 'Terminus deadman, counterweight, landing pit, bunker' },
+  };
+
+  function bom(cfgIn, res) {
+    const cfg = resolve(cfgIn);
+    const r = res || evacuate(cfg);
+    const cp = cableProps(cfg);
+    const chord = Math.hypot(cfg.span, cfg.accessHeight - cfg.terminusHeight);
+    const ropeLen = Math.ceil(chord * 1.05 + 30); // + anchorage and counterweight run
+    const nW = cfg.wires, nPods = cfg.wires * cfg.podsPerWire;
+    const peakKN = r.peakTension / 1000;
+    const cwKg = (cfg.tension * 1000) / G;
+    const magnetsPerM = 33; // two facing rows of 50×25×10 mm blocks, 60 mm pitch
+    const magnetKgPerM = magnetsPerM * 0.094;
+    const bays = cfg.terminal === 'switchyard' ? cfg.bays : 1;
+    const rows = [];
+    const add = (group, item, mat, spec, qty, unit, massKg) => rows.push({ group, item, material: MATERIALS[mat] ? MATERIALS[mat].name : mat, spec, qty, unit, massKg });
+    add('Wire (per wire × ' + nW + ')', 'Track rope', 'rope', `${cfg.cableDiameter} mm; MBS ${(cp.mbs / 1000).toFixed(0)} kN; allowable ${(cp.allow / 1000).toFixed(0)} kN at SF ${cfg.cableSF}; peak load ${peakKN.toFixed(0)} kN`, ropeLen * nW, 'm', ropeLen * nW * cp.massPerM);
+    add('Wire (per wire × ' + nW + ')', 'Spelter rope sockets', 's355', `forged steel, resin or zinc poured, rated ≥ MBS ${(cp.mbs / 1000).toFixed(0)} kN`, 2 * nW, 'pcs', 2 * nW * 25);
+    add('Wire (per wire × ' + nW + ')', 'Counterweight (constant tension)', 'concrete', `${(cwKg / 1000).toFixed(1)} t per wire in a guided pit; holds T = ${cfg.tension} kN`, nW, 'pcs', cwKg * nW);
+    add('Wire (per wire × ' + nW + ')', 'Deflection sheave', 's355', `diameter ≥ 40 d = ${(0.04 * cfg.cableDiameter).toFixed(2)} m; sealed roller bearings`, nW, 'pcs', 350 * nW);
+    add('Wire (per wire × ' + nW + ')', 'Tower padeye and terminus deadman', 'concrete', `S355 padeye + C30/37 deadman, each designed for ≥ 2 × ${peakKN.toFixed(0)} kN`, nW, 'sets', null);
+    const brakeRuns = cfg.terminal === 'switchyard' ? bays * nW : nW; // one per bay, or one per wire
+    const where = cfg.terminal === 'switchyard' ? 'in each bay' : 'on each wire';
+    add('Brake', 'Eddy-current brake magnets', 'ndfeb', `${cfg.brakeLength} m zone ${where}, ${magnetsPerM} blocks/m in two facing rows, 20 mm slot; k_b ≈ ${Math.round(r.brakeK)} N·s/m`, Math.round(cfg.brakeLength * magnetsPerM * brakeRuns), 'blocks', cfg.brakeLength * magnetKgPerM * brakeRuns);
+    add('Brake', 'Magnet back-iron and track frame', 's355', `galvanised channel, ${cfg.brakeLength} m ${where}`, cfg.brakeLength * brakeRuns, 'm', cfg.brakeLength * 45 * brakeRuns);
+    if (cfg.arrester === 'chain') {
+      add('Arrester (per bay)', 'Drag-chain bed', 'chain', `${cfg.chainKc} kg of chain picked up per metre, ${cfg.bedLength} m bed of dry sand`, bays * nW, 'beds', cfg.chainKc * cfg.bedLength * bays * nW);
+      add('Arrester (per bay)', 'Backup net with energy absorbers', 'pet', `${cfg.netStroke} m stroke at the end of each bed`, bays * nW, 'pcs', 60 * bays * nW);
+    } else {
+      add('Arrester', 'Catch net with energy absorbers', 'pet', `${cfg.bufferLength} m stroke`, nW, 'pcs', 80 * nW);
+    }
+    if (cfg.terminal === 'switchyard') {
+      const bayLen = cfg.brakeLength + (cfg.arrester === 'chain' ? cfg.bedLength + cfg.netStroke : cfg.bufferLength) + 5;
+      add('Switch yard (per wire)', 'Landing rail and bay tracks', 's355', `rope-to-rail transfer at the points, ${bays} level bays × ${bayLen} m + 30 m lead; 50 kg/m rail`, (bays * bayLen + 30) * nW, 'm', (bays * bayLen + 30) * 50 * nW);
+      add('Switch yard (per wire)', 'Self-indexing points (turnouts)', 's355', 'spring-return points advanced one bay by each passing pod (ratchet indexer); no power', Math.max(1, bays - 1) * nW, 'pcs', 400 * Math.max(1, bays - 1) * nW);
+    }
+    add('Pods (× ' + nPods + ')', 'Pod frame, open-sided', 'al6061', `${cfg.podCapacity} seats; mass budget ${cfg.podMass} kg with trolley; design load ${cfg.podCapacity * cfg.personMass + cfg.podMass} kg × 1.5`, nPods, 'pcs', 135 * nPods);
+    add('Pods (× ' + nPods + ')', 'Trolley with 4 lined sheaves', 'pa6', 'PA6 liners on steel sheaves, sealed bearings, 316 axles, anti-derailment keeper', nPods, 'pcs', 110 * nPods);
+    add('Pods (× ' + nPods + ')', 'Brake fin', 'copper', '10 mm plate, 1.2 m × 0.25 m, runs in the magnet slot', nPods, 'pcs', 0.01 * 1.2 * 0.25 * 8960 * nPods);
+    add('Pods (× ' + nPods + ')', 'Release lever and latch', 'ph174', 'occupant-pulled lever, ≤ 150 N; locked by the headway interlock until the wire ahead is clear', nPods, 'sets', 4 * nPods);
+    add('Pods (× ' + nPods + ')', 'Seats with 4-point harness', 'pet', '50 mm polyester webbing, quick-release buckle', cfg.podCapacity * nPods, 'pcs', 6 * cfg.podCapacity * nPods);
+    add('Pods (× ' + nPods + ')', 'Accelerometer logger', 'battery-powered 3-axis, ±16 g', 'records every ride and test drop', nPods, 'pcs', 0.5 * nPods);
+    add('Site', 'Bunker', 'concrete', `rated ${cfg.bunkerPsi} psi, seats ${cfg.crew + cfg.ground}, air supply`, 1, 'pcs', null);
+    const totals = {};
+    for (const row of rows) if (row.massKg) totals[row.group] = (totals[row.group] || 0) + row.massKg;
+    return { rows, totals, materials: MATERIALS, ropeLength: ropeLen, counterweightKg: cwKg };
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
-    podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth,
+    podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth, bom, MATERIALS,
     stopLength, bunkerDistance, maxSpan, bunkerWindow,
     resolve, prepare, arrivals, evacuate, minHeadway, minBlock,
   };
