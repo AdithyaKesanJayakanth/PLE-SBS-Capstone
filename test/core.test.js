@@ -82,6 +82,11 @@ test('more wires never make the evacuation slower (same pods per wire)', () => {
   assert.ok(t2 <= t1 + 1e-9);
 });
 
+test('Monte Carlo is reproducible for a fixed seed', () => {
+  const a = S.monteCarlo({}, 20, 7), b = S.monteCarlo({}, 20, 7);
+  assert.equal(a.p95, b.p95);
+});
+
 test('drag-chain bed: simple-harmonic stop, distance v/w and peak v*w', () => {
   const cfg = S.resolve({ arrester: 'chain', terminal: 'dock', chainKc: 40, chainMu: 0.6, bedLength: 100 });
   const m = 600, v = 20, w = Math.sqrt((0.6 * S.G * 40) / m);

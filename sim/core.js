@@ -1015,12 +1015,134 @@
     return { rows, totals, materials: MATERIALS, ropeLength: ropeLen, counterweightKg: cwKg };
   }
 
+  // ---------------------------------------------------------------------------
+  // 5. Studies
+  // ---------------------------------------------------------------------------
+
+  function rng(seed) { // mulberry32
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function normal(u, mean, sd) {
+    const a = Math.max(u(), 1e-12), b = u();
+    return mean + sd * Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * b);
+  }
+  const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+
+  // Uncertain inputs and their spread (documented in the paper, Table 3).
+  const MC_SPEC = {
+    tReact: (u, c) => clamp(normal(u, c.tReact, 3), 3, 30),
+    tHatch: (u, c) => clamp(normal(u, c.tHatch, 15), 25, 150),
+    tWalk: (u, c) => clamp(normal(u, c.tWalk, 4), 8, 45),
+    tGap: (u, c) => clamp(normal(u, c.tGap, 0.8), 1.5, 8),
+    tBoard: (u, c) => clamp(normal(u, c.tBoard, 1.5), 2, 15),
+    tRelease: (u, c) => clamp(normal(u, c.tRelease, 1), 1, 8),
+    tUnload: (u, c) => clamp(normal(u, c.tUnload, 4), 6, 40),
+    vehicleLoad: (u, c) => clamp(normal(u, c.vehicleLoad, 5), 8, 60),
+    runSpeed: (u, c) => clamp(normal(u, c.runSpeed, 0.5), 1.5, 5),
+    mu: (u, c) => clamp(normal(u, c.mu, 0.004), 0.008, 0.05),
+    cdaScale: (u) => clamp(normal(u, 1, 0.1), 0.7, 1.4),
+    brakeScale: (u) => clamp(normal(u, 1, 0.05), 0.8, 1.2),
+    // wind: speed uniform 0..17.5 m/s (34 kn, the Shuttle-era design wind [R3]), random direction
+    wind: (u, c) => c.wind + 17.5 * u() * Math.cos(2 * Math.PI * u()),
+  };
+
+  function monteCarlo(cfgIn, n, seed, onProgress) {
+    const cfg = prepare(cfgIn);
+    const u = rng(seed || 1);
+    const P = cfg.crew + cfg.ground;
+    const runs = [];
+    for (let i = 0; i < n; i++) {
+      const rnd = {};
+      for (const k in MC_SPEC) rnd[k] = MC_SPEC[k](u, cfg);
+      rnd.personMasses = Array.from({ length: P }, () => clamp(normal(u, cfg.personMass, 12), 60, 140));
+      const res = evacuate(Object.assign({}, cfg, { dt: Math.max(cfg.dt, 0.05) }), rnd);
+      runs.push({
+        tAll: res.tAll, fail: res.flags.some((f) => f.level === 'fail'),
+        warn: res.flags.some((f) => f.level === 'warn'),
+        wind: rnd.wind, aPeakG: Math.max(...res.pods.map((p) => Math.max(p.aPeakG || 0, p.impactG || 0))),
+      });
+      if (onProgress && i % 25 === 0) onProgress(i / n);
+    }
+    const ts = runs.map((r) => r.tAll).filter(isFinite).sort((a, b) => a - b);
+    const q = (p) => ts[Math.min(ts.length - 1, Math.floor(p * ts.length))];
+    const warn = hazard(cfg).warn;
+    return {
+      runs, n,
+      mean: ts.reduce((s, x) => s + x, 0) / ts.length,
+      p05: q(0.05), p50: q(0.5), p95: q(0.95), max: ts[ts.length - 1],
+      pLate: runs.filter((r) => !(r.tAll <= warn)).length / n,
+      pFail: runs.filter((r) => r.fail).length / n,
+      warn,
+    };
+  }
+
+  // Series vs parallel: every (wires m, pods per wire k) layout that seats everyone.
+  function tradeStudy(cfgIn, mMax, kMax) {
+    const base = resolve(cfgIn);
+    if (base.brakeK == null) base.brakeK = designBrake(base);
+    const block = base.dispatch === 'block';
+    const hw = block ? null : minHeadway(base);
+    const bx = block ? minBlock(Object.assign({}, base, { podsPerWire: Math.max(2, base.podsPerWire) })) : null;
+    const cells = [];
+    for (let m = 1; m <= (mMax || 6); m++) {
+      for (let k = 1; k <= (kMax || 6); k++) {
+        const cfg = Object.assign({}, base, { wires: m, podsPerWire: k, headway: k > 1 ? hw : 0, blockX: bx },
+          base.terminal === 'switchyard' ? { bays: k } : {});
+        if (m * k * cfg.podCapacity < cfg.crew + cfg.ground) { cells.push({ m, k, feasible: false }); continue; }
+        const r = evacuate(cfg);
+        cells.push({
+          m, k, feasible: true, tAll: r.tAll, cost: r.cost, status: r.status,
+          fails: r.flags.filter((f) => f.level === 'fail').length,
+        });
+      }
+    }
+    // Pareto front on (cost, time) among feasible, non-failing layouts
+    const ok = cells.filter((c) => c.feasible && !c.fails && isFinite(c.tAll));
+    for (const c of ok) c.pareto = !ok.some((d) => d !== c && d.cost <= c.cost && d.tAll <= c.tAll && (d.cost < c.cost || d.tAll < c.tAll));
+    return { cells, headway: hw, blockX: bx };
+  }
+
+  // One-at-a-time ±20% swing of each uncertain input on total evacuation time.
+  const SENS_PARAMS = [
+    ['tHatch', 'Capsule hatch / unstrap time'],
+    ['tReact', 'Reaction time'],
+    ['tWalk', 'Walk to platform'],
+    ['tBoard', 'Boarding time per person'],
+    ['tGap', 'Single-file spacing'],
+    ['tUnload', 'Unload at terminus'],
+    ['vehicleLoad', 'Board armoured vehicle'],
+    ['mu', 'Trolley rolling resistance'],
+    ['cdaPod', 'Pod drag area'],
+    ['personMass', 'Person mass'],
+    ['tension', 'Cable tension'],
+    ['accessHeight', 'Launch height'],
+  ];
+  function sensitivity(cfgIn, swing) {
+    const s = swing || 0.2;
+    const base = prepare(cfgIn);
+    const t0 = evacuate(base).tAll;
+    const rows = SENS_PARAMS.map(([k, label]) => {
+      const lo = evacuate(Object.assign({}, base, { [k]: base[k] * (1 - s) })).tAll;
+      const hi = evacuate(Object.assign({}, base, { [k]: base[k] * (1 + s) })).tAll;
+      return { key: k, label, lo: lo - t0, hi: hi - t0 };
+    });
+    rows.sort((a, b) => Math.max(Math.abs(b.lo), Math.abs(b.hi)) - Math.max(Math.abs(a.lo), Math.abs(a.hi)));
+    return { t0, swing: s, rows };
+  }
+
   return {
-    G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS,
+    G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS, MC_SPEC, SENS_PARAMS,
     hazard, overpressurePsi, kForPsi,
     cableProps, makeWire, deflection, slopeAt, heightAt, peakTension,
     podMass, podCdA, simulateWire, designBrake, arrest, brakeHealth, bom, MATERIALS,
     stopLength, bunkerDistance, maxSpan, bunkerWindow,
     resolve, prepare, arrivals, evacuate, minHeadway, minBlock,
+    rng, monteCarlo, tradeStudy, sensitivity,
   };
 });
