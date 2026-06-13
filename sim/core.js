@@ -1136,6 +1136,46 @@
     return { t0, swing: s, rows };
   }
 
+  // ---------------------------------------------------------------------------
+  // Scale model: predict run time on a straight taut line, and fit μ (and CdA)
+  // to measured runs by least squares over a grid.
+  // run: { wire_length_m, drop_m, mass_kg, time_s }
+  // ---------------------------------------------------------------------------
+  function scaleRunTime(run, mu, cda, rho) {
+    const L = run.wire_length_m, h = run.drop_m;
+    const s = h / L, c = Math.sqrt(1 - s * s);
+    const m = run.mass_kg;
+    let x = 0, v = 0, t = 0;
+    const dt = 0.001;
+    while (x < L && t < 120) {
+      const a = G * s - mu * G * c - (0.5 * (rho || 1.2) * cda * v * v) / m;
+      v += a * dt;
+      if (v <= 0) return Infinity;
+      x += v * dt; t += dt;
+    }
+    return t;
+  }
+  function fitScaleModel(runs, opts) {
+    const o = Object.assign({ fitCda: true, cdaFixed: 0.003 }, opts || {});
+    const good = runs.filter((r) => r.time_s > 0 && r.wire_length_m > 0 && r.drop_m > 0 && r.mass_kg > 0);
+    if (!good.length) return null;
+    let best = null;
+    const cdas = o.fitCda ? Array.from({ length: 41 }, (_, i) => i * 0.0005) : [o.cdaFixed];
+    for (let mu = 0; mu <= 0.2; mu += 0.001) {
+      for (const cda of cdas) {
+        let sse = 0;
+        for (const r of good) {
+          const tp = scaleRunTime(r, mu, cda);
+          sse += (tp - r.time_s) ** 2;
+        }
+        if (!best || sse < best.sse) best = { mu, cda, sse };
+      }
+    }
+    best.rmse = Math.sqrt(best.sse / good.length);
+    best.points = good.map((r) => ({ ...r, predicted: scaleRunTime(r, best.mu, best.cda) }));
+    return best;
+  }
+
   return {
     G, PROPELLANTS, PADS, VEHICLES, DANGER_LEVELS, K_FACTORS, DEFAULTS, MC_SPEC, SENS_PARAMS,
     hazard, overpressurePsi, kForPsi,
@@ -1144,5 +1184,6 @@
     stopLength, bunkerDistance, maxSpan, bunkerWindow,
     resolve, prepare, arrivals, evacuate, minHeadway, minBlock,
     rng, monteCarlo, tradeStudy, sensitivity,
+    scaleRunTime, fitScaleModel,
   };
 });

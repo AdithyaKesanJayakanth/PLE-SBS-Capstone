@@ -87,6 +87,13 @@ test('Monte Carlo is reproducible for a fixed seed', () => {
   assert.equal(a.p95, b.p95);
 });
 
+test('scale-model fit recovers a known friction coefficient', () => {
+  const runs = [2, 3, 4].map((m) => ({ wire_length_m: 6, drop_m: 0.8, mass_kg: m }));
+  for (const r of runs) r.time_s = S.scaleRunTime(r, 0.04, 0.003);
+  const fit = S.fitScaleModel(runs, { fitCda: false, cdaFixed: 0.003 });
+  close(fit.mu, 0.04, 0.0015, 'mu');
+});
+
 test('drag-chain bed: simple-harmonic stop, distance v/w and peak v*w', () => {
   const cfg = S.resolve({ arrester: 'chain', terminal: 'dock', chainKc: 40, chainMu: 0.6, bedLength: 100 });
   const m = 600, v = 20, w = Math.sqrt((0.6 * S.G * 40) / m);
