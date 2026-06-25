@@ -19,6 +19,8 @@ A student engineering study of a gravity-driven slidewire escape system for crew
 - **Paper** (≤ 7 pages): `paper/PLE-SBS.pdf`, editable copy `paper/PLE-SBS.docx`, source `paper/paper.md`
 - **Simulator**: `web/index.html`. Pick any rocket and pad, choose a single dock or a switch yard, a catch net or drag-chain bed, fail a magnetic brake, and watch the evacuation. A Materials & BOM tab lists what the chosen design is made of.
 - **Physics**: `sim/core.js`, one dependency-free file shared by the website and the paper's figures
+- **Scale model** (1:50, print-only, the wire is the only purchase): `scale_down/` has the 22 STL files, sketches, renders, BOM, build log and test results, including the one-wire switch yard with three self-indexing bays
+- **Poster** (A0 landscape): `PLESBS_Poster.pdf`, source `poster/PLESBS_Poster.tex`. Rebuild with `.venv/bin/python poster/make_poster_figs.py && (cd poster && tectonic PLESBS_Poster.tex) && cp poster/PLESBS_Poster.pdf .`
 
 Author: Adithya Kesan Jayakanth, Padma Seshadri Bala Bhavan, K.K. Nagar, Chennai. Mentor and guide: Mrs. Abitha Peter, Class 12 physics teacher.
 
@@ -64,6 +66,8 @@ sim/core.js                  physics: hazard, cable, pod dynamics, evacuation, M
 sim/export.js                runs every study in the paper -> data/results.json
 figures/make_figures.py      paper figures from data/results.json
 paper/                       paper.md (source), template.html + paper.css (layout), build.sh
+poster/                      PLESBS_Poster.tex (A0 poster), make_poster_figs.py -> poster/img/
+scale_down/                  print-only model: make_parts.py -> stl/, make_drawings.py -> sketch_*.png, BOM.md, README.md
 web/                         simulator UI (index.html, app.js, style.css)
 data/scale_model.csv         scale-model runs (template; add measurements)
 docs/scale-model-protocol.md how to test the 1:50 tabletop rig
@@ -75,8 +79,13 @@ site/build.sh                packages the simulator as a static site (published 
 private/                     author notes (sources, checklist); git-ignored, never published
 ```
 
+## AI assistance
+
+I used an AI assistant as a programming assistant, tutor and reviewer under the policy in [docs/ai_usage_policy.md](docs/ai_usage_policy.md): drafting and debugging the simulator and its tests, the part generators and the figure scripts, explaining the physics and numerical behaviour when I asked, and reviewing the writing. The requirements, the danger levels, the design decisions and their failures, the sizing rule, the switch-yard add-on and the conclusions are mine, and every number in the paper is produced by the code in this repository and checked against a closed-form case, a reference value or a hand calculation. [docs/ai_use_log.md](docs/ai_use_log.md) lists the assistance actually used and how each output was verified.
+
 ## Honesty notes
 
 - All results are model predictions from public data and stated assumptions. This is not a certified safety analysis.
 - The reference launcher and pad are generic; their dimensions are estimates.
 - Unconfirmed facts are marked `[VERIFY]` in the paper and listed in `docs/author-checklist.md`.
+- The scale-model pictures in the paper and poster are renders of the part files; photographs and timed runs go in `scale_down/photos/` and `scale_down/results.csv`.

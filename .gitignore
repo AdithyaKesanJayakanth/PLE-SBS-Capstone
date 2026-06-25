@@ -5,3 +5,5 @@ paper/paper.html
 site/dist/
 private/
 site/deploy/
+video/
+.gstack/
