@@ -22,7 +22,7 @@ A student engineering study of a gravity-driven slidewire escape system for crew
 - **Scale model** (1:50, print-only, the wire is the only purchase): `scale_down/` has the 22 STL files, sketches, renders, BOM, build log and test results, including the one-wire switch yard with three self-indexing bays
 - **Poster** (A0 landscape): `PLESBS_Poster.pdf`, source `poster/PLESBS_Poster.tex`. Rebuild with `.venv/bin/python poster/make_poster_figs.py && (cd poster && tectonic PLESBS_Poster.tex) && cp poster/PLESBS_Poster.pdf .`
 
-Author: Adithya Kesan Jayakanth, Padma Seshadri Bala Bhavan, K.K. Nagar, Chennai. Mentor and guide: Mrs. Abitha Peter, Class 12 physics teacher.
+Author: Adithya Kesan Jayakanth, Padma Seshadri Bala Bhavan, K.K. Nagar, Chennai. Mentor and guide: Mrs. Abhitha Peter, Class 12 physics teacher.
 
 ## Run the simulator
 
