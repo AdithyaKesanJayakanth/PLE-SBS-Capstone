@@ -457,9 +457,30 @@ def marker_flag():
     return b
 
 
+# ---- 0. fit coupon: print this first and read the clearance off it -----------------
+COUPON_CLR = (0.15, 0.20, 0.25, 0.30, 0.35, 0.40)
+
+
+def fit_coupon():
+    """One 6 mm post and one 4 mm pin (the cam post, the tongue pivot, the axle), beside a row
+    of six rings bored at each clearance, numbered. Push the post through each ring: the first
+    ring that turns freely with no wobble is your CLR; the first ring a 4 mm pin passes without
+    force is your axle clearance. Set CLR (and AXLE_CLR) at the top of this file, re-run."""
+    base = box(118, 36, 3).translate([0, 0, -3])
+    c = base + cyl(12.0, 6.0).translate([12, 10, 0]) + cyl(12.0, 4.0).translate([12, 26, 0])
+    for i, k in enumerate(COUPON_CLR):
+        x = 34 + i * 15
+        c += cyl(6.0, 12.0).translate([x, 10, 0]) - cyl(8, 6.0 + 2 * k).translate([x, 10, -1])
+        c += cyl(6.0, 9.0).translate([x, 26, 0]) - cyl(8, 4.0 + 2 * k).translate([x, 26, -1])
+        for n in range(i + 1):   # i+1 notches on the rim: ring 1 = 0.15 ... ring 6 = 0.40
+            c -= box(1.0, 2.0, 2.0).translate([x - 0.5 + (n - i / 2) * 1.8, 15.0, 4.5])
+    return c
+
+
 # ---- build everything ---------------------------------------------------------------
 def main():
     print("part                          qty  mat    mass  bounding box (mm)")
+    save(fit_coupon(), "fit_coupon_x1", 1, "PETG", "print first: post, pin and six bored rings at 0.15 to 0.40 mm; read your clearance off it")
     save(wheel(), "wheel_x6", 6, "PLA", "V-groove wheel; rides on the wire and on the rail head")
     save(axle_pin(), "axle_pin_x6", 6, "PETG", "4 mm pin, head one end, split snap the other")
     save(trolley_plate(), "trolley_plate_x6", 6, "PLA", "two identical plates per trolley; hooks under the wire")

@@ -50,7 +50,7 @@ Files are in `stl/`, written by `make_parts.py`; `parts.csv` is the same table f
 | gate_pin_x3.stl | 3 | PETG | 1 | 6 × 6 × 26 | lever pivot pin |
 | block_marker_flag_x1.stl | 1 | PLA | 4 | 20 × 46 × 40 | optional block marker the pod knocks |
 
-Print the six plate-level pieces first (handover, turnout, three leads) and test-fit a trolley on the rail before printing the rest.
+Print `fit_coupon_x1.stl` before anything else (section 6), then the six plate-level pieces (handover, turnout, three leads), and test-fit a trolley on the rail before printing the rest.
 
 ## 4. Print settings (Bambu Studio, P1S, 0.4 mm nozzle)
 
@@ -72,3 +72,16 @@ PETG where a part must flex many times or carry the wire's pull (pins, indexer, 
 - Wire: 1:50 in length and drop. A 5 m span with a 1 m drop stands for a 250 m wire from a 50 m crew access level. Use whatever the room allows; the paper's rule (span ≈ 100 m + 4 × height) scales to span ≈ 2 m + 4 × drop.
 - Pods: Froude scaling, as in the paper. A 3 s model run stands for about 21 s full size (√50).
 - Switch yard: the mechanism is modelled (one shared wire, self-indexing points, a bay per pod, passive brake, chain bed, backup stop, block marker). The bay lengths are compressed and the brake is friction, not eddy current, so the yard shows the logic, not the numbers.
+
+## 6. Making the mechanism work first time
+
+Every moving fit in the model (the tongue on its pivot post, the indexer on the cam post, the axle pins, the dovetails) is cut with one clearance, `CLR = 0.3` in `make_parts.py`. Whether that is right depends on the printer, the filament and the nozzle, so measure it instead of guessing.
+
+1. **Print the coupon.** `fit_coupon_x1.stl` (PETG, 10 g, 20 minutes) has a 6 mm post, a 4 mm pin and six rings bored at 0.15, 0.20, 0.25, 0.30, 0.35 and 0.40 mm, with one to six notches on the rim so they can be told apart. Push the post through each ring. The first ring that turns freely by finger with no wobble is your `CLR`. Do the same with the 4 mm pin for the axles.
+2. **Set it and re-run** `make_parts.py`. Everything is regenerated with your number; the rest of the parts are printed only after this.
+3. **Kill elephant's foot.** The pins, posts and ring bores all start on the bed, and a squashed first layer is what makes a 0.3 mm fit bind. In Bambu Studio set *Elephant foot compensation* to 0.15 mm and *First layer height* to 0.2 mm, and level the bed before the coupon.
+4. **Calibrate the two filaments.** Run the P1S flow-rate and pressure-advance calibration for the PLA and the PETG you will use, once. Over-extrusion by 3 % closes a 0.3 mm gap.
+5. **The cam, the tongue and the detent are the parts that must be right.** Print the indexer (PETG) and the tongue (PLA) at 0.12 mm layers with 5 walls; the cam rim and the follower boss are then smooth and the 2 mm blade is solid. Print the detent finger's plate (the turnout base) with the finger's thin wall parallel to the bed's X axis so it bends along the layers, not across them.
+6. **Fit dry, then lubricate.** Before assembly, run a fingernail round the cam rim and the ring bores to knock off any seam bump, and chamfer the post tips with a blade so the tongue and indexer drop on square. Then a dry PTFE spray or a pencil's graphite on the cam rim, the pivot post and the detent ring. Never oil: it softens PLA and collects dust.
+7. **Check in this order.** Spin the indexer on its post by hand: it should turn freely and click into four stops. Push the tongue through its throw with the indexer removed: it must swing past all three exit rails without catching, and the leaf spring must return it. Then with the indexer on, turn it by hand through a full revolution and watch the tongue step 1, 2, 3, 2. Only then run a pod. If the tongue hesitates at one position, the fault is in the cam profile's 10-degree ramps: sand the ramp, do not shim the follower.
+8. **Springs tire.** The leaf spring, the detent finger, the brake teeth and the bumpers are PLA or PETG cantilevers. PETG lasts; PLA creeps if left bent. Store the model with the tongue centred and the pods out of the bays.
