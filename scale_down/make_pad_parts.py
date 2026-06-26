@@ -76,7 +76,7 @@ def capsule():
     nose = Manifold.cylinder(65.0, 20.3, 3.0, P.SEG, False).translate([0, 0, 95.0])   # overlaps the frustum by 1 mm
     c = skirt + frustum + nose
     c -= cyl(SPIG_H + 1, CORE_D - 2 * WALL + 0.1).translate([0, 0, -1])      # socket for the spigot below, inside the skirt
-    c -= Manifold.cylinder(76.0, CORE_D / 2 - 2.6, 14.0, P.SEG, False).translate([0, 0, 14.0])   # hollow, saves filament
+    c -= Manifold.cylinder(82.0, CORE_D / 2 - 2.6, 14.0, P.SEG, False).translate([0, 0, 8.0])    # hollow, open into the socket below
     return c
 
 
