@@ -278,7 +278,7 @@ def indexer():
         ring -= cyl(8, 3.2).translate([12.0 * math.cos(a), 12.0 * math.sin(a), 53.0])
     hub = cyl(14.0, 30.0).translate([0, 0, 60.0])
     for k in range(4):
-        hub -= rot(box(20, 8.6, 8.6).translate([8, -4.3, -4.3]), "z", 90 * k).translate([0, 0, 67.0])
+        hub -= rot(box(20, 8.0 + 2 * CLR, 8.0 + 2 * CLR).translate([8, -4.0 - CLR, -4.0 - CLR]), "z", 90 * k).translate([0, 0, 67.0])   # 8 mm arm, CLR per side
     part = cam + shaft + ring + hub
     part -= cyl(30, 6.0 + 2 * CLR).translate([0, 0, -1])
     return part
@@ -429,8 +429,8 @@ def wire_clamp_body(L=24.0):
 def start_gate():
     b = wire_clamp_body(30.0)
     # latch lever pivoting on a pin in two lugs below the wire; its tip holds the front axle head
-    b += box(8, 20, 6).translate([-4, -10, -14]) - rot(cyl(22, 3.2), "x", -90).translate([0, -11, -11])
-    b -= rot(cyl(22, 3.2), "x", -90).translate([0, -11, -11])
+    b += box(8, 20, 6).translate([-4, -10, -14]) - rot(cyl(22, 3.0 + 2 * CLR), "x", -90).translate([0, -11, -11])
+    b -= rot(cyl(22, 3.0 + 2 * CLR), "x", -90).translate([0, -11, -11])   # 3 mm gate pin, CLR per side
     return b
 
 
@@ -440,7 +440,7 @@ def gate_key():
 
 def gate_lever():
     lv = box(26, 6, 5).translate([-6, -3, -2.5])
-    lv -= rot(cyl(8, 3.2), "x", -90).translate([0, -4, 0])
+    lv -= rot(cyl(8, 3.0 + 2 * CLR), "x", -90).translate([0, -4, 0])
     lv += box(5, 6, 14).translate([15, -3, -2.5])     # the finger that holds the trolley
     return lv
 

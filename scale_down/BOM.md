@@ -72,7 +72,38 @@ Files are in `stl/`, written by `make_parts.py`; `parts.csv` is the same table f
 
 Print `fit_coupon_x1.stl` before anything else (section 6), then the six plate-level pieces (handover, turnout, three leads), and test-fit a trolley on the rail before printing the rest.
 
-## 4. Print settings (Bambu Studio, P1S, 0.4 mm nozzle)
+## 4. Fits and tolerances
+
+Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.py`, `SPIG_CLR` and `P.CLR` in `make_pad_parts.py`): a 4 mm pin goes in a 4.4 mm hole, a 6 mm post in a 6.4 mm bore, an 8 mm arm in an 8.4 mm socket.
+
+| Fit | Part | Nominal | Hole or gap | Per side |
+|---|---|---|---|---:|
+| Wheel on axle pin | wheel, axle_pin | Ø4.0 | Ø4.4 | 0.2 |
+| Axle pin in trolley plate | trolley_plate | Ø4.0 | Ø4.4 | 0.2 |
+| Plate bridge pin | trolley_plate | Ø3.0 | Ø3.4 | 0.2 |
+| Pannier dovetail on plate | pannier, trolley_plate | dovetail | +0.2 all round | 0.2 |
+| Rail-strip dovetails | all rail segments, turnout, bumper, platform tiles | dovetail | +0.2 all round | 0.2 |
+| Tongue on pivot post | tongue, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
+| Indexer on cam post | indexer, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
+| Star arm in hub socket | star_arm, indexer | 8.0 × 8.0 | 8.4 × 8.4 | 0.2 |
+| Gate lever pin | start_gate, gate_lever, gate_pin | Ø3.0 | Ø3.4 | 0.2 |
+| Core and booster spigots | core_segment, booster_lower, capsule, booster_upper | tube bore | spigot 0.4 smaller | 0.2 |
+| Tower stacking pegs | tower_section, tower_crown | Ø5.6 peg | Ø6.0 hole | 0.2 |
+| Clip on tower post | arm_bracket, wire_saddle | 8.0 × 8.0 | 8.4 × 8.4, slit to spring | 0.2 |
+| Access arm pivot | access_arm, arm_bracket, arm_pin | Ø6.0 | Ø6.4 | 0.2 |
+
+Deliberate exceptions, which are not running fits:
+
+| Feature | Gap | Why |
+|---|---|---|
+| Print-in-place chain links | 0.4 mm | Parts printed already linked need a wider gap than parts assembled after printing, or they fuse |
+| Wire bore in the gate and flag clamps | 1.8 mm for a 1.5 mm wire (0.15 per side) | The key pinches the wire; a looser bore lets the gate slide |
+| Wire groove in the handover ramp | 1.9 mm (0.2 per side) | The wire lies in it, it does not slide in it |
+| Wedge pockets | tapered 2.2 to 6 mm | The wedge closes the gap onto the wire |
+
+Print `fit_coupon_x1` first. Its six rings are bored at 0.15, 0.20, 0.25, 0.30, 0.35 and 0.40 mm per side; the first one that turns freely on the post without wobble is your printer's clearance. If it is not 0.20, change `CLR`, regenerate and re-slice.
+
+## 5. Print settings (Bambu Studio, P1S, 0.4 mm nozzle)
 
 | Setting | Value |
 |---|---|
@@ -87,13 +118,13 @@ Orientation: rails, plate, handover and bumper with the strip flat on the bed; w
 
 PETG where a part must flex many times or carry the wire's pull (pins, indexer, wedges, hook, bumper). If you only have PLA, print those in PLA and expect the bumper and the detent finger to tire after a few hundred cycles; the cleats will be fine.
 
-## 5. Scale and what is and is not to scale
+## 6. Scale and what is and is not to scale
 
 - Wire: 1:50 in length and drop. A 5 m span with a 1 m drop stands for a 250 m wire from a 50 m crew access level. Use whatever the room allows; the paper's rule (span ≈ 100 m + 4 × height) scales to span ≈ 2 m + 4 × drop.
 - Pods: Froude scaling, as in the paper. A 3 s model run stands for about 21 s full size (√50).
 - Switch yard: the mechanism is modelled (one shared wire, self-indexing points, a bay per pod, passive brake, chain bed, backup stop, block marker). The bay lengths are compressed and the brake is friction, not eddy current, so the yard shows the logic, not the numbers.
 
-## 6. Making the mechanism work first time
+## 7. Making the mechanism work first time
 
 Every moving fit in the model (the tongue on its pivot post, the indexer on the cam post, the axle pins, the dovetails) is cut with one clearance, `CLR = 0.3` in `make_parts.py`. Whether that is right depends on the printer, the filament and the nozzle, so measure it instead of guessing.
 

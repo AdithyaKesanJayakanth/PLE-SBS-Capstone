@@ -151,7 +151,7 @@ def crown():
 
 def arm_bracket():
     """Clips onto a corner post (8 x 8) and carries the arm pivot pin."""
-    b = box(16, 20, 30).translate([-8, -10, 0]) - box(8.6, 8.6, 32).translate([-4.3, -4.3, -1])
+    b = box(16, 20, 30).translate([-8, -10, 0]) - box(8.0 + 2 * P.CLR, 8.0 + 2 * P.CLR, 32).translate([-4.0 - P.CLR, -4.0 - P.CLR, -1])
     b -= box(2.0, 8.0, 32).translate([-1, 4.3, -1])                      # slit through one wall so the clip springs over the post
     b += box(12, 9, 30).translate([-6, -18, 0])                         # lug, overlapping the body by 1 mm
     b -= P.rot(cyl(40, 6.4), "x", 90).translate([0, -8, 15])            # Ø6 pin, 0.2 per side
@@ -177,7 +177,7 @@ def arm_pin():
 
 def wire_saddle():
     """Clips onto a corner post at the access level and shows the wire leaving the tower."""
-    s = box(16, 20, 30).translate([-8, -10, 0]) - box(8.6, 8.6, 32).translate([-4.3, -4.3, -1])
+    s = box(16, 20, 30).translate([-8, -10, 0]) - box(8.0 + 2 * P.CLR, 8.0 + 2 * P.CLR, 32).translate([-4.0 - P.CLR, -4.0 - P.CLR, -1])
     s -= box(2.0, 8.0, 32).translate([-1, 4.3, -1])
     s += box(24, 9, 22).translate([-12, 9, 8])
     s -= P.rot(cyl(30, 3.0), "y", 90).translate([-15, 14, 26])         # groove the wire lies in

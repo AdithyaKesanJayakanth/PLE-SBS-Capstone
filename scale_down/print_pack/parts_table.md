@@ -24,9 +24,9 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 | P1-16 | chain_bed_190_x3 | 3 | 202.0 × 41.0 × 53.5 | PLA Basic | Light Grey | 45.1 | 135.3 | 2h 40m |
 | P1-17 | chain_11_links_x3 | 3 | 156.0 × 10.0 × 10.0 | PLA Basic | Light Grey | 5.7 | 17.1 | 0h 59m |
 | P1-18 | bumper_x3 | 3 | 60.0 × 40.0 × 56.0 | PETG HF | Orange | 30.5 | 91.4 | 4h 28m |
-| P1-19 | start_gate_x3 | 3 | 30.0 × 20.0 × 22.0 | PLA Basic | Light Grey | 6.1 | 18.2 | 0h 36m |
+| P1-19 | start_gate_x3 | 3 | 30.0 × 20.0 × 22.0 | PLA Basic | Light Grey | 6.0 | 18.1 | 0h 36m |
 | P1-20 | gate_key_x4 | 4 | 30.0 × 3.1 × 6.6 | PETG HF | Orange | 0.6 | 2.4 | 0h 17m |
-| P1-21 | gate_lever_x3 | 3 | 26.0 × 6.0 × 14.0 | PLA Basic | Light Grey | 1.2 | 3.5 | 0h 15m |
+| P1-21 | gate_lever_x3 | 3 | 26.0 × 6.0 × 14.0 | PLA Basic | Light Grey | 1.1 | 3.4 | 0h 15m |
 | P1-22 | gate_pin_x3 | 3 | 6.0 × 6.0 × 26.0 | PETG HF | Orange | 0.3 | 0.9 | 0h 20m |
 | P1-23 | block_marker_flag_x1 | 1 | 20.0 × 46.0 × 40.0 | PLA Basic | Light Grey | 6.5 | 6.5 | 0h 23m |
 | | **Phase 1 total** | **65** | | | | | **1,174** | **34h 25m** |
@@ -51,10 +51,10 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 | P2-05 | booster_strut_x4 | 4 | 10.0 × 10.0 × 13.2 | PLA Basic | Light Grey | 0.3 | 1.2 | 0h 16m |
 | P2-06 to P2-09 | tower_section_x4 | 4 | 160.0 × 160.0 × 250.0 | PLA Basic | Dark Grey | 166.1 | 664.2 | 25h 26m |
 | P2-10 | tower_crown_x1 | 1 | 240.0 × 160.0 × 68.0 | PLA Basic | Dark Grey | 118.3 | 118.3 | 2h 33m |
-| P2-11 | arm_bracket_x1 | 1 | 16.0 × 28.0 × 30.0 | PLA Basic | Dark Grey | 10.0 | 10.0 | 0h 25m |
+| P2-11 | arm_bracket_x1 | 1 | 16.0 × 28.0 × 30.0 | PLA Basic | Dark Grey | 10.1 | 10.1 | 0h 25m |
 | P2-12 | access_arm_x1 | 1 | 183.9 × 30.0 × 26.0 | PLA Basic | Orange | 44.9 | 44.9 | 1h 03m |
 | P2-13 | arm_pin_x1 | 1 | 10.0 × 10.0 × 46.0 | PETG HF | Orange | 1.8 | 1.8 | 0h 32m |
-| P2-14 | wire_saddle_x1 | 1 | 24.0 × 28.0 × 30.0 | PLA Basic | Dark Grey | 11.0 | 11.0 | 0h 25m |
+| P2-14 | wire_saddle_x1 | 1 | 24.0 × 28.0 × 30.0 | PLA Basic | Dark Grey | 11.1 | 11.1 | 0h 25m |
 | P2-15 | launch_mount_x1 | 1 | 100.0 × 230.0 × 30.0 | PLA Basic | Light Grey | 160.4 | 160.4 | 3h 28m |
 | P2-16 to P2-19 | platform_tile_x4 | 4 | 236.0 × 236.0 × 10.0 | PLA Basic | Light Grey | 169.4 | 677.6 | 11h 49m |
 | | **Phase 2 total** | **27** | | | | | **2,511** | **64h 48m** |
