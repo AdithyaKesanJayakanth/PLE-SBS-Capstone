@@ -6,9 +6,29 @@ Everything except the wire is printed on a Bambu Lab P1S Combo (0.4 mm nozzle). 
 
 | # | Item | Specification | Qty | Approx. ₹ |
 |---:|---|---|---:|---:|
-| 1 | Stainless steel wire rope | 1.5 mm, 7×7 construction (any hardware store; "1.5 mm SS wire rope"). 4 to 6 m span + 1 m at the window + 2 m to the floor anchor + spare | 10 m | 350 |
+| 1 | Stainless steel wire rope | 1.5 mm, 7×7, AISI 316, bare (uncoated); full specification below. Ask for "1.5 mm SS 316 wire rope 7×7, uncoated" | 10 m | 350 |
 
 That is the whole shopping list.
+
+### Wire specification
+
+| Property | Specification | Why |
+|---|---|---|
+| Type | Stainless steel wire rope, bare (uncoated) | The printed parts are sized to the steel itself; PVC or nylon coating adds 0.3 to 0.5 mm and slips in the wedges |
+| Construction | 7×7 (seven strands of seven wires) | Smooth enough for the printed wheels, flexible enough to wrap three turns round the Ø12 mm capstan post. 7×19 also works; 1×19 is too stiff for the post |
+| Diameter | 1.5 mm nominal, 1.6 mm maximum | Gate and flag clamps have a 1.8 mm bore, the handover groove 1.9 mm, the wedge pockets taper from 2.2 mm. A 2 mm wire will not fit |
+| Grade | AISI 316 (A4, marine) or AISI 304 (A2) | Either is fine indoors; 316 is the common stock item |
+| Lay | Right-hand regular lay | Standard; no preference beyond what the shop has |
+| Minimum breaking load | about 1.4 kN (140 kgf); check the seller's figure | The model runs at 50 to 80 N, a safety factor of about 20 |
+| Weight | about 9 g/m | Self-weight sag over 6 m is under 2 mm at working tension; the pods set the sag |
+| Length | 10 m on a reel or coil | 6 m span, 1 m round the window hook, 2 m to the floor tie-off, 1 m spare |
+| Condition | No kinks, ends taped by the shop | A kink stops the trolley; never buy a bent offcut |
+
+**Tension.** There is no turnbuckle; tension is set by hand at the floor tie-off and checked by sag. With one ballasted pod (about 0.4 kg) at mid-span, pull until the wire hangs 100 to 120 mm below the straight line between the two ends. That is about 50 to 80 N. Tighter gives a flatter, faster ride; slacker makes the last metre too flat and the pod stalls, which is the paper's Figure 4 in miniature.
+
+**Cutting and ends.** Wrap tape round the cut point and cut through the tape with a cable cutter or a sharp side cutter at the very tip; wire snips crush the strands. Leave the tape on both ends so they cannot unlay. No ferrules or clips are needed: each end is held by three turns round a capstan post plus a wedge.
+
+**Full-size, for comparison.** The paper's design uses 36 mm galvanised steel wire rope, 6×36 IWRC, extra improved plow steel (ASTM A1023), minimum breaking load 907 kN, at 150 kN tension. Scaled by 1:50 that would be 0.72 mm; the model's 1.5 mm is twice as thick because the trolleys need something to grip, and diameter does not affect the ride.
 
 ## 2. Already at home
 
