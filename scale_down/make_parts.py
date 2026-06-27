@@ -35,7 +35,7 @@ STRIP_T = 4.0
 STRIP_W = 40.0
 LEAD_W = 22.0               # narrow strip where the three lanes are still close together
 DOVE = (12.0, 10.0, 14.0)   # dovetail: length, narrow width, wide width
-CLR = 0.3                   # sliding clearance (tune for your printer)
+CLR = 0.2                   # running clearance per side (print the fit test; 0.15 to 0.3 is the usual range)
 # pod
 WHEEL_OD, WHEEL_W, GROOVE_R = 24.0, 8.0, 9.0
 AXLE_D = 4.0
@@ -139,7 +139,7 @@ def rail_segment(L, w=STRIP_W):
 def wheel():
     r_out, w, gr = WHEEL_OD / 2, WHEEL_W, GROOVE_R
     flat = 1.2                       # flat at the groove bottom (wire 1.5, rail head 3.5 sits higher in the V)
-    bore = AXLE_D / 2 + 0.25
+    bore = AXLE_D / 2 + CLR
     prof = [(bore, 0), (r_out, 0), (r_out, 1.0), (gr, w / 2 - flat / 2), (gr, w / 2 + flat / 2), (r_out, w - 1.0), (r_out, w), (bore, w)]
     return CrossSection([prof]).revolve(SEG)
 
@@ -168,7 +168,7 @@ def trolley_plate():
         p += box(7.0, lip, HOOK_TOP).translate([x - 3.5, -lip, 0])
     # axle holes
     for x in (-AXLE_PITCH / 2, AXLE_PITCH / 2):
-        p -= rot(cyl(PLATE_T + 2, AXLE_D + 0.3), "x", -90).translate([x, -1, AXLE_Z])
+        p -= rot(cyl(PLATE_T + 2, AXLE_D + 2 * CLR), "x", -90).translate([x, -1, AXLE_Z])
     # bridge: a peg on one end and a hole on the other, so two identical plates mate
     bridge_z = H - 4
     p += box(6, 4.5 - CLR, 6).translate([18, -4.5 + CLR, bridge_z - 3])            # peg reaches the mid-plane
@@ -386,7 +386,7 @@ def chain_link():
 def chain(n=11):
     """Print-in-place chain: links alternate flat and upright, 0.45 mm apart."""
     L, Wd, d = LINK
-    pitch = L - 2 * d - 0.45          # adjacent links interlock with 0.45 mm to spare
+    pitch = L - 2 * d - 0.4           # print-in-place links need 0.4 mm, more than the 0.2 running fits
     c = None
     for k in range(n):
         lk = chain_link()
@@ -465,7 +465,7 @@ def fit_coupon():
     """One 6 mm post and one 4 mm pin (the cam post, the tongue pivot, the axle), beside a row
     of six rings bored at each clearance, numbered. Push the post through each ring: the first
     ring that turns freely with no wobble is your CLR; the first ring a 4 mm pin passes without
-    force is your axle clearance. Set CLR (and AXLE_CLR) at the top of this file, re-run."""
+    force is your axle clearance. Set CLR at the top of this file (0.2 by default) and re-run."""
     base = box(118, 36, 3).translate([0, 0, -3])
     c = base + cyl(12.0, 6.0).translate([12, 10, 0]) + cyl(12.0, 4.0).translate([12, 26, 0])
     for i, k in enumerate(COUPON_CLR):

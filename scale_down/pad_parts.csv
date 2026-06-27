@@ -1,7 +1,7 @@
 file,qty,material,colour,grams_each,x_mm,y_mm,z_mm,note
-core_segment_x4.stl,4,PLA,Jade White,60,80.0,80.0,250.0,"Ø80 x 240 tube, spigot on top, strut holes"
+core_segment_x4.stl,4,PLA,Jade White,50,80.0,80.0,210.0,"Ø80 x 200 tube, spigot on top, strut holes"
 capsule_x1.stl,1,PLA,Jade White,50,80.0,80.0,160.0,"frustum and nose, socket for the core spigot"
-booster_lower_x2.stl,2,PLA,Light Grey,50,64.0,64.0,250.0,"Ø64 x 240 tube, spigot on top"
+booster_lower_x2.stl,2,PLA,Light Grey,50,64.0,64.0,210.0,"Ø64 x 240 tube, spigot on top"
 booster_upper_x2.stl,2,PLA,Light Grey,55,64.0,64.0,240.0,Ø64 x 200 tube with the nose
 booster_strut_x4.stl,4,PLA,Light Grey,1,10.0,10.0,13.2,double peg: core hole to booster hole
 tower_section_x4.stl,4,PLA,Dark Grey,110,160.0,160.0,250.0,"160 x 160 x 250 lattice, pegs up, holes down"
@@ -11,4 +11,4 @@ access_arm_x1.stl,1,PLA,Orange,45,183.9,30.0,26.0,swings on the bracket pin to t
 arm_pin_x1.stl,1,PETG,Orange,2,10.0,10.0,46.0,Ø6 pivot pin
 wire_saddle_x1.stl,1,PLA,Dark Grey,10,24.0,28.0,30.0,clips onto a post; the wire leaves the tower here
 launch_mount_x1.stl,1,PLA,Light Grey,80,100.0,230.0,30.0,three pockets hold the core and boosters
-platform_tile_x4.stl,4,PLA,Light Grey,150,248.0,248.0,10.0,"240 x 240 tile, ribs below, dovetails"
+platform_tile_x4.stl,4,PLA,Light Grey,150,236.0,236.0,10.0,"240 x 240 tile, ribs below, dovetails"

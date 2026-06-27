@@ -25,11 +25,11 @@ def mm(x_m): return x_m * 1000.0 / S
 
 CORE_D, BOOST_D = mm(4.0), mm(3.2)          # 80, 64
 WALL = 1.6                                   # two perimeters
-SEG_H = 240.0
-SPIG_H, SPIG_CLR = 10.0, 0.25
+SEG_H = 200.0                                # four core segments = 800 + 160 capsule = 960 mm, the 48 m launcher
+SPIG_H, SPIG_CLR = 10.0, 0.2                 # 0.2 mm per side on every running fit
 TOWER_W, TOWER_SEC = mm(8.0), 240.0          # 160 x 160, four sections of 240 + 10 mm pegs = 250 on the bed
 POST = 8.0
-PAD_TILE, PAD_T = 236.0, 2.0                 # 236 + 12 mm dovetail tab = 248 on the bed
+PAD_TILE, PAD_T = 224.0, 2.0                 # 224 + 12 mm tab = 236: clears the P1S front-left exclusion zone
 ACCESS_Z = mm(42.0)                          # 840
 OFFSET = mm(15.0)                            # 300: rocket axis to tower axis
 
@@ -75,7 +75,7 @@ def capsule():
     frustum = Manifold.cylinder(84.0, CORE_D / 2, 20.0, P.SEG, False).translate([0, 0, 12.0])
     nose = Manifold.cylinder(65.0, 20.3, 3.0, P.SEG, False).translate([0, 0, 95.0])   # overlaps the frustum by 1 mm
     c = skirt + frustum + nose
-    c -= cyl(SPIG_H + 1, CORE_D - 2 * WALL + 0.1).translate([0, 0, -1])      # socket for the spigot below, inside the skirt
+    c -= cyl(SPIG_H + 1, CORE_D - 2 * WALL).translate([0, 0, -1])            # socket = the tube bore; the spigot is 0.2 smaller per side
     c -= Manifold.cylinder(82.0, CORE_D / 2 - 2.6, 14.0, P.SEG, False).translate([0, 0, 8.0])    # hollow, open into the socket below
     return c
 
@@ -92,7 +92,7 @@ def booster_upper():
     cone = Manifold.cylinder(40.0, BOOST_D / 2, 4.0, P.SEG, False).translate([0, 0, 200.0])
     cone -= Manifold.cylinder(30.0, BOOST_D / 2 - WALL, 2.0, P.SEG, False).translate([0, 0, 200.0])
     b = body + cone
-    b -= cyl(SPIG_H + 1, BOOST_D - 2 * WALL + 0.1).translate([0, 0, -1])
+    b -= cyl(SPIG_H + 1, BOOST_D - 2 * WALL).translate([0, 0, -1])
     return b
 
 
@@ -133,7 +133,7 @@ def tower_section():
     for sx in (-1, 1):
         for sy in (-1, 1):
             t += cyl(10.0, 5.6).translate([sx * half, sy * half, h])
-            t -= cyl(11.0, 6.1).translate([sx * half, sy * half, -1])
+            t -= cyl(11.0, 6.0).translate([sx * half, sy * half, -1])      # 0.2 per side
     return t
 
 
@@ -143,7 +143,7 @@ def crown():
     half = w / 2 - POST / 2
     for sx in (-1, 1):
         for sy in (-1, 1):
-            c -= cyl(9, 6.1).translate([sx * half, sy * half, -1])
+            c -= cyl(9, 6.0).translate([sx * half, sy * half, -1])
     c += box(w, 10, 30).translate([-w / 2, -5, 8])                      # crane girder
     c += box(10, 10, 60).translate([w / 2 - 10, -5, 8]) + box(90, 8, 8).translate([w / 2 - 10, -4, 60])   # crane mast and jib
     return c
@@ -154,15 +154,15 @@ def arm_bracket():
     b = box(16, 20, 30).translate([-8, -10, 0]) - box(8.6, 8.6, 32).translate([-4.3, -4.3, -1])
     b -= box(2.0, 8.0, 32).translate([-1, 4.3, -1])                      # slit through one wall so the clip springs over the post
     b += box(12, 9, 30).translate([-6, -18, 0])                         # lug, overlapping the body by 1 mm
-    b -= P.rot(cyl(40, 6.3), "x", 90).translate([0, -8, 15])            # pin hole through lug and body
+    b -= P.rot(cyl(40, 6.4), "x", 90).translate([0, -8, 15])            # Ø6 pin, 0.2 per side
     return b
 
 
 def access_arm():
     L = OFFSET - TOWER_W / 2 - CORE_D / 2 - 2                           # 300 - 80 - 40 - 2 = 178
     a = box(L, 30, 12).translate([0, -15, 0])
-    a += cyl(12, 20).translate([0, 0, 0]) - cyl(14, 6.3).translate([0, 0, -1])   # pivot boss
-    a -= cyl(14, 6.3).translate([0, 0, -1])
+    a += cyl(12, 20).translate([0, 0, 0]) - cyl(14, 6.4).translate([0, 0, -1])   # pivot boss
+    a -= cyl(14, 6.4).translate([0, 0, -1])
     # curved yoke at the capsule end
     a -= cyl(14, CORE_D + 2).translate([L + CORE_D / 2 - 6, 0, -1])
     # handrails
@@ -216,7 +216,7 @@ def platform_tile():
 # ---- build, preview, render ---------------------------------------------------------
 def main():
     print("part                        qty  material colour       mass  bbox (mm)")
-    save(core_segment(), "core_segment_x4", 4, "PLA", "Jade White", 60, "Ø80 x 240 tube, spigot on top, strut holes")
+    save(core_segment(), "core_segment_x4", 4, "PLA", "Jade White", 50, "Ø80 x 200 tube, spigot on top, strut holes")
     save(capsule(), "capsule_x1", 1, "PLA", "Jade White", 50, "frustum and nose, socket for the core spigot")
     save(booster_lower(), "booster_lower_x2", 2, "PLA", "Light Grey", 50, "Ø64 x 240 tube, spigot on top")
     save(booster_upper(), "booster_upper_x2", 2, "PLA", "Light Grey", 55, "Ø64 x 200 tube with the nose")

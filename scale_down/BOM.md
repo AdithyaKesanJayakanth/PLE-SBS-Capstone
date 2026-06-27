@@ -23,7 +23,7 @@ That is the whole shopping list.
 
 ## 3. Printed parts
 
-Files are in `stl/`, written by `make_parts.py`; `parts.csv` is the same table for a spreadsheet. Masses are estimates for PLA at the settings below. Total about 675 g plus failed prints.
+Files are in `stl/`, written by `make_parts.py`; `parts.csv` is the same table for a spreadsheet. Masses in this table are estimates. The slicer's exact figures for the P1S, per file, are in `print_pack/README.md`: phase 1 comes to 1,174 g and about 35 hours, more than estimated because the comb teeth, the rails and the mechanism parts print nearly solid.
 
 | File | Qty | Material | g each | Size (mm) | What it is |
 |---|---:|---|---:|---|---|

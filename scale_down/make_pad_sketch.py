@@ -49,9 +49,9 @@ def main():
     ax.add_patch(Rectangle((-mm(CORE_D) / 2, 0), mm(CORE_D), core_h, fc=WHITE, ec=GRAPHITE, lw=0.7))
     ax.add_patch(Polygon([(-mm(CORE_D) / 2, core_h), (mm(CORE_D) / 2, core_h), (mm(CORE_D) / 4, core_h + mm(CAPSULE_H) * 0.6), (-mm(CORE_D) / 4, core_h + mm(CAPSULE_H) * 0.6)], fc=WHITE, ec=GRAPHITE, lw=0.7))
     ax.add_patch(Polygon([(-mm(CORE_D) / 4, core_h + mm(CAPSULE_H) * 0.6), (mm(CORE_D) / 4, core_h + mm(CAPSULE_H) * 0.6), (0, mm(ROCKET_H))], fc=WHITE, ec=GRAPHITE, lw=0.7))
-    # segment lines on the core (240 mm prints)
+    # segment lines on the core (200 mm prints)
     for k in range(1, 4):
-        ax.plot([-mm(CORE_D) / 2, mm(CORE_D) / 2], [240 * k, 240 * k], color=GRAPHITE, lw=0.5, ls=":")
+        ax.plot([-mm(CORE_D) / 2, mm(CORE_D) / 2], [200 * k, 200 * k], color=GRAPHITE, lw=0.5, ls=":")
     # tower
     tx = mm(OFFSET)
     ax.add_patch(Rectangle((tx - mm(TOWER_W) / 2, 0), mm(TOWER_W), mm(TOWER_H), fc="#dde3e9", ec=INK, lw=0.8))
@@ -74,7 +74,7 @@ def main():
     dim(ax, (-mm(CORE_D) / 2, mm(ROCKET_H) + 40), (mm(CORE_D) / 2, mm(ROCKET_H) + 40), f"core Ø{mm(CORE_D):.0f}", off=(0, 16))
     dim(ax, (mm(CORE_D) / 2, mm(BOOSTER_H) + 70), (mm(CORE_D) / 2 + mm(BOOSTER_D), mm(BOOSTER_H) + 70), f"booster Ø{mm(BOOSTER_D):.0f}, {mm(BOOSTER_H):.0f} tall", off=(0, 18))
     dim(ax, (tx - mm(TOWER_W) / 2, mm(TOWER_H) + 40), (tx + mm(TOWER_W) / 2, mm(TOWER_H) + 40), f"tower {mm(TOWER_W):.0f} × {mm(TOWER_W):.0f}", off=(0, 16))
-    ax.text(0, -190, "Elevation, model millimetres. Dotted lines: joints between 240 to 250 mm printed segments (P1S bed 256 mm).", ha="center", fontsize=7.5, color=GRAPHITE)
+    ax.text(0, -190, "Elevation, model millimetres. Dotted lines: joints between printed segments, 200 mm core, 240 mm tower (P1S bed 256 mm).", ha="center", fontsize=7.5, color=GRAPHITE)
     ax.set_xlim(-mm(PAD_W) / 2 - 160, tx + 320); ax.set_ylim(-220, mm(TOWER_H) + 90)
     ax.set_title("Phase 2: generic pad and reference launcher at 1:50", fontsize=9)
 

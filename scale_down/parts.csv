@@ -15,7 +15,7 @@ window_hook_x1.stl,1,PETG,31,56.0,24.0,74.0,"hooks a grill bar or handle; 3 turn
 lead_rail_230_x3.stl,3,PLA,24,242.0,22.0,53.5,"first bay segment, narrow strip, straight"
 brake_comb_190_x3.stl,3,PLA,30,202.2,40.0,53.5,rail with 12 flexible teeth that rub the right pannier's floor
 chain_bed_190_x3.stl,3,PLA,25,202.0,41.0,53.5,rail with a trough for the chain and the stirrup the hook catches
-chain_11_links_x3.stl,3,PLA,3,155.5,10.0,10.0,"print-in-place drag chain, 11 links of 20 x 10 mm"
+chain_11_links_x3.stl,3,PLA,3,156.0,10.0,10.0,"print-in-place drag chain, 11 links of 20 x 10 mm"
 bumper_x3.stl,3,PETG,16,60.0,40.0,56.0,"zig-zag printed spring, the model's backup net"
 start_gate_x3.stl,3,PLA,4,30.0,20.0,22.0,clamps on the wire; the lever holds a pod until flicked
 gate_key_x4.stl,4,PETG,0,30.0,3.1,6.6,tapered key that pinches the wire in a gate or flag
