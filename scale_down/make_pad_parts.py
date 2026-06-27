@@ -264,26 +264,28 @@ def preview():
 
 
 def render_pad():
-    """Assembled pad, rendered with the yard's renderer."""
+    """Assembled pad in its print colours, two views."""
     import make_renders as R
+    R.COL.update({"white": (0.93, 0.94, 0.95), "lgrey": (0.72, 0.75, 0.78), "dgrey": (0.30, 0.33, 0.37), "orange": (0.89, 0.34, 0.06)})
     def L(name): return trimesh.load(OUT / f"{name}.stl")
     pieces = []
     for i in range(2):
         for j in range(2):
-            pieces.append((R.place(L("platform_tile_x4"), -240 + i * 240, -240 + j * 240 - 60, 0), "plate"))
-    pieces.append((R.place(L("launch_mount_x1"), 0, 0, PAD_T), "plate"))
+            pieces.append((R.place(L("platform_tile_x4"), -PAD_TILE + i * PAD_TILE, -PAD_TILE + j * PAD_TILE - 60, 0), "lgrey"))
+    pieces.append((R.place(L("launch_mount_x1"), 0, 0, PAD_T), "lgrey"))
     for k in range(4):
-        pieces.append((R.place(L("core_segment_x4"), 0, 0, PAD_T + 12 + k * SEG_H), "rail"))
-    pieces.append((R.place(L("capsule_x1"), 0, 0, PAD_T + 12 + 4 * SEG_H), "rail"))
+        pieces.append((R.place(L("core_segment_x4"), 0, 0, PAD_T + 12 + k * SEG_H), "white"))
+    pieces.append((R.place(L("capsule_x1"), 0, 0, PAD_T + 12 + 4 * SEG_H), "white"))
     pitch = CORE_D / 2 + BOOST_D / 2 + 1.0
     for sgn in (-1, 1):
-        pieces.append((R.place(L("booster_lower_x2"), 0, sgn * pitch, PAD_T + 12), "plate"))
-        pieces.append((R.place(L("booster_upper_x2"), 0, sgn * pitch, PAD_T + 12 + SEG_H), "plate"))
+        pieces.append((R.place(L("booster_lower_x2"), 0, sgn * pitch, PAD_T + 12), "lgrey"))
+        pieces.append((R.place(L("booster_upper_x2"), 0, sgn * pitch, PAD_T + 12 + SEG_H), "lgrey"))
     for k in range(4):
-        pieces.append((R.place(L("tower_section_x4"), OFFSET, 0, PAD_T + k * TOWER_SEC), "pod"))
-    pieces.append((R.place(L("tower_crown_x1"), OFFSET, 0, PAD_T + 4 * TOWER_SEC), "pod"))
-    pieces.append((R.place(L("access_arm_x1"), OFFSET - TOWER_W / 2 + 4, 0, PAD_T + ACCESS_Z, yaw=180), "mech"))
+        pieces.append((R.place(L("tower_section_x4"), OFFSET, 0, PAD_T + k * TOWER_SEC), "dgrey"))
+    pieces.append((R.place(L("tower_crown_x1"), OFFSET, 0, PAD_T + 4 * TOWER_SEC), "dgrey"))
+    pieces.append((R.place(L("access_arm_x1"), OFFSET - TOWER_W / 2 + 4, 0, PAD_T + ACCESS_Z, yaw=180), "orange"))
     R.render(pieces, HERE / "render_pad.png", 18, -35, figsize=(9, 9))
+    R.render(pieces, HERE / "render_pad_side.png", 6, -90, figsize=(9, 9))
 
 
 if __name__ == "__main__":
