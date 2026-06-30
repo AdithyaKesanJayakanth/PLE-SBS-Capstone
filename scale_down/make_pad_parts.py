@@ -33,7 +33,21 @@ PAD_TILE, PAD_T = 224.0, 2.0                 # 224 + 12 mm tab = 236: clears the
 ACCESS_Z = mm(42.0)                          # 840
 OFFSET = mm(15.0)                            # 300: rocket axis to tower axis
 
-cyl, box, prism = P.cyl, P.box, P.prism
+# the version-1 helpers, kept here so the phase-2 geometry does not change with phase 1
+from manifold3d import Manifold  # noqa: E402
+cyl = P.cyl
+
+
+def box(x, y, z, center=False):
+    return Manifold.cube([x, y, z], center)
+
+
+def prism(pts, h):
+    return P.poly(pts).extrude(h)
+
+
+def rot(m, ax, deg):
+    return m.rotate([deg if ax == "x" else 0, deg if ax == "y" else 0, deg if ax == "z" else 0])
 PARTS = []
 
 
@@ -65,7 +79,7 @@ def core_segment():
     # strut peg holes at mid height, both sides (boosters sit at +-y)
     for sgn in (-1, 1):
         for z in (60.0, 180.0):
-            t -= P.rot(cyl(12, 4.0), "x", 90).translate([0, sgn * (CORE_D / 2 + 1), z])
+            t -= rot(cyl(12, 4.0), "x", 90).translate([0, sgn * (CORE_D / 2 + 1), z])
     return t
 
 
@@ -82,8 +96,8 @@ def capsule():
 
 def booster_lower():
     t = tube(BOOST_D, SEG_H) + spigot(BOOST_D).translate([0, 0, SEG_H])
-    t -= P.rot(cyl(12, 4.0), "x", -90).translate([0, -(BOOST_D / 2 + 1), 60.0])
-    t -= P.rot(cyl(12, 4.0), "x", -90).translate([0, -(BOOST_D / 2 + 1), 180.0])
+    t -= rot(cyl(12, 4.0), "x", -90).translate([0, -(BOOST_D / 2 + 1), 60.0])
+    t -= rot(cyl(12, 4.0), "x", -90).translate([0, -(BOOST_D / 2 + 1), 180.0])
     return t
 
 
@@ -125,9 +139,9 @@ def tower_section():
         z0 = k * bay
         for sgn in (-1, 1):
             brace = box(L, 3, 3, center=True)
-            b1 = P.rot(brace, "y", -sgn * ang).translate([0, 0, z0 + bay / 2])
+            b1 = rot(brace, "y", -sgn * ang).translate([0, 0, z0 + bay / 2])
             t += b1.translate([0, half, 0]) + b1.translate([0, -half, 0])
-            b2 = P.rot(P.rot(brace, "y", -sgn * ang), "z", 90).translate([0, 0, z0 + 25])
+            b2 = rot(rot(brace, "y", -sgn * ang), "z", 90).translate([0, 0, z0 + 25])
             t += b2.translate([half, 0, 0]) + b2.translate([-half, 0, 0])
     # stacking pegs on top, holes in the bottom
     for sx in (-1, 1):
@@ -154,7 +168,7 @@ def arm_bracket():
     b = box(16, 20, 30).translate([-8, -10, 0]) - box(8.0 + 2 * P.CLR, 8.0 + 2 * P.CLR, 32).translate([-4.0 - P.CLR, -4.0 - P.CLR, -1])
     b -= box(2.0, 8.0, 32).translate([-1, 4.3, -1])                      # slit through one wall so the clip springs over the post
     b += box(12, 9, 30).translate([-6, -18, 0])                         # lug, overlapping the body by 1 mm
-    b -= P.rot(cyl(40, 6.4), "x", 90).translate([0, -8, 15])            # Ø6 pin, 0.2 per side
+    b -= rot(cyl(40, 6.4), "x", 90).translate([0, -8, 15])            # Ø6 pin, 0.2 per side
     return b
 
 
@@ -180,7 +194,7 @@ def wire_saddle():
     s = box(16, 20, 30).translate([-8, -10, 0]) - box(8.0 + 2 * P.CLR, 8.0 + 2 * P.CLR, 32).translate([-4.0 - P.CLR, -4.0 - P.CLR, -1])
     s -= box(2.0, 8.0, 32).translate([-1, 4.3, -1])
     s += box(24, 9, 22).translate([-12, 9, 8])
-    s -= P.rot(cyl(30, 3.0), "y", 90).translate([-15, 14, 26])         # groove the wire lies in
+    s -= rot(cyl(30, 3.0), "y", 90).translate([-15, 14, 26])         # groove the wire lies in
     return s
 
 
@@ -207,9 +221,9 @@ def platform_tile():
     slot = prism([(-1, -n / 2 - P.CLR), (dl + P.CLR, -wdt / 2 - P.CLR), (dl + P.CLR, wdt / 2 + P.CLR), (-1, n / 2 + P.CLR)], PAD_T + 2).translate([0, 0, -1])
     for pos in (PAD_TILE * 0.25, PAD_TILE * 0.75):
         t += tab.translate([PAD_TILE, pos, 0])                                    # +x edge: tabs
-        t += P.rot(tab, "z", 90).translate([pos, PAD_TILE, 0])                     # +y edge: tabs
+        t += rot(tab, "z", 90).translate([pos, PAD_TILE, 0])                     # +y edge: tabs
         t -= slot.translate([0, pos, 0])                                           # -x edge: slots
-        t -= P.rot(slot, "z", 90).translate([pos, 0, 0])                           # -y edge: slots
+        t -= rot(slot, "z", 90).translate([pos, 0, 0])                           # -y edge: slots
     return t
 
 

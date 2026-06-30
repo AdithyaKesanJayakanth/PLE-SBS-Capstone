@@ -8,9 +8,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ORDER = {
-    1: ["fit_coupon_x1", "wheel_x6", "axle_pin_x6", "trolley_plate_x6", "pannier_left_x3", "pannier_right_x3", "turnout_base_x1", "tongue_x1",
-        "indexer_x1", "star_arm_x4", "handover_x1", "wedge_x2", "window_hook_x1", "lead_rail_230_x3", "brake_comb_190_x3", "chain_bed_190_x3",
-        "chain_11_links_x3", "bumper_x3", "start_gate_x3", "gate_key_x4", "gate_lever_x3", "gate_pin_x3", "block_marker_flag_x1"],
+    1: ["fit_coupon_x1", "wheel_x6", "axle_pin_x6", "trolley_plate_x6", "pannier_x6", "turnout_base_x1", "tongue_x1", "rocker_x1",
+        "rocker_pin_x1", "bias_spring_x1", "flap_x1", "gantry_axle_x1", "handover_x1", "window_hook_x1", "wedge_x1", "lead_rail_230_x3",
+        "brake_comb_190_x3", "chain_bed_190_x3", "chain_11_links_x3", "sled_x3", "bumper_x3", "start_gate_x1", "gate_lever_x1", "gate_key_x1", "gate_pin_x1"],
     2: ["core_segment_x4", "capsule_x1", "booster_lower_x2", "booster_upper_x2", "booster_strut_x4", "tower_section_x4", "tower_crown_x1",
         "arm_bracket_x1", "access_arm_x1", "arm_pin_x1", "wire_saddle_x1", "launch_mount_x1", "platform_tile_x4"],
 }

@@ -29,7 +29,7 @@ COL.update({"white": (0.90, 0.91, 0.93), "lgrey": (0.70, 0.73, 0.76), "dgrey": (
             "wire": (0.20, 0.25, 0.32), "blue": (0.17, 0.39, 0.56)})
 
 SPAN = 6000.0                       # horizontal, wire saddle to handover nose
-HANDOVER_X0 = -222.0                # handover module starts here (yard coordinates: turnout plate at x = 0)
+HANDOVER_X0 = -200.0                # handover nose block starts here (yard coordinates: turnout plate at x = 0)
 Z_YARD_HEAD = 4.0 + P.HEAD_Z        # rail head above the floor at the yard (strip 4 mm + 47.75)
 Z_RAMP_TOP = Z_YARD_HEAD + 14.0 + 1.0
 Z_SADDLE = E.TILE_H + M.ACCESS_Z + 26.0   # wire groove in the saddle: tile + 840 + 26
@@ -157,7 +157,7 @@ def render_dimensioned(pieces):
     dim_v(ax, HANDOVER_X0 - SPAN / 2, Z_YARD_HEAD, Z_SADDLE, f"drop {Z_SADDLE - Z_YARD_HEAD:.0f} mm (41 m)", side=1)
     dim_v(ax, yard_end + 60, 0, Z_YARD_HEAD, f"rail head {Z_YARD_HEAD:.0f} mm", side=1)
     dim_v(ax, xmin - 60, 0, zmax, f"pad {zmax:.0f} mm tall", side=-1)
-    dim_h(ax, HANDOVER_X0, yard_end, -90, f"yard {yard_end - HANDOVER_X0:.0f} mm: handover 222 · turnout 248 · bays 690")
+    dim_h(ax, HANDOVER_X0, yard_end, -90, f"yard {yard_end - HANDOVER_X0:.0f} mm: handover 200 · turnout 236 · bays 674")
     dim_h(ax, xmin, xmax, -200, f"overall {xmax - xmin:.0f} mm ({(xmax - xmin) / 1000:.1f} m) from the far booster to the last bumper")
     ax.set_xlim(xmin - 400, xmax + 500); ax.set_ylim(-280, zmax + 260)
     ax.set_aspect("equal"); ax.axis("off")
@@ -166,12 +166,12 @@ def render_dimensioned(pieces):
     ax = b
     ortho(ax, pieces, (0, 1), -1, 2)
     dim_h(ax, x_sad - M.OFFSET - 24 - M.TOWER_W / 2, x_sad - 24 - M.TOWER_W / 2, ymax + 120, f"rocket axis to tower axis {M.OFFSET:.0f}", above=True)
-    dim_v(ax, xmax + 60, -95, 95, "bays 95 apart at the bumpers", side=1)
+    dim_v(ax, xmax + 60, -146, 146, "bays 146 apart at the bumpers", side=1)
     dim_v(ax, xmin - 60, -2 * M.PAD_TILE / 2 - 60, 2 * M.PAD_TILE / 2 - 60, f"platform {2 * M.PAD_TILE:.0f}", side=-1)
-    dim_h(ax, 0, 236, ymin - 60, "turnout plate 236 × 180")
+    dim_h(ax, 0, 236, ymin - 60, "turnout plate 236 × 155")
     ax.set_xlim(xmin - 400, xmax + 500); ax.set_ylim(ymin - 160, ymax + 220)
     ax.set_aspect("equal"); ax.axis("off")
-    ax.set_title("Plan: the three bays fan out at 5.9°; the wire runs straight from the tower saddle to the handover.", fontsize=10, color=INK)
+    ax.set_title("Plan: the three bays fan out at 9.65°; the wire runs straight from the tower saddle to the handover and on under the yard.", fontsize=10, color=INK)
     fig.tight_layout()
     out = HERE / "render_overall_dimensioned.png"
     fig.savefig(out, dpi=150, facecolor="white")

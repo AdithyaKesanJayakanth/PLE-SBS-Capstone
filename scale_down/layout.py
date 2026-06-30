@@ -54,7 +54,7 @@ def main():
     for drop in (0.5, 0.7, 0.9, 1.2, 1.5, drop_max):
         t, va, vp = run(span, drop)
         print(f"  {drop:4.2f}   1:{span / drop:4.1f}   {drop * 50:5.0f} m             {t:5.2f}  {va:6.2f}    {vp:5.2f}")
-    print("\nGate positions along the wire from the hook: 0, 0.15 and 0.30 m. Pods leave when the one ahead has passed the block marker, 1.2 m down (60 m at 1:50).")
+    print("\nStart gate about 0.3 m along the wire from the hook. Release the next pod when the one ahead has stopped in its bay.")
 
 
 if __name__ == "__main__":
