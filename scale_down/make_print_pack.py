@@ -44,12 +44,12 @@ TILE = dict(base="std", wall_loops="3", sparse_infill_density="15%", brim_type="
 
 SETTINGS = {
     # phase 1
-    "wheel_x6": MECH, "axle_pin_x6": MECH, "gate_key_x4": MECH, "gate_pin_x3": MECH, "wedge_x2": MECH,
-    "indexer_x1": FLEX, "chain_11_links_x3": dict(FLEX, sparse_infill_density="100%", brim_type="no_brim"),
-    "trolley_plate_x6": BODY, "pannier_left_x3": SUPPORTED, "pannier_right_x3": SUPPORTED,
-    "turnout_base_x1": RAIL, "tongue_x1": RAIL, "star_arm_x4": RAIL, "handover_x1": RAIL,
+    "wheel_x6": MECH, "axle_pin_x6": MECH, "gate_key_x1": MECH, "gate_pin_x1": MECH, "wedge_x1": MECH, "rocker_pin_x1": MECH, "gantry_axle_x1": MECH,
+    "chain_11_links_x3": dict(FLEX, sparse_infill_density="100%", brim_type="no_brim"), "bias_spring_x1": dict(FLEX, sparse_infill_density="100%"),
+    "trolley_plate_x6": BODY, "pannier_x6": BODY, "rocker_x1": dict(BODY, base="fine"), "flap_x1": BODY, "sled_x3": BODY,
+    "turnout_base_x1": RAIL, "tongue_x1": RAIL, "handover_x1": RAIL,
     "lead_rail_230_x3": RAIL, "brake_comb_190_x3": RAIL, "chain_bed_190_x3": RAIL,
-    "bumper_x3": FLEX, "window_hook_x1": BODY, "start_gate_x3": BODY, "gate_lever_x3": BODY, "block_marker_flag_x1": BODY,
+    "bumper_x3": FLEX, "window_hook_x1": BODY, "start_gate_x1": BODY, "gate_lever_x1": BODY,
     # phase 2
     "core_segment_x4": SHELL, "capsule_x1": SHELL, "booster_lower_x2": SHELL, "booster_upper_x2": SHELL, "booster_strut_x4": MECH,
     "tower_section_x4": LATTICE, "tower_crown_x1": LATTICE, "arm_bracket_x1": BODY, "access_arm_x1": BODY, "arm_pin_x1": MECH,
@@ -59,8 +59,9 @@ SETTINGS = {
 # parts whose modelled orientation is not the print orientation: rotation about x in degrees
 FLIP = {"platform_tile_x4": 180}
 FILAMENT = {"PLA": "Bambu PLA Basic @BBL X1C", "PETG": "Bambu PETG HF @BBL X1C"}
-COLOUR1 = {"Cobalt Blue": ["trolley_plate_x6", "wheel_x6", "pannier_left_x3", "pannier_right_x3"],
-           "Orange": ["tongue_x1", "star_arm_x4", "indexer_x1", "bumper_x3", "axle_pin_x6", "wedge_x2", "window_hook_x1", "gate_key_x4", "gate_pin_x3", "fit_coupon_x1"]}
+COLOUR1 = {"Cobalt Blue": ["trolley_plate_x6", "wheel_x6", "pannier_x6"],
+           "Orange": ["tongue_x1", "rocker_x1", "rocker_pin_x1", "bias_spring_x1", "flap_x1", "gantry_axle_x1", "bumper_x3", "axle_pin_x6",
+                      "wedge_x1", "window_hook_x1", "gate_key_x1", "gate_pin_x1", "fit_coupon_x1"]}
 PHASE1_COLOUR = {n: c for c, names in COLOUR1.items() for n in names}
 
 

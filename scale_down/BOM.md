@@ -16,12 +16,12 @@ That is the whole shopping list.
 |---|---|---|
 | Type | Stainless steel wire rope, bare (uncoated) | The printed parts are sized to the steel itself; PVC or nylon coating adds 0.3 to 0.5 mm and slips in the wedges |
 | Construction | 7×7 (seven strands of seven wires) | Smooth enough for the printed wheels, flexible enough to wrap three turns round the Ø12 mm capstan post. 7×19 also works; 1×19 is too stiff for the post |
-| Diameter | 1.5 mm nominal, 1.6 mm maximum | Gate and flag clamps have a 1.8 mm bore, the handover groove 1.9 mm, the wedge pockets taper from 2.2 mm. A 2 mm wire will not fit |
+| Diameter | 1.5 mm nominal, 1.4 to 1.6 mm works | The start gate's slot and bore are 1.9 mm, the handover groove 1.9 mm, the wagon's lip slot 2.6 mm; the gate key and the hook's wedge grip anything from 1.4 to 1.6 mm. A 2 mm wire will not fit |
 | Grade | AISI 316 (A4, marine) or AISI 304 (A2) | Either is fine indoors; 316 is the common stock item |
 | Lay | Right-hand regular lay | Standard; no preference beyond what the shop has |
 | Minimum breaking load | about 1.4 kN (140 kgf); check the seller's figure | The model runs at 50 to 80 N, a safety factor of about 20 |
 | Weight | about 9 g/m | Self-weight sag over 6 m is under 2 mm at working tension; the pods set the sag |
-| Length | 10 m on a reel or coil | 6 m span, 1 m round the window hook, 2 m to the floor tie-off, 1 m spare |
+| Length | 10 m on a reel or coil | 6 m span, 1 m round the window hook, 2 m on under the yard to the furniture leg, 1 m spare |
 | Condition | No kinks, ends taped by the shop | A kink stops the trolley; never buy a bent offcut |
 
 **Tension.** There is no turnbuckle; tension is set by hand at the floor tie-off and checked by sag. With one ballasted pod (about 0.4 kg) at mid-span, pull until the wire hangs 100 to 120 mm below the straight line between the two ends. That is about 50 to 80 N. Tighter gives a flatter, faster ride; slacker makes the last metre too flat and the pod stalls, which is the paper's Figure 4 in miniature.
@@ -34,105 +34,104 @@ That is the whole shopping list.
 
 | Item | Used for |
 |---|---|
-| PLA filament, about 550 g, and PETG, about 120 g | all parts (see section 3 for which is which). PLA only is acceptable; see the notes. |
-| Coins or steel washers | ballast in the panniers: 0.1 to 0.5 kg per pod, same in both halves |
-| Books or a water bottle | weight on the turnout plate and the handover module so the yard cannot creep |
-| A heavy piece of furniture (bed or sofa leg) near the floor end | the far end of the wire ties off here, so the handover module carries no tension |
-| Sewing thread (optional) | to pull the gate levers from a distance, and for the block-marker interlock |
+| PLA filament, about 887 g, and PETG, about 188 g (slicer figures, phase 1) | all parts; section 3 says which is which |
+| Coins or steel washers | ballast: 0.1 to 0.5 kg per pod, the same in both panniers; about 15 g in the rocker's cup; a few in each sled |
+| Sewing thread, about 30 cm | links the flap's crank to the rocker's outer arm (the trigger) |
+| Books or a water bottle | weight on the turnout plate and the handover so the yard cannot creep |
+| A heavy piece of furniture (bed or sofa leg) beyond the yard | the wire runs on under the yard and ties off here, so the handover carries almost none of the pull |
 | Phone with slow-motion video, tape measure | timing runs (see docs/scale-model-protocol.md in the repository) |
 
-## 3. Printed parts
+## 3. Printed parts (phase 1, version 2)
 
-Files are in `stl/`, written by `make_parts.py`; `parts.csv` is the same table for a spreadsheet. Masses in this table are estimates. The slicer's exact figures for the P1S, per file, are in `print_pack/README.md`: phase 1 comes to 1,174 g and about 35 hours, more than estimated because the comb teeth, the rails and the mechanism parts print nearly solid.
+Files are in `stl/`, each already in its print orientation, written by `make_parts.py`; `parts.csv` is the same list. Grams are OrcaSlicer's for the P1S profiles (`print_pack/README.md` has the times): **1,076 g in all, about 31.5 hours**. If you printed version 1, `print_pack/phase1/reprint_v2/README.md` lists the 18 files to print now (about 880 g) and the 7 you already have.
 
-| File | Qty | Material | g each | Size (mm) | What it is |
-|---|---:|---|---:|---|---|
-| wheel_x6.stl | 6 | PLA | 2 | 24 × 24 × 8 | V-groove wheel; rides the wire and the rail head |
-| axle_pin_x6.stl | 6 | PETG | 1 | 8 × 8 × 21 | 4 mm pin, head one end, split snap the other |
-| trolley_plate_x6.stl | 6 | PLA | 5 | 64 × 15 × 40 | two identical plates make one trolley; hook lips under the wire; dovetail for the pannier |
-| pannier_right_x3.stl | 3 | PLA | 7 | 60 × 28 × 38 | basket half that rides over the brake comb |
-| pannier_left_x3.stl | 3 | PLA | 7 | 60 × 28 × 45 | basket half with the chain hook |
-| turnout_base_x1.stl | 1 | PLA | 111 | 248 × 180 × 64 | plate with entry rail, three exit rails, pivot post, cam post, tongue spring, detent post |
-| tongue_x1.stl | 1 | PLA | 8 | 136 × 12 × 50 | the switch blade |
-| indexer_x1.stl | 1 | PETG | 31 | 103 × 104 × 70 | 4-dwell cam, shaft, detent ring and star hub, one print |
-| star_arm_x4.stl | 4 | PLA | 11 | 142 × 86 × 15 | L-shaped arm; its cross-bar waits across the lanes |
-| handover_x1.stl | 1 | PLA | 51 | 222 × 51 × 67 | wire-to-rail ramp with the wedge cleat and a tie-down loop |
-| wedge_x2.stl | 2 | PETG | 1 | 32 × 5 × 22 | pinches the wire in the cleat pockets |
-| window_hook_x1.stl | 1 | PETG | 31 | 56 × 24 × 74 | hooks a grill bar or handle up to 24 mm; capstan post and wedge pocket |
-| lead_rail_230_x3.stl | 3 | PLA | 24 | 242 × 22 × 54 | first bay segment (narrow strip) |
-| brake_comb_190_x3.stl | 3 | PLA | 30 | 202 × 40 × 54 | rail with 12 flexible teeth: the brake |
-| chain_bed_190_x3.stl | 3 | PLA | 25 | 202 × 41 × 54 | rail with a chain trough and the stirrup |
-| chain_11_links_x3.stl | 3 | PLA | 3 | 156 × 10 × 10 | print-in-place drag chain |
-| bumper_x3.stl | 3 | PETG | 16 | 60 × 40 × 56 | zig-zag spring, the model's backup net |
-| start_gate_x3.stl | 3 | PLA | 4 | 30 × 20 × 22 | clamps on the wire and holds a pod |
-| gate_key_x4.stl | 4 | PETG | 1 | 30 × 3 × 7 | tapered key that pinches the wire in a gate or the flag |
-| gate_lever_x3.stl | 3 | PLA | 1 | 26 × 6 × 14 | latch lever |
-| gate_pin_x3.stl | 3 | PETG | 1 | 6 × 6 × 26 | lever pivot pin |
-| block_marker_flag_x1.stl | 1 | PLA | 4 | 20 × 46 × 40 | optional block marker the pod knocks |
+| File | Qty | Filament | Colour | g (slicer) | Size on the bed (mm) | What it is |
+|---|---:|---|---|---:|---|---|
+| fit_coupon_x1.stl | 1 | PETG | Orange | 21.5 | 118.0 × 36.0 × 15.0 | print first: posts and bored rings at 0.15 to 0.40 mm per side |
+| wheel_x6.stl | 6 | PLA | Cobalt Blue | 20.9 | 24.0 × 24.0 × 8.0 | V-groove wheel; rides the wire and the rail head |
+| axle_pin_x6.stl | 6 | PETG | Orange | 3.3 | 8.0 × 8.0 × 32.0 | 4 mm pin through pannier, plate, wheel, plate, pannier; snap bump |
+| trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 47.9 | 64.0 × 40.0 × 15.5 | two identical plates per wagon; prints flat, peg up |
+| pannier_x6.stl | 6 | PLA | Cobalt Blue | 104.8 | 64.0 × 10.0 × 54.8 | basket; two identical per wagon, clamped by the axle pins |
+| turnout_base_x1.stl | 1 | PLA | Light Grey | 164.4 | 249.0 × 155.0 × 109.0 | plate, entry and exit rails, pivot, stops, rocker bridges, gantry posts |
+| tongue_x1.stl | 1 | PLA | Orange | 22.2 | 106.0 × 88.7 × 49.5 | switch blade with the ring of four teeth |
+| rocker_x1.stl | 1 | PLA | Orange | 8.1 | 30.6 × 75.0 × 13.4 | escapement rocker; prints upside down |
+| rocker_pin_x1.stl | 1 | PETG | Orange | 0.5 | 6.5 × 6.5 × 44.0 | 3 mm rocker axle with snap bump |
+| bias_spring_x1.stl | 1 | PETG | Orange | 1.0 | 67.4 × 2.2 × 8.0 | leaf spring that pushes the tongue toward the next lane |
+| flap_x1.stl | 1 | PLA | Orange | 14.8 | 34.5 × 114.0 × 9.0 | trigger flap with crank; prints on its downstream face |
+| gantry_axle_x1.stl | 1 | PETG | Orange | 2.1 | 4.0 × 134.0 × 3.5 | 4 mm flap axle, prints on its flat |
+| handover_x1.stl | 1 | PLA | Light Grey | 49.1 | 212.0 × 40.0 × 53.5 | wire-to-rail handover; the wire dives through it |
+| window_hook_x1.stl | 1 | PETG | Orange | 49.6 | 84.0 × 74.0 × 46.0 | top anchor: capstan post and wedge pocket |
+| wedge_x1.stl | 1 | PETG | Orange | 3.2 | 32.0 × 5.4 × 22.0 | pinches the wire in the window hook |
+| lead_rail_230_x3.stl | 3 | PLA | Light Grey | 131.5 | 242.0 × 22.0 × 53.5 | first bay segment, narrow strip |
+| brake_comb_190_x3.stl | 3 | PLA | Light Grey | 155.7 | 202.2 × 40.0 × 53.5 | rail with 12 leaves under the right basket |
+| chain_bed_190_x3.stl | 3 | PLA | Light Grey | 133.6 | 202.0 × 40.0 × 53.5 | rail with the chain trough |
+| chain_11_links_x3.stl | 3 | PLA | Light Grey | 17.1 | 156.0 × 10.0 × 10.0 | print-in-place drag chain |
+| sled_x3.stl | 3 | PLA | Light Grey | 10.0 | 20.0 × 13.0 × 22.0 | pushed by the left basket; drags the chain |
+| bumper_x3.stl | 3 | PETG | Orange | 106.2 | 64.0 × 40.0 × 56.0 | zig-zag spring at the end of each bay |
+| start_gate_x1.stl | 1 | PLA | Light Grey | 5.8 | 30.0 × 14.0 × 25.0 | clamps on the wire behind the waiting wagon |
+| gate_lever_x1.stl | 1 | PLA | Light Grey | 1.3 | 27.6 × 27.5 × 4.6 | hook over the wagon's rear spacer peg |
+| gate_key_x1.stl | 1 | PETG | Orange | 0.7 | 30.0 × 3.1 × 6.6 | tapered key that locks the gate on the wire |
+| gate_pin_x1.stl | 1 | PETG | Orange | 0.4 | 6.0 × 6.0 × 26.0 | lever pivot pin |
 
-Print `fit_coupon_x1.stl` before anything else (section 6), then the six plate-level pieces (handover, turnout, three leads), and test-fit a trolley on the rail before printing the rest.
+Colours are a suggestion: blue for the wagons, orange for everything that moves or flexes, light grey for the yard.
 
 ## 4. Fits and tolerances
 
-Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.py`, `SPIG_CLR` and `P.CLR` in `make_pad_parts.py`): a 4 mm pin goes in a 4.4 mm hole, a 6 mm post in a 6.4 mm bore, an 8 mm arm in an 8.4 mm socket.
+Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.py`). Each one was measured on the assembled model by `check/assembly_check.py`, which moves one part against the other until they touch.
 
-| Fit | Part | Nominal | Hole or gap | Per side |
+| Fit | Parts | Nominal | Hole or gap | Measured play |
 |---|---|---|---|---:|
-| Wheel on axle pin | wheel, axle_pin | Ø4.0 | Ø4.4 | 0.2 |
-| Axle pin in trolley plate | trolley_plate | Ø4.0 | Ø4.4 | 0.2 |
-| Plate bridge pin | trolley_plate | Ø3.0 | Ø3.4 | 0.2 |
-| Pannier dovetail on plate | pannier, trolley_plate | dovetail | +0.2 all round | 0.2 |
-| Rail-strip dovetails | all rail segments, turnout, bumper, platform tiles | dovetail | +0.2 all round | 0.2 |
-| Tongue on pivot post | tongue, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
-| Indexer on cam post | indexer, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
-| Star arm in hub socket | star_arm, indexer | 8.0 × 8.0 | 8.4 × 8.4 | 0.2 |
-| Gate lever pin | start_gate, gate_lever, gate_pin | Ø3.0 | Ø3.4 | 0.2 |
-| Core and booster spigots | core_segment, booster_lower, capsule, booster_upper | tube bore | spigot 0.4 smaller | 0.2 |
-| Tower stacking pegs | tower_section, tower_crown | Ø5.6 peg | Ø6.0 hole | 0.2 |
-| Clip on tower post | arm_bracket, wire_saddle | 8.0 × 8.0 | 8.4 × 8.4, slit to spring | 0.2 |
-| Access arm pivot | access_arm, arm_bracket, arm_pin | Ø6.0 | Ø6.4 | 0.2 |
+| Wheel on axle pin | wheel, axle_pin | Ø4.0 | Ø4.4 | 0.21 radial |
+| Wheel between the thrust bosses | wheel, trolley_plate | 8.0 wide | 8.4 | 0.20 each side |
+| Axle pin through plate and pannier arm | trolley_plate, pannier, axle_pin | Ø4.0 | Ø4.4 (teardrop in the arm) | 0.2 |
+| Spacer peg in the other plate | trolley_plate | Ø5.0, 3 mm deep | Ø5.4 | 0.21 |
+| Guide lips on the rail web | trolley_plate, any rail | 2.0 web | 2.6 slot | 0.30 each side |
+| Rail-strip dovetails | every rail segment, turnout, handover, bumper | dovetail | +0.2 all round | 0.19 / 0.20 |
+| Tongue on its pivot post | tongue, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
+| Rocker pin in the rocker and the bridge notches | rocker_pin, rocker, turnout_base | Ø3.0 | Ø3.4, notch mouth 3.2 | 0.2 |
+| Flap on its axle | flap, gantry_axle | Ø4.0 | Ø4.4 | 0.2 |
+| Gate lever on its pin | gate_lever, start_gate, gate_pin | Ø3.0 | Ø3.4 | 0.2 |
+| Spring foot in its socket | bias_spring, turnout_base | 4.0 × 2.2 | 4.4 × 2.6 | 0.2 |
 
 Deliberate exceptions, which are not running fits:
 
 | Feature | Gap | Why |
 |---|---|---|
-| Print-in-place chain links | 0.4 mm | Parts printed already linked need a wider gap than parts assembled after printing, or they fuse |
-| Wire bore in the gate and flag clamps | 1.8 mm for a 1.5 mm wire (0.15 per side) | The key pinches the wire; a looser bore lets the gate slide |
-| Wire groove in the handover ramp | 1.9 mm (0.2 per side) | The wire lies in it, it does not slide in it |
-| Wedge pockets | tapered 2.2 to 6 mm | The wedge closes the gap onto the wire |
+| Print-in-place chain links | 0.4 mm | parts printed already linked need a wider gap or they fuse |
+| Gate axle snap notches | 3.4 mouth on a 4 mm axle | the axle clicks in and stays |
+| Wire in the handover groove | 1.9 mm for 1.5 | the wire lies in it |
+| Gate key and window-hook wedge | tapered | they close onto the wire: about 10 mm of key and 8 mm of wedge stay showing |
 
-Print `fit_coupon_x1` first. Its six rings are bored at 0.15, 0.20, 0.25, 0.30, 0.35 and 0.40 mm per side; the first one that turns freely on the post without wobble is your printer's clearance. If it is not 0.20, change `CLR`, regenerate and re-slice.
+Print `fit_coupon_x1` first. Its rings are bored at 0.15 to 0.40 mm per side; the first one that turns freely on the post without wobble is your printer's clearance. If it is not 0.20, change `CLR`, run `make_parts.py` and `check/assembly_check.py`, and re-slice.
 
-## 5. Print settings (Bambu Studio, P1S, 0.4 mm nozzle)
+## 5. Print settings (P1S, 0.4 mm nozzle)
 
-| Setting | Value |
-|---|---|
-| Layer height | 0.2 mm (wheels, pins, chain: 0.12 mm) |
-| Walls | 4 (rails, tongue, star arms: 5, so the 2 mm blade is solid) |
-| Infill | 25 % gyroid; wheels and pins 100 % |
-| Supports | none. Every part is oriented to print without them (see below). |
-| Brim | 5 mm on the turnout plate, handover, bumper and star arms |
-| Speed | default profile; print the chain and the springs at 50 % speed |
+The sliced files in `print_pack/phase1/sliced_p1s/` already carry these.
 
-Orientation: rails, plate, handover and bumper with the strip flat on the bed; wheels flat; axle pins standing on the head; trolley plates on their outer face (dovetail up, so the hook lips print as short bridges); panniers open side up; tongue on its foot; indexer standing on the cam; star arms flat; chain flat as exported (the upright links stand on the bed and the flat links bridge between them); window hook on its back (the hook opening faces up); gates, keys and wedges flat.
+| Parts | Layer | Walls | Infill | Brim |
+|---|---|---|---|---|
+| wheels, pins, axles, wedge, key, coupon | 0.12 | 4 | 100 % | 3 mm |
+| rocker | 0.12 | 4 | 25 % | 3 mm |
+| bias spring, chain | 0.12 | 4 | 100 % | 3 mm / none |
+| bumper | 0.12 | 4 | 25 % | 3 mm |
+| plates, panniers, flap, sled, hook, gate, lever | 0.20 | 4 | 25 % | 3 mm |
+| turnout, tongue, handover, rails, combs, chain beds | 0.20 | 5 | 25 % | none |
 
-PETG where a part must flex many times or carry the wire's pull (pins, indexer, wedges, hook, bumper). If you only have PLA, print those in PLA and expect the bumper and the detent finger to tire after a few hundred cycles; the cleats will be fine.
+No part needs supports. Overhangs were measured on every STL (`check/assembly_report.md`, section 9): the only flat ceilings are bridges held at both ends (the rocker bridges, 36 mm; the coin cup, 22 mm; trough and groove roofs), and the steep faces are the rail heads, the wheel's upper flank and the comb leaves, as in version 1.
 
 ## 6. Scale and what is and is not to scale
 
-- Wire: 1:50 in length and drop. A 5 m span with a 1 m drop stands for a 250 m wire from a 50 m crew access level. Use whatever the room allows; the paper's rule (span ≈ 100 m + 4 × height) scales to span ≈ 2 m + 4 × drop.
+- Wire: 1:50 in length and drop. A 6 m span with a 0.9 m drop stands for 300 m from a 45 m crew access level.
 - Pods: Froude scaling, as in the paper. A 3 s model run stands for about 21 s full size (√50).
-- Switch yard: the mechanism is modelled (one shared wire, self-indexing points, a bay per pod, passive brake, chain bed, backup stop, block marker). The bay lengths are compressed and the brake is friction, not eddy current, so the yard shows the logic, not the numbers.
+- Switch yard: the logic is modelled exactly (one shared wire, points that index themselves, a bay per pod, passive brake, chain bed, backup stop). The bay lengths are compressed and the brake is friction, not eddy current, so the yard shows the logic, not the numbers.
 
 ## 7. Making the mechanism work first time
 
-Every moving fit in the model (the tongue on its pivot post, the indexer on the cam post, the axle pins, the dovetails) is cut with one clearance, `CLR = 0.3` in `make_parts.py`. Whether that is right depends on the printer, the filament and the nozzle, so measure it instead of guessing.
-
-1. **Print the coupon.** `fit_coupon_x1.stl` (PETG, 10 g, 20 minutes) has a 6 mm post, a 4 mm pin and six rings bored at 0.15, 0.20, 0.25, 0.30, 0.35 and 0.40 mm, with one to six notches on the rim so they can be told apart. Push the post through each ring. The first ring that turns freely by finger with no wobble is your `CLR`. Do the same with the 4 mm pin for the axles.
-2. **Set it and re-run** `make_parts.py`. Everything is regenerated with your number; the rest of the parts are printed only after this.
-3. **Kill elephant's foot.** The pins, posts and ring bores all start on the bed, and a squashed first layer is what makes a 0.3 mm fit bind. In Bambu Studio set *Elephant foot compensation* to 0.15 mm and *First layer height* to 0.2 mm, and level the bed before the coupon.
-4. **Calibrate the two filaments.** Run the P1S flow-rate and pressure-advance calibration for the PLA and the PETG you will use, once. Over-extrusion by 3 % closes a 0.3 mm gap.
-5. **The cam, the tongue and the detent are the parts that must be right.** Print the indexer (PETG) and the tongue (PLA) at 0.12 mm layers with 5 walls; the cam rim and the follower boss are then smooth and the 2 mm blade is solid. Print the detent finger's plate (the turnout base) with the finger's thin wall parallel to the bed's X axis so it bends along the layers, not across them.
-6. **Fit dry, then lubricate.** Before assembly, run a fingernail round the cam rim and the ring bores to knock off any seam bump, and chamfer the post tips with a blade so the tongue and indexer drop on square. Then a dry PTFE spray or a pencil's graphite on the cam rim, the pivot post and the detent ring. Never oil: it softens PLA and collects dust.
-7. **Check in this order.** Spin the indexer on its post by hand: it should turn freely and click into four stops. Push the tongue through its throw with the indexer removed: it must swing past all three exit rails without catching, and the leaf spring must return it. Then with the indexer on, turn it by hand through a full revolution and watch the tongue step 1, 2, 3, 2. Only then run a pod. If the tongue hesitates at one position, the fault is in the cam profile's 10-degree ramps: sand the ramp, do not shim the follower.
-8. **Springs tire.** The leaf spring, the detent finger, the brake teeth and the bumpers are PLA or PETG cantilevers. PETG lasts; PLA creeps if left bent. Store the model with the tongue centred and the pods out of the bays.
+1. **Coupon first.** Settle `CLR` with `fit_coupon_x1` before printing anything else.
+2. **One wagon on one rail.** Assemble a wagon (see the README) and push it along a lead rail: it should roll on the head with the lips clear of the web, and lift 0.4 mm before the lips touch the head.
+3. **Tongue and spring.** Put the tongue on its post and the spring's foot in its socket, leaf against the tab. The tongue should swing from stop to stop and the spring should carry it all the way to the left stop.
+4. **Rocker.** Pin pushed through the rocker, then dropped into the bridge notches. With about 15 g in the cup the rocker rests outer side down. Swing the tongue right by hand and let go: finger A must stop it on the first tooth, at bay R.
+5. **Flap and thread.** Click the axle into the gantry notches with the flap on it. Tie the thread from the crank's hole to the rocker's outer hole, straight but not lifting the rocker; anything from tight to 1.5 mm slack works. Lift the flap by hand: the rocker tips, the tongue moves half a step; lower it: the tongue lands on bay C. Again: bay L.
+6. **Reset.** Lift the rocker out of its notches, swing the tongue to the right stop, drop the rocker back.
+7. **Lubricate dry.** Pencil graphite or dry PTFE on the pivot post, the teeth and the fingers; never oil, which softens PLA.
+8. **Springs tire.** The leaf spring, the comb leaves and the bumpers are PETG or PLA cantilevers. Store the model with the tongue at bay L (the spring least bent) and the pods out of the bays.

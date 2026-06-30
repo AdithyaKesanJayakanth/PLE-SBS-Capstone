@@ -7,31 +7,33 @@ Grams and times are the slicer's own figures: filament volume times the filament
 
 | File | Qty | Material | Colour | Size (mm) | Layer | Plates | g each | g total | Time |
 |---|---:|---|---|---|---|---:|---:|---:|---|
-| axle_pin_x6.stl | 6 | PETG | Orange | 8.0 × 8.0 × 20.8 | 0.12 | 1 | 0.4 | 2.4 | 0h 36m |
-| block_marker_flag_x1.stl | 1 | PLA | Light Grey | 20.0 × 46.0 × 40.0 | 0.20 | 1 | 6.5 | 6.5 | 0h 23m |
-| brake_comb_190_x3.stl | 3 | PLA | Light Grey | 202.2 × 40.0 × 53.5 | 0.20 | 1 | 51.2 | 153.5 | 3h 11m |
-| bumper_x3.stl | 3 | PETG | Orange | 60.0 × 40.0 × 56.0 | 0.12 | 1 | 30.5 | 91.4 | 4h 28m |
+| axle_pin_x6.stl | 6 | PETG | Orange | 8.0 × 8.0 × 32.0 | 0.12 | 1 | 0.6 | 3.3 | 0h 52m |
+| bias_spring_x1.stl | 1 | PETG | Orange | 67.4 × 2.2 × 8.0 | 0.12 | 1 | 1.0 | 1.0 | 0h 14m |
+| brake_comb_190_x3.stl | 3 | PLA | Light Grey | 202.2 × 40.0 × 53.5 | 0.20 | 1 | 51.9 | 155.7 | 3h 31m |
+| bumper_x3.stl | 3 | PETG | Orange | 64.0 × 40.0 × 56.0 | 0.12 | 1 | 35.4 | 106.2 | 4h 45m |
 | chain_11_links_x3.stl | 3 | PLA | Light Grey | 156.0 × 10.0 × 10.0 | 0.12 | 1 | 5.7 | 17.1 | 0h 59m |
-| chain_bed_190_x3.stl | 3 | PLA | Light Grey | 202.0 × 41.0 × 53.5 | 0.20 | 1 | 45.1 | 135.3 | 2h 40m |
+| chain_bed_190_x3.stl | 3 | PLA | Light Grey | 202.0 × 40.0 × 53.5 | 0.20 | 1 | 44.5 | 133.6 | 2h 35m |
 | fit_coupon_x1.stl | 1 | PETG | Orange | 118.0 × 36.0 × 15.0 | 0.12 | 1 | 21.5 | 21.5 | 0h 59m |
-| gate_key_x4.stl | 4 | PETG | Orange | 30.0 × 3.1 × 6.6 | 0.12 | 1 | 0.6 | 2.4 | 0h 17m |
-| gate_lever_x3.stl | 3 | PLA | Light Grey | 26.0 × 6.0 × 14.0 | 0.20 | 1 | 1.1 | 3.4 | 0h 15m |
-| gate_pin_x3.stl | 3 | PETG | Orange | 6.0 × 6.0 × 26.0 | 0.12 | 1 | 0.3 | 0.9 | 0h 20m |
-| handover_x1.stl | 1 | PLA | Light Grey | 222.0 × 51.0 × 67.1 | 0.20 | 1 | 74.7 | 74.7 | 1h 42m |
-| indexer_x1.stl | 1 | PETG | Orange | 103.4 × 103.5 × 70.0 | 0.12 | 1 | 35.0 | 35.0 | 1h 49m |
+| flap_x1.stl | 1 | PLA | Orange | 34.5 × 114.0 × 9.0 | 0.20 | 1 | 14.8 | 14.8 | 0h 25m |
+| gantry_axle_x1.stl | 1 | PETG | Orange | 4.0 × 134.0 × 3.5 | 0.12 | 1 | 2.1 | 2.1 | 0h 12m |
+| gate_key_x1.stl | 1 | PETG | Orange | 30.0 × 3.1 × 6.6 | 0.12 | 1 | 0.7 | 0.7 | 0h 14m |
+| gate_lever_x1.stl | 1 | PLA | Light Grey | 27.6 × 27.5 × 4.6 | 0.20 | 1 | 1.3 | 1.3 | 0h 09m |
+| gate_pin_x1.stl | 1 | PETG | Orange | 6.0 × 6.0 × 26.0 | 0.12 | 1 | 0.4 | 0.4 | 0h 11m |
+| handover_x1.stl | 1 | PLA | Light Grey | 212.0 × 40.0 × 53.5 | 0.20 | 1 | 49.1 | 49.1 | 1h 06m |
 | lead_rail_230_x3.stl | 3 | PLA | Light Grey | 242.0 × 22.0 × 53.5 | 0.20 | 1 | 43.8 | 131.5 | 2h 29m |
-| pannier_left_x3.stl | 3 | PLA | Cobalt Blue | 60.0 × 28.0 × 45.0 | 0.20 | 1 | 19.2 | 57.7 | 2h 13m |
-| pannier_right_x3.stl | 3 | PLA | Cobalt Blue | 60.0 × 28.0 × 38.0 | 0.20 | 1 | 15.3 | 45.9 | 1h 11m |
-| star_arm_x4.stl | 4 | PLA | Orange | 142.0 × 86.0 × 15.0 | 0.20 | 1 | 16.9 | 67.6 | 1h 33m |
-| start_gate_x3.stl | 3 | PLA | Light Grey | 30.0 × 20.0 × 22.0 | 0.20 | 1 | 6.0 | 18.1 | 0h 36m |
-| tongue_x1.stl | 1 | PLA | Orange | 136.0 × 12.0 × 49.5 | 0.20 | 1 | 16.6 | 16.6 | 0h 30m |
-| trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 64.0 × 14.5 × 39.8 | 0.20 | 1 | 11.6 | 69.6 | 1h 44m |
-| turnout_base_x1.stl | 1 | PLA | Light Grey | 248.3 × 180.0 × 64.0 | 0.20 | 1 | 157.4 | 157.4 | 3h 14m |
-| wedge_x2.stl | 2 | PETG | Orange | 32.0 × 5.4 × 22.0 | 0.12 | 1 | 3.1 | 6.2 | 0h 41m |
+| pannier_x6.stl | 6 | PLA | Cobalt Blue | 64.0 × 10.0 × 54.8 | 0.20 | 1 | 17.5 | 104.8 | 2h 24m |
+| rocker_pin_x1.stl | 1 | PETG | Orange | 6.5 × 6.5 × 44.0 | 0.12 | 1 | 0.5 | 0.5 | 0h 14m |
+| rocker_x1.stl | 1 | PLA | Orange | 30.6 × 75.0 × 13.4 | 0.12 | 1 | 8.1 | 8.1 | 0h 28m |
+| sled_x3.stl | 3 | PLA | Light Grey | 20.0 × 13.0 × 22.0 | 0.20 | 1 | 3.3 | 10.0 | 0h 23m |
+| start_gate_x1.stl | 1 | PLA | Light Grey | 30.0 × 14.0 × 25.0 | 0.20 | 1 | 5.8 | 5.8 | 0h 19m |
+| tongue_x1.stl | 1 | PLA | Orange | 106.0 × 88.7 × 49.5 | 0.20 | 1 | 22.2 | 22.2 | 0h 41m |
+| trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 64.0 × 40.0 × 15.5 | 0.20 | 1 | 8.0 | 47.9 | 1h 25m |
+| turnout_base_x1.stl | 1 | PLA | Light Grey | 249.0 × 155.0 × 109.0 | 0.20 | 1 | 164.4 | 164.4 | 3h 46m |
+| wedge_x1.stl | 1 | PETG | Orange | 32.0 × 5.4 × 22.0 | 0.12 | 1 | 3.2 | 3.2 | 0h 39m |
 | wheel_x6.stl | 6 | PLA | Cobalt Blue | 24.0 × 24.0 × 8.0 | 0.12 | 1 | 3.5 | 20.9 | 1h 06m |
-| window_hook_x1.stl | 1 | PETG | Orange | 56.0 × 24.0 × 74.0 | 0.20 | 1 | 38.4 | 38.4 | 1h 29m |
+| window_hook_x1.stl | 1 | PETG | Orange | 84.0 × 74.0 × 46.0 | 0.20 | 1 | 49.6 | 49.6 | 1h 25m |
 
-Phase 1 total: **1174 g**, 34h 26m of printing.
+Phase 1 total: **1076 g**, 31h 42m of printing.
 
 ## Phase 2
 
@@ -57,11 +59,11 @@ Phase 2 total: **2511 g**, 64h 48m of printing.
 
 | Material | Colour | Phase 1 g | Phase 2 g | Total g |
 |---|---|---:|---:|---:|
-| PETG | Orange | 198 | 2 | 200 |
-| PLA | Cobalt Blue | 194 | 0 | 194 |
+| PETG | Orange | 188 | 2 | 190 |
+| PLA | Cobalt Blue | 174 | 0 | 174 |
 | PLA | Dark Grey | 0 | 804 | 804 |
 | PLA | Jade White | 0 | 476 | 476 |
-| PLA | Light Grey | 698 | 1185 | 1882 |
-| PLA | Orange | 84 | 45 | 129 |
+| PLA | Light Grey | 668 | 1185 | 1853 |
+| PLA | Orange | 45 | 45 | 90 |
 
-Grand total **3685 g** of filament through the nozzle, both phases, excluding purge, brims already included, failures not included.
+Grand total **3587 g** of filament through the nozzle, both phases, excluding purge, brims already included, failures not included.

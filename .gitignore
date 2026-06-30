@@ -8,3 +8,4 @@ site/deploy/
 video/
 .gstack/
 *.log
+scale_down/check/freecad_scene/
