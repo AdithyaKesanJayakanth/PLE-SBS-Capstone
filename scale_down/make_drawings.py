@@ -280,7 +280,7 @@ def bay_sections():
         draw(a, side(fn().translate([s, 0, 0])), ORANGE if n == "bumper" else GREY, z=1)
         s += L
     sl = P.sled().translate([420 + 16, -14, -2])
-    ch = P.chain().translate([420 + 16 + 20 + 1 + P.LINK[0] / 2, -14, -2])
+    ch = P.chain().translate([420 + P.CHAIN_X0, -14, -2])
     draw(a, side(ch), "#9aa4ad", z=2)
     draw(a, side(sl), "#9aa4ad", z=2)
     for x, alpha in ((300, 0.9), (420 - 16 - 32 + 2, 0.5)):

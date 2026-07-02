@@ -11,36 +11,37 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 | P1-03 | axle_pin_x6 | 6 | 8.0 × 8.0 × 32.0 | PETG HF | Orange | 0.6 | 3.3 | 0h 52m |
 | P1-04 | trolley_plate_x6 | 6 | 64.0 × 40.0 × 15.5 | PLA Basic | Cobalt Blue | 8.0 | 47.9 | 1h 25m |
 | P1-05 | pannier_x6 | 6 | 64.0 × 10.0 × 54.8 | PLA Basic | Cobalt Blue | 17.5 | 104.8 | 2h 24m |
-| P1-06 | turnout_base_x1 | 1 | 249.0 × 155.0 × 109.0 | PLA Basic | Light Grey | 164.4 | 164.4 | 3h 46m |
+| P1-06 | turnout_base_x1 | 1 | 249.0 × 155.0 × 109.0 | PLA Basic | Light Grey | 159.9 | 159.9 | 3h 38m |
 | P1-07 | tongue_x1 | 1 | 106.0 × 88.7 × 49.5 | PLA Basic | Orange | 22.2 | 22.2 | 0h 41m |
-| P1-08 | rocker_x1 | 1 | 30.6 × 75.0 × 13.4 | PLA Basic | Orange | 8.1 | 8.1 | 0h 28m |
-| P1-09 | rocker_pin_x1 | 1 | 6.5 × 6.5 × 44.0 | PETG HF | Orange | 0.5 | 0.5 | 0h 14m |
-| P1-10 | bias_spring_x1 | 1 | 67.4 × 2.2 × 8.0 | PETG HF | Orange | 1.0 | 1.0 | 0h 14m |
-| P1-11 | flap_x1 | 1 | 34.5 × 114.0 × 9.0 | PLA Basic | Orange | 14.8 | 14.8 | 0h 25m |
-| P1-12 | gantry_axle_x1 | 1 | 4.0 × 134.0 × 3.5 | PETG HF | Orange | 2.1 | 2.1 | 0h 12m |
-| P1-13 | handover_x1 | 1 | 212.0 × 40.0 × 53.5 | PLA Basic | Light Grey | 49.1 | 49.1 | 1h 06m |
-| P1-14 | window_hook_x1 | 1 | 84.0 × 74.0 × 46.0 | PETG HF | Orange | 49.6 | 49.6 | 1h 25m |
-| P1-15 | wedge_x1 | 1 | 32.0 × 5.4 × 22.0 | PETG HF | Orange | 3.2 | 3.2 | 0h 39m |
-| P1-16 | lead_rail_230_x3 | 3 | 242.0 × 22.0 × 53.5 | PLA Basic | Light Grey | 43.8 | 131.5 | 2h 29m |
-| P1-17 | brake_comb_190_x3 | 3 | 202.2 × 40.0 × 53.5 | PLA Basic | Light Grey | 51.9 | 155.7 | 3h 31m |
-| P1-18 | chain_bed_190_x3 | 3 | 202.0 × 40.0 × 53.5 | PLA Basic | Light Grey | 44.5 | 133.6 | 2h 35m |
-| P1-19 | chain_11_links_x3 | 3 | 156.0 × 10.0 × 10.0 | PLA Basic | Light Grey | 5.7 | 17.1 | 0h 59m |
-| P1-20 | sled_x3 | 3 | 20.0 × 13.0 × 22.0 | PLA Basic | Light Grey | 3.3 | 10.0 | 0h 23m |
-| P1-21 | bumper_x3 | 3 | 64.0 × 40.0 × 56.0 | PETG HF | Orange | 35.4 | 106.2 | 4h 45m |
-| P1-22 | start_gate_x1 | 1 | 30.0 × 14.0 × 25.0 | PLA Basic | Light Grey | 5.8 | 5.8 | 0h 19m |
-| P1-23 | gate_lever_x1 | 1 | 27.6 × 27.5 × 4.6 | PLA Basic | Light Grey | 1.3 | 1.3 | 0h 09m |
-| P1-24 | gate_key_x1 | 1 | 30.0 × 3.1 × 6.6 | PETG HF | Orange | 0.7 | 0.7 | 0h 14m |
-| P1-25 | gate_pin_x1 | 1 | 6.0 × 6.0 × 26.0 | PETG HF | Orange | 0.4 | 0.4 | 0h 11m |
-| | **Phase 1 total** | **57** | | | | | **1,076** | **31h 31m** |
+| P1-08 | rocker_bridge_x1 | 1 | 39.4 × 53.0 × 17.0 | PLA Basic | Light Grey | 5.9 | 5.9 | 0h 20m |
+| P1-09 | rocker_x1 | 1 | 30.6 × 75.0 × 13.4 | PLA Basic | Orange | 8.1 | 8.1 | 0h 28m |
+| P1-10 | rocker_pin_x1 | 1 | 6.5 × 6.5 × 44.0 | PETG HF | Orange | 0.5 | 0.5 | 0h 14m |
+| P1-11 | bias_spring_x1 | 1 | 67.4 × 2.2 × 8.0 | PETG HF | Orange | 1.0 | 1.0 | 0h 14m |
+| P1-12 | flap_x1 | 1 | 34.5 × 114.0 × 9.0 | PLA Basic | Orange | 14.8 | 14.8 | 0h 25m |
+| P1-13 | gantry_axle_x1 | 1 | 4.0 × 134.0 × 3.5 | PETG HF | Orange | 2.1 | 2.1 | 0h 12m |
+| P1-14 | handover_x1 | 1 | 212.0 × 40.0 × 53.5 | PLA Basic | Light Grey | 49.1 | 49.1 | 1h 06m |
+| P1-15 | window_hook_x1 | 1 | 84.0 × 74.0 × 46.0 | PETG HF | Orange | 49.6 | 49.6 | 1h 25m |
+| P1-16 | wedge_x1 | 1 | 32.0 × 5.4 × 22.0 | PETG HF | Orange | 3.2 | 3.2 | 0h 39m |
+| P1-17 | lead_rail_230_x3 | 3 | 242.0 × 22.0 × 53.5 | PLA Basic | Light Grey | 43.8 | 131.5 | 2h 29m |
+| P1-18 | brake_comb_190_x3 | 3 | 202.0 × 40.0 × 53.5 | PLA Basic | Light Grey | 50.2 | 150.5 | 3h 27m |
+| P1-19 | chain_bed_190_x3 | 3 | 202.0 × 40.0 × 53.5 | PLA Basic | Light Grey | 44.3 | 132.9 | 2h 34m |
+| P1-20 | chain_11_links_x3 | 3 | 156.0 × 10.0 × 10.0 | PLA Basic | Light Grey | 5.7 | 17.1 | 0h 59m |
+| P1-21 | sled_x3 | 3 | 20.0 × 13.0 × 22.0 | PLA Basic | Light Grey | 3.3 | 10.0 | 0h 23m |
+| P1-22 | bumper_x3 | 3 | 64.0 × 40.0 × 56.0 | PETG HF | Orange | 35.4 | 106.2 | 4h 45m |
+| P1-23 | start_gate_x1 | 1 | 30.0 × 14.0 × 25.0 | PLA Basic | Light Grey | 5.8 | 5.8 | 0h 19m |
+| P1-24 | gate_lever_x1 | 1 | 27.6 × 27.5 × 4.6 | PLA Basic | Light Grey | 1.3 | 1.3 | 0h 09m |
+| P1-25 | gate_key_x1 | 1 | 30.0 × 3.1 × 6.6 | PETG HF | Orange | 0.7 | 0.7 | 0h 14m |
+| P1-26 | gate_pin_x1 | 1 | 6.0 × 6.0 × 26.0 | PETG HF | Orange | 0.4 | 0.4 | 0h 11m |
+| | **Phase 1 total** | **58** | | | | | **1,071** | **31h 38m** |
 
 | Filament | Colour | g |
 |---|---|---:|
 | PETG HF | Orange | 188 |
 | PLA Basic | Cobalt Blue | 174 |
-| PLA Basic | Light Grey | 668 |
+| PLA Basic | Light Grey | 664 |
 | PLA Basic | Orange | 45 |
 
-25 part files, 57 pieces, 25 plates.
+26 part files, 58 pieces, 26 plates.
 
 ## Phase 2: launch pad and rocket
 
@@ -73,4 +74,4 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 
 ## Both phases
 
-84 pieces on 44 plates, **3,587 g** of filament, about **96h 19m** of printing.
+85 pieces on 45 plates, **3,582 g** of filament, about **96h 26m** of printing.

@@ -62,7 +62,10 @@ def gap(a, b, d, hi=6.0):
 # ---------------------------------------------------------------------------- cached solids
 tongue_solid = functools.lru_cache(None)(P.tongue)
 rocker_solid = functools.lru_cache(None)(P.rocker)
-base_solid = functools.lru_cache(None)(P.turnout_base)
+@functools.lru_cache(None)
+def base_solid():
+    """Turnout plate with the rocker bridge sitting on its pegs: everything fixed to the floor."""
+    return P.turnout_base() + P.rocker_bridge_in_yard()
 flap_body = functools.lru_cache(None)(P._flap_body)
 
 
@@ -179,7 +182,7 @@ def sled_chain(k):
     s0 = 230 + 190
     x0, y0 = P.PLATE_L + s0 * math.cos(a), P.lane_y(k, P.PLATE_L) + s0 * math.sin(a)
     sled = P.place(P.sled().translate([16.0, -14.0, -2.0]), t, x0, y0)
-    ch = P.place(P.chain().translate([16.0 + 20.0 + 1.0 + P.LINK[0] / 2, -14.0, -2.0]), t, x0, y0)
+    ch = P.place(P.chain().translate([P.CHAIN_X0, -14.0, -2.0]), t, x0, y0)
     return sled, ch
 
 
@@ -523,6 +526,11 @@ def check_ends():
     say(f"- sled pushed along the trough: runs {x_hit:.0f} mm, then meets {what} at z {zz[2]:.1f} to {zz[5]:.1f} (the zig-zag stands on z 0)")
     sl0, ch0 = sled_chain("C")
     say(f"- sled and chain at rest: {'clear' if ov(sl0, ch0) <= EPS else 'CLASH'}")
+    comb = P.brake_segment().translate([-190.0, 0, 0])
+    ch = P.chain().translate([P.CHAIN_X0, -14.0, -2.0])
+    worst = max(ov(ch.translate([dx, 0, 0]), u) for dx in np.arange(0, x_hit + 0.1, 2.0) for u in (comb, bed, bmp))
+    say(f"- chain dragged behind the sled the whole way to the bumper, through the comb's and the chain bed's troughs: "
+        f"{'clear' if worst <= EPS else 'CLASH %.2f' % worst}")
     # gate
     g, lv = P.gate_in_pod()
     pod = dict(pod_local())
@@ -531,6 +539,12 @@ def check_ends():
     cl = [(n, round(ov(m, lv), 2)) for n, m in pod.items() if ov(m, lv) > EPS]
     say(f"- gate lever latched: {'clear' if not cl else cl}; the wagon moves {gap(union(list(pod.values())), lv, (1, 0, 0)):.2f} mm before the peg meets the hook")
     say(f"- gate lever vs clamp: {'clear' if ov(lv, g) <= EPS else 'CLASH %.2f' % ov(lv, g)}")
+    y0 = -(P.WIRE_D + 0.4) / 2
+    o = 9.8
+    key = P.section([(-15 - o, y0 + 1.0 + P.KEY_TAPER * o), (15 - o, y0 + 1.0 + P.KEY_TAPER * o), (15 - o, y0 + 2.6 + P.KEY_TAPER * o),
+                     (-15 - o, y0 + 4.1 + P.KEY_TAPER * o)], "xy", -3.3, 3.3).translate([P.GATE_CX, 0, -P.R_WIRE])
+    cl = [(n, round(ov(m, key), 2)) for n, m in pod.items() if ov(m, key) > EPS]
+    say(f"- gate key in place (its tail uphill) vs the latched wagon: {'clear' if not cl else cl}")
     piv = (P.GATE_CX + P.GPX, 0, P.GPZ - P.R_WIRE)
     sweep = union([pod["plate L"].translate([dx, 0, 0]) for dx in np.arange(0, 40, 1.0)])
     a_rel = None
@@ -549,7 +563,7 @@ def check_ends():
         shown = None
         for o in np.arange(0.0, 30.0, 0.05):
             f = y0 + 1.0 + P.KEY_TAPER * o
-            key = P.section([(-15 + o, f), (15 + o, f), (15 + o, f + 3.1), (-15 + o, f + 1.6)], "xy", -3.3, 3.3)
+            key = P.section([(-15 - o, f), (15 - o, f), (15 - o, f + 1.6), (-15 - o, f + 3.1)], "xy", -3.3, 3.3)   # from uphill
             if ov(key, gw) <= EPS:
                 shown = o
                 break

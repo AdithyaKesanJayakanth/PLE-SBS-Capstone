@@ -434,9 +434,15 @@ def rocker_pin_in_yard():
     return rk_place(rocker_pin().rotate([0, 90, 0]).translate([-BEAM_X1 - 0.3, 0, 0]))
 
 
+BRIDGE_PEGS = [(sx * 10.0, y) for sx in (1, -1) for y in ((BEAM_Y0 + BEAM_Y0 + 5.0) / 2, BEAM_Y1 - 2.5)]
+PEG_H = 3.0
+
+
 def goalposts():
-    """Two bridges across the tooth ring that carry the rocker pin in open notches; posts stand
-    outside the ring, beams pass over the teeth. Plus the two tilt stops. Rocker frame, z from 0."""
+    """Rocker bridge, a separate part: two beams across the tooth ring carry the rocker pin in open
+    notches; their posts stand outside the ring and are joined at floor level by an inner and an
+    outer bar, which also carry the two tilt stops. It is lowered over the ring after the tongue is
+    on its post and sits on four pegs of the turnout plate. Rocker frame, floor at z = -ROCK_Z."""
     g = None
     for sx in (1, -1):
         x0, x1 = sorted((sx * BEAM_X0, sx * BEAM_X1))
@@ -450,9 +456,22 @@ def goalposts():
     h_rest = ROCK_Z + (REST_STOP_Y + 2.5) * math.tan(t)                       # arm bottom (z = 0) over the stop's outer edge
     t = math.radians(LIMIT_TILT)
     h_lim = ROCK_Z + max((LIMIT_STOP_Y - 2.5) * math.tan(t), ARM_IN * math.sin(t))   # or the arm's end
-    g += box(6.0, 5.0, h_rest, (-3.0, REST_STOP_Y - 2.5, -ROCK_Z))
+    g += box(6.0, REST_STOP_Y + 2.5 - (BEAM_Y1 - 5.0), h_rest, (-3.0, BEAM_Y1 - 5.0, -ROCK_Z))   # from the outer bar
     g += box(6.0, 5.0, h_lim, (-3.0, LIMIT_STOP_Y - 2.5, -ROCK_Z))
+    for y0 in (BEAM_Y0, BEAM_Y1 - 5.0):                                       # floor bars, outside the ring
+        g += box(2 * BEAM_X1, 5.0, 4.0, (-BEAM_X1, y0, -ROCK_Z))
+    for x, y in BRIDGE_PEGS:
+        g -= cyl(4.0 + 2, 4.0 + 2 * CLR).translate([x, y, -ROCK_Z - 1])
     return g
+
+
+def rocker_bridge():
+    """Print orientation: floor bars on the bed, beams bridging between the posts."""
+    return goalposts().translate([0, 0, ROCK_Z])
+
+
+def rocker_bridge_in_yard():
+    return rk_place(goalposts())
 
 
 def eyelet(x, y, along="x"):
@@ -475,7 +494,7 @@ def turnout_base():
     p = box(PLATE_L, PLATE_Y1 - PLATE_Y0, STRIP_T, (0, PLATE_Y0, -STRIP_T))
     p -= dove_slot()
     p += rail(ENTRY_END)                                                      # entry rail
-    p += box(ENTRY_HEAD_END - ENTRY_END + 0.5, WEB_T, HEAD_Z - 11.0, (ENTRY_END - 0.5, -WEB_T / 2, 11.0))
+    p += box(ENTRY_HEAD_END - ENTRY_END + 0.5, WEB_T, HEAD_Z - 21.0, (ENTRY_END - 0.5, -WEB_T / 2, 21.0))   # 12 mm over the tongue's boss: it slides under
     p += cyl_x(ENTRY_END - 0.5, ENTRY_HEAD_END, HEAD_D, 0, HEAD_Z)
     for k, t in LANES.items():                                                 # room for the angled lead strips
         if t:
@@ -491,7 +510,9 @@ def turnout_base():
         a = math.radians(s * (THETA + OVERTRAVEL))
         xt, yt = 90.0, s * (SHOE_W / 2 + 1.5)
         p += cyl(5.0, 3.0).translate([PIVOT[0] + xt * math.cos(a) - yt * math.sin(a), PIVOT[1] + xt * math.sin(a) + yt * math.cos(a), 0])
-    p += rk_place(goalposts())
+    for x, y in BRIDGE_PEGS:                                                   # pegs for the separate rocker bridge
+        px, py = rk_plan(x, y)
+        p += cyl(PEG_H, 4.0).translate([px, py, 0])
     for s in (1, -1):                                                          # gantry posts, snap notches
         y0, y1 = sorted((s * POST_Y[0], s * POST_Y[1]))
         post = box(8, y1 - y0, GANTRY_Z + 5.0, (GANTRY_X - 4, y0, 0))
@@ -619,23 +640,30 @@ def brake_segment():
     """Comb of flexible leaves under the right pannier: tip 13.8 mm above the strip, so each leaf
     is pressed down 1.8 mm by the basket floor (12 mm) as the wagon passes."""
     L = 190.0
-    s = rail_segment(L)
+    s = rail_segment(L) - box(L + 2, 16, 2.0, (-1, -22, -2.0))              # chain trough under the left basket
     leaf = section([(0, 0), (30, 0), (30, 1.2), (0, 1.2)], "xz", 0, 10.0).rotate([0, -25, 0])
     root = box(3, 10, 3, (-1, 0, 0))
-    for i in range(12):
-        s += (leaf + root).translate([10 + i * 15, 4.0, 0])
+    for i in range(12):                                                        # last tip ends 2 mm inside the segment
+        s += (leaf + root).translate([14 + i * 13.3, 4.0, 0])
     return s
 
 
 def chain_bed():
-    """As version 1 without the stirrup ring, which stood in the basket's path."""
+    """Rail with the chain trough, end to end. The sled stands at its start; the chain lies behind
+    the sled in the comb segment's trough, tied to the sled, and is dragged when the basket pushes
+    the sled. (Version 1 had a stirrup ring here, which stood in the basket's path.)"""
     L = 190.0
-    return rail_segment(L) - box(L - 10 + 1, 16, 2.0, (10, -22, -2.0))   # trough runs out of the end, on into the bumper
+    return rail_segment(L) - box(L + 2, 16, 2.0, (-1, -22, -2.0))        # trough end to end: chain behind, sled and bumper ahead
 
 
 def sled():
-    """Stands in the chain trough; the left basket meets it 8 mm deep. Coins inside set its mass."""
-    return box(20.0, 13.0, 22.0, (0, -6.5, 0)) - box(16.0, 9.0, 21.0, (2.0, -4.5, 2.0))
+    """Stands in the chain trough; the left basket meets it 8 mm deep. Coins inside set its mass.
+    The chain's first link is tied to the hole in its back wall."""
+    s = box(20.0, 13.0, 22.0, (0, -6.5, 0)) - box(16.0, 9.0, 21.0, (2.0, -4.5, 2.0))
+    return s - tear_x(-1, 3, 2.2, 0, 6.0)
+
+
+CHAIN_X0 = 16.0 - 1.0 - 146.0      # chain-bed frame: the chain ends 1 mm behind the sled, in the comb's trough
 
 
 LINK = (20.0, 10.0, 3.0)
@@ -714,14 +742,16 @@ KEY_TAPER = 1.5 / 30.0
 
 
 def wire_clamp_body(L=30.0):
-    """Wire along x at y = z = 0. The wire drops in through the 1.9 mm slot from the top; the
-    tapered key slides in beside it (from +x) and presses it against the far wall. Fully home the
-    key would leave 0.05 mm, so it grips a 1.4 to 1.6 mm wire with 6 to 10 mm of key showing."""
+    """Wire along x at y = z = 0. The clamp is lowered onto the wire, which enters through the
+    1.9 mm slot in the bottom, so the clamp hangs on the wire by the top of its bore even before
+    the key is in. The tapered key slides in beside the wire from the uphill end (-x), so its tail
+    points away from the waiting wagon, and presses the wire against the far wall. Fully home the key would leave 0.05 mm, so it grips a 1.4 to 1.6 mm wire with 6 to
+    10 mm of key showing."""
     b = box(L, 14, 16, (-L / 2, -7, -8))
     b -= cyl_x(-L / 2 - 1, L / 2 + 1, WIRE_D + 0.4)
-    b -= box(L + 2, WIRE_D + 0.4, 10, (-L / 2 - 1, -(WIRE_D + 0.4) / 2, 0))
+    b -= box(L + 2, WIRE_D + 0.4, 10, (-L / 2 - 1, -(WIRE_D + 0.4) / 2, -10))       # slot opens downward
     y0 = -(WIRE_D + 0.4) / 2
-    wall = lambda x: y0 + 1.0 + 1.6 + KEY_TAPER * (x + L / 2)               # key face 0.05 past the slot centre when home
+    wall = lambda x: y0 + 1.0 + 1.6 + KEY_TAPER * (L / 2 - x)               # wide at -x: the key goes in from uphill, its tail away from the wagon
     b -= section([(-L / 2 - 1, y0), (L / 2 + 1, y0), (L / 2 + 1, wall(L / 2 + 1)), (-L / 2 - 1, wall(-L / 2 - 1))], "xy", -3.3 - CLR, 3.3 + CLR)
     return b
 
@@ -804,6 +834,7 @@ PARTS = [
     ("pannier_x6", 6, "PLA", "Cobalt Blue", lambda: pannier(), "basket; two identical per wagon, clamped by the axle pins"),
     ("turnout_base_x1", 1, "PLA", "Light Grey", lambda: turnout_base(), "plate, entry and exit rails, pivot, stops, rocker bridges, gantry posts"),
     ("tongue_x1", 1, "PLA", "Orange", lambda: tongue(), "switch blade with the ring of four teeth"),
+    ("rocker_bridge_x1", 1, "PLA", "Light Grey", lambda: rocker_bridge(), "two beams over the tooth ring; carries the rocker pin and the tilt stops; sits on four pegs"),
     ("rocker_x1", 1, "PLA", "Orange", lambda: rocker().rotate([180, 0, 0]), "escapement rocker; prints upside down"),
     ("rocker_pin_x1", 1, "PETG", "Orange", lambda: rocker_pin(), "3 mm rocker axle with snap bump"),
     ("bias_spring_x1", 1, "PETG", "Orange", _spring_flat, "leaf spring that pushes the tongue toward the next lane"),
@@ -813,10 +844,10 @@ PARTS = [
     ("window_hook_x1", 1, "PETG", "Orange", lambda: window_hook().rotate([90, 0, 0]), "top anchor: capstan post and wedge pocket"),
     ("wedge_x1", 1, "PETG", "Orange", lambda: wedge(), "pinches the wire in the window hook"),
     ("lead_rail_230_x3", 3, "PLA", "Light Grey", lambda: lead_rail(), "first bay segment, narrow strip"),
-    ("brake_comb_190_x3", 3, "PLA", "Light Grey", lambda: brake_segment(), "rail with 12 leaves under the right basket"),
-    ("chain_bed_190_x3", 3, "PLA", "Light Grey", lambda: chain_bed(), "rail with the chain trough"),
+    ("brake_comb_190_x3", 3, "PLA", "Light Grey", lambda: brake_segment(), "rail with 12 leaves under the right basket and the chain trough under the left"),
+    ("chain_bed_190_x3", 3, "PLA", "Light Grey", lambda: chain_bed(), "rail with the chain trough, end to end; the sled starts here"),
     ("chain_11_links_x3", 3, "PLA", "Light Grey", lambda: chain(), "print-in-place drag chain"),
-    ("sled_x3", 3, "PLA", "Light Grey", lambda: sled(), "pushed by the left basket; drags the chain"),
+    ("sled_x3", 3, "PLA", "Light Grey", lambda: sled(), "pushed by the left basket; drags the chain tied to its back"),
     ("bumper_x3", 3, "PETG", "Orange", lambda: bumper(), "zig-zag spring at the end of each bay"),
     ("start_gate_x1", 1, "PLA", "Light Grey", lambda: start_gate(), "clamps on the wire behind the waiting wagon"),
     ("gate_lever_x1", 1, "PLA", "Light Grey", lambda: gate_lever().rotate([90, 0, 0]), "hook over the wagon's rear spacer peg"),

@@ -50,15 +50,15 @@
 - lane R (tongue -9.65 deg): wagon pushes the flap to 40.3 deg
   - wheel steered by the head: wheel front / tongue from 280 to 292 mm along the path, up to 0.4; the wheel rides up at most 0.14 mm over the joint
   - wheel steered by the head: wheel rear / turnout plate from 308 to 320 mm along the path, up to 0.3; the wheel rides up at most 0.13 mm over the joint
-  - intended: pannier R / brake R from 736 to 960 mm along the path, up to 135.4
+  - intended: pannier R / brake R from 740 to 944 mm along the path, up to 169.3
   - intended: pannier L / sled from 904 to 984 mm along the path, up to 175.4
 - lane C (tongue +0.00 deg): wagon pushes the flap to 40.3 deg
-  - intended: pannier R / brake C from 732 to 956 mm along the path, up to 135.4
+  - intended: pannier R / brake C from 736 to 940 mm along the path, up to 169.3
   - intended: pannier L / sled from 904 to 980 mm along the path, up to 191.5
 - lane L (tongue +9.65 deg): wagon pushes the flap to 40.3 deg
   - wheel steered by the head: wheel front / tongue from 280 to 292 mm along the path, up to 0.4; the wheel rides up at most 0.14 mm over the joint
   - wheel steered by the head: wheel rear / turnout plate from 308 to 320 mm along the path, up to 0.3; the wheel rides up at most 0.13 mm over the joint
-  - intended: pannier R / brake L from 736 to 960 mm along the path, up to 135.4
+  - intended: pannier R / brake L from 740 to 944 mm along the path, up to 169.3
   - intended: pannier L / sled from 904 to 984 mm along the path, up to 175.4
 
 ## 7. Flap, thread and trigger
@@ -73,9 +73,11 @@
 - bumper: first contact with the zig-zag by plate R, plate L, pannier R, pannier L; front axle then 12 mm along a 60 mm rail stub
 - sled pushed along the trough: runs 179 mm, then meets the bumper at z -2.0 to 20.0 (the zig-zag stands on z 0)
 - sled and chain at rest: clear
+- chain dragged behind the sled the whole way to the bumper, through the comb's and the chain bed's troughs: clear
 - start gate clamp vs wagon: clear; gap to the wagon 2.00 mm
 - gate lever latched: clear; the wagon moves 0.63 mm before the peg meets the hook
 - gate lever vs clamp: clear
+- gate key in place (its tail uphill) vs the latched wagon: clear
 - release: lifting the lever 14.0 deg frees the wagon
 - wire in the gate clamp: clear
   - gate key on a 1.4 mm wire: grips with 7.8 mm of key showing (clear of the body: True)
@@ -90,7 +92,7 @@ Downward-facing area not on the bed: flat ceilings must be bridges (both ends su
 |---|---:|---:|---:|
 | axle_pin_x6.stl | 4 | 0 | 1.9 |
 | bias_spring_x1.stl | 0 | 0 | 0.0 |
-| brake_comb_190_x3.stl | 33 | 3453 | 3.0 |
+| brake_comb_190_x3.stl | 24 | 3453 | 2.0 |
 | bumper_x3.stl | 83 | 37 | 4.0 |
 | chain_11_links_x3.stl | 1074 | 0 | 10.0 |
 | chain_bed_190_x3.stl | 24 | 117 | 2.0 |
@@ -103,13 +105,14 @@ Downward-facing area not on the bed: flat ceilings must be bridges (both ends su
 | handover_x1.stl | 227 | 107 | 7.3 |
 | lead_rail_230_x3.stl | 24 | 142 | 2.0 |
 | pannier_x6.stl | 84 | 392 | 1.4 |
+| rocker_bridge_x1.stl | 292 | 0 | 4.0 |
 | rocker_pin_x1.stl | 3 | 0 | 1.4 |
 | rocker_x1.stl | 380 | 104 | 22.0 |
-| sled_x3.stl | 0 | 0 | 0.0 |
-| start_gate_x1.stl | 43 | 18 | 2.2 |
+| sled_x3.stl | 0 | 4 | 0.0 |
+| start_gate_x1.stl | 100 | 18 | 4.1 |
 | tongue_x1.stl | 7 | 62 | 2.0 |
 | trolley_plate_x6.stl | 0 | 0 | 0.0 |
-| turnout_base_x1.stl | 864 | 201 | 19.1 |
+| turnout_base_x1.stl | 572 | 201 | 14.0 |
 | wedge_x1.stl | 0 | 0 | 0.0 |
 | wheel_x6.stl | 0 | 253 | 0.0 |
 | window_hook_x1.stl | 20 | 0 | 13.0 |
