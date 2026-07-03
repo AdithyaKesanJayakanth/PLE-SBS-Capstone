@@ -4,7 +4,7 @@ FreeCAD 1.1.4. 1066 pairs listed, 159 with overlapping bounding boxes measured.
 
 | Part | Part | Expected | Common volume mm³ |
 |---|---|---|---:|
-| tongue_L | spring | contact | 0.106 |
+| tongue_L | spring | contact | 22.368 |
 | brake_L | chainbed_L | clear | 0.002 |
 | chainbed_L | bumper_L | clear | 0.002 |
 | brake_R | chainbed_R | clear | 0.001 |

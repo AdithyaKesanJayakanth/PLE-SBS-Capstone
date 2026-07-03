@@ -32,6 +32,7 @@ Volumes in mm³. Listed are all pairs that touched at any moment, with the worst
 | run | pod3_wheel_rear | tongue | 0.070 | 735 | wheel rolling on a rail or the wire |
 | run | pod3_wheel_rear | wire | 0.653 | 675 | wheel rolling on a rail or the wire |
 | run | rocker | tongue | 0.050 | 612 | finger against a tooth (the escapement working) |
+| run | spring_09.5 | tongue | 0.014 | 612 | spring preload on the tongue's tab (intended) |
 | wagon | pod_pannier_L | pod_pin_front | 1.951 | 59 | snap fit pressed through |
 | wagon | pod_pannier_L | pod_pin_rear | 1.951 | 76 | snap fit pressed through |
 | wagon | pod_pannier_R | pod_pin_front | 1.951 | 53 | snap fit pressed through |
@@ -47,6 +48,6 @@ Volumes in mm³. Listed are all pairs that touched at any moment, with the worst
 | yard | gantry_axle | turnout_plate | 5.568 | 301 | snap fit pressed through |
 | yard | rocker | rocker_pin | 0.744 | 236 | snap fit pressed through |
 | yard | rocker | tongue | 0.050 | 277 | finger against a tooth (the escapement working) |
-| yard | spring_16.0 | tongue | 0.049 | 274 | spring preload on the tongue's tab (intended) |
+| yard | spring_17.0 | tongue | 0.012 | 275 | spring preload on the tongue's tab (intended) |
 
 **Unexplained overlaps above 0.05 mm³: 0**

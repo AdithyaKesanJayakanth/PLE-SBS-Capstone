@@ -27,14 +27,14 @@ Grams and times are the slicer's own figures: filament volume times the filament
 | rocker_x1.stl | 1 | PLA | Orange | 30.6 × 77.0 × 13.4 | 0.12 | 1 | 8.3 | 8.3 | 0h 28m |
 | sled_x3.stl | 3 | PLA | Light Grey | 20.0 × 13.0 × 22.0 | 0.20 | 1 | 3.3 | 10.0 | 0h 23m |
 | start_gate_x1.stl | 1 | PLA | Light Grey | 30.0 × 14.0 × 25.0 | 0.20 | 1 | 5.8 | 5.8 | 0h 19m |
-| tongue_x1.stl | 1 | PLA | Orange | 106.0 × 88.7 × 49.5 | 0.20 | 1 | 22.2 | 22.2 | 0h 41m |
+| tongue_x1.stl | 1 | PLA | Orange | 106.0 × 88.7 × 49.5 | 0.20 | 1 | 22.5 | 22.5 | 0h 41m |
 | trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 64.0 × 40.0 × 15.8 | 0.20 | 1 | 8.2 | 49.1 | 1h 27m |
 | turnout_base_x1.stl | 1 | PLA | Light Grey | 249.0 × 155.0 × 109.0 | 0.20 | 1 | 159.9 | 159.9 | 3h 38m |
 | wedge_x1.stl | 1 | PETG | Orange | 32.0 × 5.4 × 22.0 | 0.12 | 1 | 3.2 | 3.2 | 0h 39m |
 | wheel_x6.stl | 6 | PLA | Cobalt Blue | 24.0 × 24.0 × 8.0 | 0.12 | 1 | 3.5 | 20.9 | 1h 06m |
 | window_hook_x1.stl | 1 | PETG | Orange | 84.0 × 74.0 × 46.0 | 0.20 | 1 | 49.6 | 49.6 | 1h 25m |
 
-Phase 1 total: **1074 g**, 31h 51m of printing.
+Phase 1 total: **1074 g**, 31h 46m of printing.
 
 ## Phase 2
 
@@ -65,6 +65,6 @@ Phase 2 total: **2511 g**, 64h 48m of printing.
 | PLA | Dark Grey | 0 | 804 | 804 |
 | PLA | Jade White | 0 | 476 | 476 |
 | PLA | Light Grey | 665 | 1185 | 1850 |
-| PLA | Orange | 45 | 45 | 90 |
+| PLA | Orange | 46 | 45 | 90 |
 
 Grand total **3585 g** of filament through the nozzle, both phases, excluding purge, brims already included, failures not included.

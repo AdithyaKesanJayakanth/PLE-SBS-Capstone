@@ -28,11 +28,11 @@
 - tongue swept -10.25 to 10.25 degrees against the plate: clear
 - left overtravel stop: tongue 0.3 degrees past the outer lane overlaps the stop by 1.42 (must be > 0)
 - right overtravel stop: tongue 0.3 degrees past the outer lane overlaps the stop by 1.42 (must be > 0)
-- spring at tongue -10.25 deg: leaf bent 16.3 mm, force 1.42 N, strain 1.30 %, leaf vs plate clear
-- spring at tongue -9.65 deg: leaf bent 15.9 mm, force 1.39 N, strain 1.27 %, leaf vs plate clear
-- spring at tongue +0.00 deg: leaf bent 10.4 mm, force 0.91 N, strain 0.83 %, leaf vs plate clear
-- spring at tongue +9.65 deg: leaf bent 5.3 mm, force 0.47 N, strain 0.43 %, leaf vs plate clear
-- spring at tongue +10.25 deg: leaf bent 5.0 mm, force 0.44 N, strain 0.40 %, leaf vs plate clear
+- spring at tongue -10.25 deg: leaf bent 17.2 mm, force 1.50 N, strain 1.38 %, leaf vs plate clear
+- spring at tongue -9.65 deg: leaf bent 16.9 mm, force 1.48 N, strain 1.35 %, leaf vs plate clear
+- spring at tongue +0.00 deg: leaf bent 11.8 mm, force 1.03 N, strain 0.95 %, leaf vs plate clear
+- spring at tongue +9.65 deg: leaf bent 7.1 mm, force 0.62 N, strain 0.57 %, leaf vs plate clear
+- spring at tongue +10.25 deg: leaf bent 6.8 mm, force 0.60 N, strain 0.55 %, leaf vs plate clear
 
 ## 5. Escapement: three pods, three bays
 - rocker tilted -15 to 22 degrees against the goalposts and stops: clear

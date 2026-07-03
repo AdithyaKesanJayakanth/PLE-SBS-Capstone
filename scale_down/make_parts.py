@@ -101,7 +101,7 @@ ARM_IN, ARM_OUT, CUP_Y, CUP_D = -24.0, 53.0, 36.0, 26.0       # cup takes a 1-ru
 THREAD_HOLE_Y = 50.0
 REST_STOP_Y, LIMIT_STOP_Y = 24.0, -20.0
 # tongue spring
-TAB_X0, TAB_X1, TAB_Y0, TAB_Y1, TAB_H = 22.0, 38.0, -15.0, -4.0, 6.0
+TAB_X0, TAB_X1, TAB_Y0, TAB_Y1, TAB_H = 16.0, 38.0, -15.0, -4.0, 6.0   # the leaf meets the tab at x 23; 7 mm of margin toward the pivot
 SPRING_ROOT = (7.0, -12.0)
 SPRING_FREE_TIP = (70.0, -7.0)
 SPRING_T, SPRING_H = 2.0, 5.0

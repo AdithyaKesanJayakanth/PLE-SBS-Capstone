@@ -12,7 +12,7 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 | P1-04 | trolley_plate_x6 | 6 | 64.0 × 40.0 × 15.8 | PLA Basic | Cobalt Blue | 8.2 | 49.1 | 1h 27m |
 | P1-05 | pannier_x6 | 6 | 64.0 × 10.2 × 54.8 | PLA Basic | Cobalt Blue | 17.5 | 105.2 | 2h 25m |
 | P1-06 | turnout_base_x1 | 1 | 249.0 × 155.0 × 109.0 | PLA Basic | Light Grey | 159.9 | 159.9 | 3h 38m |
-| P1-07 | tongue_x1 | 1 | 106.0 × 88.7 × 49.5 | PLA Basic | Orange | 22.2 | 22.2 | 0h 41m |
+| P1-07 | tongue_x1 | 1 | 106.0 × 88.7 × 49.5 | PLA Basic | Orange | 22.5 | 22.5 | 0h 41m |
 | P1-08 | rocker_bridge_x1 | 1 | 39.4 × 53.0 × 17.0 | PLA Basic | Light Grey | 6.6 | 6.6 | 0h 25m |
 | P1-09 | rocker_x1 | 1 | 30.6 × 77.0 × 13.4 | PLA Basic | Orange | 8.3 | 8.3 | 0h 28m |
 | P1-10 | rocker_pin_x1 | 1 | 6.5 × 6.5 × 44.0 | PETG HF | Orange | 0.5 | 0.5 | 0h 14m |
@@ -39,7 +39,7 @@ Plate numbers are a suggested print order within each phase. A file sliced as on
 | PETG HF | Orange | 189 |
 | PLA Basic | Cobalt Blue | 175 |
 | PLA Basic | Light Grey | 665 |
-| PLA Basic | Orange | 45 |
+| PLA Basic | Orange | 46 |
 
 26 part files, 58 pieces, 26 plates.
 

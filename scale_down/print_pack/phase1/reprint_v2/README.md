@@ -10,7 +10,7 @@ The version-1 parts printed on 27 June 2026 did not fit. Version 2 was checked p
 | pannier_x6 | 6 | PLA | Cobalt Blue | 105.2 | 2h 25m | new: one part for both sides, clamped by the axle pins, floor 12 mm above the strip; arm spacing for the 9.2 mm plate gap |
 | axle_pin_x6 | 6 | PETG | Orange | 3.4 | 0h 52m | longer (28.4 mm shank) to pass through pannier, plate, wheel, plate, pannier; snap bump 0.7 mm clear |
 | turnout_base_x1 | 1 | PLA | Light Grey | 159.9 | 3h 38m | new layout: lane spacing, pegs for the rocker bridge, gantry posts with 3.6 mm snap mouths, wire groove underneath; the entry rail's end lets the tongue slide under |
-| tongue_x1 | 1 | PLA | Orange | 22.2 | 0h 41m | new: ring of four teeth and the spring tab |
+| tongue_x1 | 1 | PLA | Orange | 22.5 | 0h 41m | new: ring of four teeth and the spring tab |
 | rocker_bridge_x1 | 1 | PLA | Light Grey | 6.6 | 0h 25m | new: carries the rocker over the tooth ring; separate so the tongue can be fitted first; beams 2.5 mm over the teeth, sliced with supports |
 | rocker_x1 | 1 | PLA | Orange | 8.3 | 0h 28m | new: escapement rocker with a 26 mm coin cup |
 | rocker_pin_x1 | 1 | PETG | Orange | 0.5 | 0h 14m | new |
