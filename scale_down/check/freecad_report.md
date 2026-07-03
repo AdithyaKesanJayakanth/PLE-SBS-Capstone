@@ -9,6 +9,7 @@ FreeCAD 1.1.4. 1066 pairs listed, 159 with overlapping bounding boxes measured.
 | chainbed_L | bumper_L | clear | 0.002 |
 | brake_R | chainbed_R | clear | 0.001 |
 | chainbed_R | bumper_R | clear | 0.001 |
+| wagon_L_plate_R | wagon_L_plate_L | clear | 0.042 |
 | tongue_R | rocker_rest | contact | 0.000 |
 | tongue_C | rocker_rest | contact | 0.000 |
 | tongue_L | rocker_rest | contact | 0.000 |

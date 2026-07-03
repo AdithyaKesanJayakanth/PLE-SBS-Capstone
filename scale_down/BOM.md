@@ -34,7 +34,7 @@ That is the whole shopping list.
 
 | Item | Used for |
 |---|---|
-| PLA filament, about 883 g, and PETG, about 188 g (slicer figures, phase 1) | all parts; section 3 says which is which |
+| PLA filament, about 885 g, and PETG, about 189 g (slicer figures, phase 1) | all parts; section 3 says which is which |
 | Coins or steel washers | ballast: 0.1 to 0.5 kg per pod, the same in both panniers; about 15 g in the rocker's cup; a few in each sled |
 | Sewing thread, about 30 cm | links the flap's crank to the rocker's outer arm (the trigger) |
 | Books or a water bottle | weight on the turnout plate and the handover so the yard cannot creep |
@@ -43,19 +43,19 @@ That is the whole shopping list.
 
 ## 3. Printed parts (phase 1, version 2)
 
-Files are in `stl/`, each already in its print orientation, written by `make_parts.py`; `parts.csv` is the same list. Grams are OrcaSlicer's for the P1S profiles (`print_pack/README.md` has the times): **1,071 g in all, about 31.6 hours**. If you printed version 1, `print_pack/phase1/reprint_v2/README.md` lists the 19 files to print now (about 876 g) and the 7 you already have.
+Files are in `stl/`, each already in its print orientation, written by `make_parts.py`; `parts.csv` is the same list. Grams are OrcaSlicer's for the P1S profiles (`print_pack/README.md` has the times): **1,074 g in all, about 31.8 hours**. If you printed version 1, `print_pack/phase1/reprint_v2/README.md` lists the 19 files to print now (about 876 g) and the 7 you already have.
 
 | File | Qty | Filament | Colour | g (slicer) | Size on the bed (mm) | What it is |
 |---|---:|---|---|---:|---|---|
 | fit_coupon_x1.stl | 1 | PETG | Orange | 21.5 | 118.0 × 36.0 × 15.0 | print first: posts and bored rings at 0.15 to 0.40 mm per side |
 | wheel_x6.stl | 6 | PLA | Cobalt Blue | 20.9 | 24.0 × 24.0 × 8.0 | V-groove wheel; rides the wire and the rail head |
-| axle_pin_x6.stl | 6 | PETG | Orange | 3.3 | 8.0 × 8.0 × 32.0 | 4 mm pin through pannier, plate, wheel, plate, pannier; snap bump |
-| trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 47.9 | 64.0 × 40.0 × 15.5 | two identical plates per wagon; prints flat, peg up |
-| pannier_x6.stl | 6 | PLA | Cobalt Blue | 104.8 | 64.0 × 10.0 × 54.8 | basket; two identical per wagon, clamped by the axle pins |
+| axle_pin_x6.stl | 6 | PETG | Orange | 3.4 | 8.0 × 8.0 × 32.4 | 4 mm pin through pannier, plate, wheel, plate, pannier; snap bump |
+| trolley_plate_x6.stl | 6 | PLA | Cobalt Blue | 49.1 | 64.0 × 40.0 × 15.8 | two identical plates per wagon; prints flat, peg up |
+| pannier_x6.stl | 6 | PLA | Cobalt Blue | 105.2 | 64.0 × 10.2 × 54.8 | basket; two identical per wagon, clamped by the axle pins |
 | turnout_base_x1.stl | 1 | PLA | Light Grey | 159.9 | 249.0 × 155.0 × 109.0 | plate, entry and exit rails, pivot, stops, rocker bridges, gantry posts |
 | tongue_x1.stl | 1 | PLA | Orange | 22.2 | 106.0 × 88.7 × 49.5 | switch blade with the ring of four teeth |
-| rocker_bridge_x1.stl | 1 | PLA | Light Grey | 5.9 | 39.4 × 53.0 × 17.0 | two beams over the tooth ring; carries the rocker pin and the tilt stops; sits on four pegs |
-| rocker_x1.stl | 1 | PLA | Orange | 8.1 | 30.6 × 75.0 × 13.4 | escapement rocker; prints upside down |
+| rocker_bridge_x1.stl | 1 | PLA | Light Grey | 6.6 | 39.4 × 53.0 × 17.0 | two beams over the tooth ring; carries the rocker pin and the tilt stops; sits on four pegs |
+| rocker_x1.stl | 1 | PLA | Orange | 8.3 | 30.6 × 77.0 × 13.4 | escapement rocker; prints upside down |
 | rocker_pin_x1.stl | 1 | PETG | Orange | 0.5 | 6.5 × 6.5 × 44.0 | 3 mm rocker axle with snap bump |
 | bias_spring_x1.stl | 1 | PETG | Orange | 1.0 | 67.4 × 2.2 × 8.0 | leaf spring that pushes the tongue toward the next lane |
 | flap_x1.stl | 1 | PLA | Orange | 14.8 | 34.5 × 114.0 × 9.0 | trigger flap with crank; prints on its downstream face |
@@ -70,7 +70,7 @@ Files are in `stl/`, each already in its print orientation, written by `make_par
 | sled_x3.stl | 3 | PLA | Light Grey | 10.0 | 20.0 × 13.0 × 22.0 | pushed by the left basket; drags the chain tied to its back |
 | bumper_x3.stl | 3 | PETG | Orange | 106.2 | 64.0 × 40.0 × 56.0 | zig-zag spring at the end of each bay |
 | start_gate_x1.stl | 1 | PLA | Light Grey | 5.8 | 30.0 × 14.0 × 25.0 | clamps on the wire behind the waiting wagon |
-| gate_lever_x1.stl | 1 | PLA | Light Grey | 1.3 | 27.6 × 27.5 × 4.6 | hook over the wagon's rear spacer peg |
+| gate_lever_x1.stl | 1 | PLA | Light Grey | 1.4 | 28.9 × 28.5 × 4.6 | hook over the wagon's rear spacer peg |
 | gate_key_x1.stl | 1 | PETG | Orange | 0.7 | 30.0 × 3.1 × 6.6 | tapered key that locks the gate on the wire |
 | gate_pin_x1.stl | 1 | PETG | Orange | 0.4 | 6.0 × 6.0 × 26.0 | lever pivot pin |
 
@@ -78,7 +78,7 @@ Colours are a suggestion: blue for the wagons, orange for everything that moves 
 
 ## 4. Fits and tolerances
 
-Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.py`). Each one was measured on the assembled model by `check/assembly_check.py`, which moves one part against the other until they touch.
+Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.py`). Dimensions along each part's print direction are multiples of the 0.2 mm layer where a fit depends on them (plate 3.6, thrust boss 0.4). Each one was measured on the assembled model by `check/assembly_check.py`, which moves one part against the other until they touch.
 
 | Fit | Parts | Nominal | Hole or gap | Measured play |
 |---|---|---|---|---:|
@@ -86,10 +86,12 @@ Every running fit is **0.2 mm per side** (`CLR = 0.2` at the top of `make_parts.
 | Wheel between the thrust bosses | wheel, trolley_plate | 8.0 wide | 8.4 | 0.20 each side |
 | Axle pin through plate and pannier arm | trolley_plate, pannier, axle_pin | Ø4.0 | Ø4.4 (teardrop in the arm) | 0.2 |
 | Spacer peg in the other plate | trolley_plate | Ø5.0, 3 mm deep | Ø5.4 | 0.21 |
-| Guide lips on the rail web | trolley_plate, any rail | 2.0 web | 2.6 slot | 0.30 each side |
+| Plate gap, set by the peg shoulders | trolley_plate | 9.2 | the shoulders meet the other plate's face | 0 (fixed) |
+| Guide lips on the rail web | trolley_plate, any rail | 2.0 web | 3.0 slot | 0.50 each side (a printed blade is not straight to less) |
 | Rail-strip dovetails | every rail segment, turnout, handover, bumper | dovetail | +0.2 all round | 0.19 / 0.20 |
 | Tongue on its pivot post | tongue, turnout_base | Ø6.0 | Ø6.4 | 0.2 |
 | Rocker pin in the rocker and the bridge notches | rocker_pin, rocker, rocker_bridge | Ø3.0 | Ø3.4, notch mouth 3.2 | 0.2 |
+| Axle pin head to snap bump | axle_pin | 28.4 stack | 29.1 | 0.7 (the gap is set by the shoulders, not the pin) |
 | Flap on its axle | flap, gantry_axle | Ø4.0 | Ø4.4 | 0.2 |
 | Gate lever on its pin | gate_lever, start_gate, gate_pin | Ø3.0 | Ø3.4 | 0.2 |
 | Spring foot in its socket | bias_spring, turnout_base | 4.0 × 2.2 | 4.4 × 2.6 | 0.2 |
@@ -100,7 +102,7 @@ Deliberate exceptions, which are not running fits:
 | Feature | Gap | Why |
 |---|---|---|
 | Print-in-place chain links | 0.4 mm | parts printed already linked need a wider gap or they fuse |
-| Gate axle snap notches | 3.4 mouth on a 4 mm axle | the axle clicks in and stays |
+| Gantry axle snap notches | 3.6 mouth on a 4 mm axle | the axle clicks in and stays |
 | Wire in the handover groove | 1.9 mm for 1.5 | the wire lies in it |
 | Gate key and window-hook wedge | tapered | they close onto the wire: about 10 mm of key (on the uphill side) and 8 mm of wedge stay showing |
 
@@ -114,12 +116,13 @@ The sliced files in `print_pack/phase1/sliced_p1s/` already carry these.
 |---|---|---|---|---|
 | wheels, pins, axles, wedge, key, coupon | 0.12 | 4 | 100 % | 3 mm |
 | rocker | 0.12 | 4 | 25 % | 3 mm |
+| rocker bridge | 0.20 | 4 | 25 % | 3 mm, tree supports under the two beams |
 | bias spring, chain | 0.12 | 4 | 100 % | 3 mm / none |
 | bumper | 0.12 | 4 | 25 % | 3 mm |
 | plates, panniers, flap, sled, hook, gate, lever | 0.20 | 4 | 25 % | 3 mm |
 | turnout, tongue, handover, rails, combs, chain beds | 0.20 | 5 | 25 % | none |
 
-No part needs supports. Overhangs were measured on every STL (`check/assembly_report.md`, section 9): the only flat ceilings are bridges held at both ends (the rocker bridge's beams, 36 mm; the coin cup, 22 mm; trough and groove roofs), and the steep faces are the rail heads, the wheel's upper flank and the comb leaves, as in version 1.
+Only the rocker bridge is sliced with supports (tree supports under its two 46 mm beams, which otherwise sag toward the teeth). No other part needs them. Overhangs were measured on every STL (`check/assembly_report.md`, section 9): the only flat ceilings are bridges held at both ends (the rocker bridge's beams, 36 mm; the coin cup, 22 mm; trough and groove roofs), and the steep faces are the rail heads, the wheel's upper flank and the comb leaves, as in version 1.
 
 ## 6. Scale and what is and is not to scale
 

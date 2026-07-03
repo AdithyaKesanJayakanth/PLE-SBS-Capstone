@@ -26,7 +26,7 @@ Every part is moved along the path you move it by hand, in small steps, and its 
 - rocker pin pushed through the rocker's bore (above the yard): clear; snap fits pressed through: rocker_pin in rocker (0.7 mm³ at the worst moment)
 - rocker with pin lowered into the bridge notches, cup side down, tongue held at its right-hand stop: clear
 - gantry axle slid through the flap's hub (above the yard): clear
-- flap and axle pressed down into the gantry posts' snap notches: clear; snap fits pressed through: gantry_axle in turnout_plate (10.2 mm³ at the worst moment)
+- flap and axle pressed down into the gantry posts' snap notches: clear; snap fits pressed through: gantry_axle in turnout_plate (5.6 mm³ at the worst moment)
 - sleds and chains laid in the chain-bed troughs: clear
 - wire laid in the handover groove, down the dive slot and along the grooves underneath: clear
 
@@ -44,20 +44,21 @@ Every part is moved along the path you move it by hand, in small steps, and its 
 ## The run: three wagons down the wire, into bays R, C and L
 - wagon 1 reached bay R; tongue now +0.09° (lanes: R -9.65, C 0.00, L +9.65)
 - wagon 2 reached bay C; tongue now +9.73° (lanes: R -9.65, C 0.00, L +9.65)
-- wagon 3 reached bay L; tongue now +9.73° (lanes: R -9.65, C 0.00, L +9.65)
+- wagon 3 reached bay L; tongue now +10.25° (lanes: R -9.65, C 0.00, L +9.65)
+
+- after the third wagon there is no tooth left for finger B: the tongue goes to its left-hand stop (+10.25°, still on lane L) and when the flap falls, finger A comes down on top of the last tooth and the rocker rests at +4.4° instead of -15°. Harmless: no fourth wagon comes; the reset (lift the rocker out, swing the tongue to the right-hand stop, drop the rocker back) clears it.
 
 ### Tongue movements during the run
-- pod1: tongue -9.56° → -9.46° while the rear wheel is 37 mm past the tongue's tip
-- pod1: tongue -9.46° → -4.76° while the rear wheel is 50 mm past the tongue's tip
-- pod1: tongue -4.76° → -4.85° while the rear wheel is 63 mm past the tongue's tip
-- pod1: tongue -4.85° → +0.09° while the rear wheel is 102 mm past the tongue's tip
-- pod2: tongue +0.09° → +0.22° while the rear wheel is 37 mm past the tongue's tip
-- pod2: tongue +0.22° → +4.86° while the rear wheel is 50 mm past the tongue's tip
-- pod2: tongue +4.86° → +4.79° while the rear wheel is 63 mm past the tongue's tip
-- pod2: tongue +4.79° → +9.73° while the rear wheel is 102 mm past the tongue's tip
+- pod1: tongue -9.56° → -9.45° while the rear wheel is 37 mm past the tongue's tip
+- pod1: tongue -9.45° → -4.77° while the rear wheel is 50 mm past the tongue's tip
+- pod1: tongue -4.77° → -4.87° while the rear wheel is 63 mm past the tongue's tip
+- pod1: tongue -4.87° → +0.09° while the rear wheel is 102 mm past the tongue's tip
+- pod2: tongue +0.09° → +0.23° while the rear wheel is 37 mm past the tongue's tip
+- pod2: tongue +0.23° → +4.85° while the rear wheel is 50 mm past the tongue's tip
+- pod2: tongue +4.85° → +4.77° while the rear wheel is 63 mm past the tongue's tip
+- pod2: tongue +4.77° → +9.73° while the rear wheel is 102 mm past the tongue's tip
 - pod3: tongue +9.73° → +9.84° while the rear wheel is 37 mm past the tongue's tip
 - pod3: tongue +9.84° → +10.25° while the rear wheel is 50 mm past the tongue's tip
-- pod3: tongue +10.25° → +9.73° while the rear wheel is 102 mm past the tongue's tip
 
 - After the third wagon no tooth is left for finger B, so the tongue swings to its left-hand stop (+10.25°). When the flap falls, finger A comes down at the edge of the last tooth and, in this geometry, eases the tongue back to +9.73°, on lane L. If the coins are too light to do that, finger A simply rests on the tooth with the tongue at the stop, still on lane L. Either way nothing else runs until the reset (lift the rocker out, swing the tongue to the right-hand stop, drop the rocker back).
 

@@ -132,6 +132,8 @@ def check_wagon():
         say(f"- {side} wheel: side play {gap(w, pr, (0, 1, 0)):.2f} / {gap(w, pl, (0, -1, 0)):.2f} mm to the thrust bosses; "
             f"{gap(w, parts[f'pin {side}'], (0, 0, 1)):.2f} mm radial play on the pin")
     pin = parts["pin front"]
+    shoulder_gap = min(gap(pr, pl, (0, -1, 0)), gap(pl, pr, (0, 1, 0)))
+    say(f"- plate gap: the plates close {shoulder_gap:.2f} mm before the peg shoulders meet (0 = the shoulders set the gap)")
     say(f"- axle pin: head to right pannier {gap(pin, parts['pannier R'], (0, -1, 0)):.2f} mm; "
         f"snap bump to left pannier face {gap(pin, parts['pannier L'], (0, 1, 0)):.2f} mm (pin pushed home)")
     for side, pn, pl_ in (("right", "pannier R", pr), ("left", "pannier L", pl)):

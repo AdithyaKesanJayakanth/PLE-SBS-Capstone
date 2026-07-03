@@ -2,20 +2,21 @@
 
 ## 1. Wagon
 - Clashes between wagon parts: none
-- front peg (plate R into L): reaches 3.0 mm into the 3.5 mm plate; 0.21 / 0.21 mm play in the hole
-- rear peg (plate L into R): reaches 3.0 mm into the 3.5 mm plate; 0.21 / 0.21 mm play in the hole
+- front peg (plate R into L): reaches 3.0 mm into the 3.6 mm plate; 0.21 / 0.21 mm play in the hole
+- rear peg (plate L into R): reaches 3.0 mm into the 3.6 mm plate; 0.21 / 0.21 mm play in the hole
 - rear wheel: side play 0.20 / 0.20 mm to the thrust bosses; 0.21 mm radial play on the pin
 - front wheel: side play 0.20 / 0.20 mm to the thrust bosses; 0.21 mm radial play on the pin
-- axle pin: head to right pannier 0.00 mm; snap bump to left pannier face 0.23 mm (pin pushed home)
+- plate gap: the plates close 0.00 mm before the peg shoulders meet (0 = the shoulders set the gap)
+- axle pin: head to right pannier 0.00 mm; snap bump to left pannier face 0.73 mm (pin pushed home)
 - right pannier: 0.00 mm to its plate (0 = clamped flat); floor 12.0 mm above the rail strip
 - left pannier: 0.00 mm to its plate (0 = clamped flat); floor 12.0 mm above the rail strip
 
 ## 2. Wagon on a rail and on the wire
 - wheels seated on the head: drop before contact 0.05 mm (0 = seated)
-- lips under the head: the wagon lifts 0.46 mm before a lip hooks the head
-- side play on the rail web: 0.30 / 0.30 mm
+- lips under the head: the wagon lifts 0.75 mm before a lip hooks the head
+- side play on the rail web: 0.50 / 0.50 mm
 - clashes with the rail: none
-- on the wire: wheels drop 0.00 mm to seat; wire to lip slot sides 3.76 / 3.76 mm; lips 6.00 mm below the wire
+- on the wire: wheels drop 0.00 mm to seat; wire to lip slot sides 3.86 / 3.86 mm; lips 6.00 mm below the wire
 
 ## 3. Yard: static fit
 - modules joined by their dovetails, clashes: none
@@ -51,23 +52,23 @@
   - wheel steered by the head: wheel front / tongue from 280 to 292 mm along the path, up to 0.4; the wheel rides up at most 0.14 mm over the joint
   - wheel steered by the head: wheel rear / turnout plate from 308 to 320 mm along the path, up to 0.3; the wheel rides up at most 0.13 mm over the joint
   - intended: pannier R / brake R from 740 to 944 mm along the path, up to 169.3
-  - intended: pannier L / sled from 904 to 984 mm along the path, up to 175.4
+  - intended: pannier L / sled from 904 to 984 mm along the path, up to 177.5
 - lane C (tongue +0.00 deg): wagon pushes the flap to 40.3 deg
   - intended: pannier R / brake C from 736 to 940 mm along the path, up to 169.3
-  - intended: pannier L / sled from 904 to 980 mm along the path, up to 191.5
+  - intended: pannier L / sled from 904 to 980 mm along the path, up to 194.4
 - lane L (tongue +9.65 deg): wagon pushes the flap to 40.3 deg
   - wheel steered by the head: wheel front / tongue from 280 to 292 mm along the path, up to 0.4; the wheel rides up at most 0.14 mm over the joint
   - wheel steered by the head: wheel rear / turnout plate from 308 to 320 mm along the path, up to 0.3; the wheel rides up at most 0.13 mm over the joint
   - intended: pannier R / brake L from 740 to 944 mm along the path, up to 169.3
-  - intended: pannier L / sled from 904 to 984 mm along the path, up to 175.4
+  - intended: pannier L / sled from 904 to 984 mm along the path, up to 177.5
 
 ## 7. Flap, thread and trigger
 - flap swung 0 to 75 deg: clear of the posts and the axle
 - axle in the snap notches: clear
-- thread tied with 0.0 mm slack: at 40.3 deg of flap the rocker tilts to +16.1 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 45.8 deg
-- thread tied with 0.5 mm slack: at 40.3 deg of flap the rocker tilts to +13.8 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 48.0 deg
-- thread tied with 1.0 mm slack: at 40.3 deg of flap the rocker tilts to +11.8 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 50.5 deg
-- thread tied with 1.5 mm slack: at 40.3 deg of flap the rocker tilts to +9.9 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 53.0 deg
+- thread tied with 0.0 mm slack: at 40.3 deg of flap the rocker tilts to +17.3 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 44.2 deg
+- thread tied with 0.5 mm slack: at 40.3 deg of flap the rocker tilts to +15.1 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 46.5 deg
+- thread tied with 1.0 mm slack: at 40.3 deg of flap the rocker tilts to +13.0 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 48.8 deg
+- thread tied with 1.5 mm slack: at 40.3 deg of flap the rocker tilts to +11.1 deg (needs +9 or more); the rocker reaches its stop, and holds the flap, at 51.2 deg
 
 ## 8. Bumper, start gate, wire ends
 - bumper: first contact with the zig-zag by plate R, plate L, pannier R, pannier L; front axle then 12 mm along a 60 mm rail stub
@@ -75,10 +76,10 @@
 - sled and chain at rest: clear
 - chain dragged behind the sled the whole way to the bumper, through the comb's and the chain bed's troughs: clear
 - start gate clamp vs wagon: clear; gap to the wagon 2.00 mm
-- gate lever latched: clear; the wagon moves 0.63 mm before the peg meets the hook
+- gate lever latched: clear; the wagon moves 0.62 mm before the peg meets the hook
 - gate lever vs clamp: clear
 - gate key in place (its tail uphill) vs the latched wagon: clear
-- release: lifting the lever 14.0 deg frees the wagon
+- release: lifting the lever 17.0 deg frees the wagon
 - wire in the gate clamp: clear
   - gate key on a 1.4 mm wire: grips with 7.8 mm of key showing (clear of the body: True)
   - gate key on a 1.5 mm wire: grips with 9.8 mm of key showing (clear of the body: True)
@@ -104,10 +105,10 @@ Downward-facing area not on the bed: flat ceilings must be bridges (both ends su
 | gate_pin_x1.stl | 0 | 0 | 0.0 |
 | handover_x1.stl | 227 | 107 | 7.3 |
 | lead_rail_230_x3.stl | 24 | 142 | 2.0 |
-| pannier_x6.stl | 84 | 392 | 1.4 |
+| pannier_x6.stl | 84 | 394 | 1.4 |
 | rocker_bridge_x1.stl | 292 | 0 | 4.0 |
 | rocker_pin_x1.stl | 3 | 0 | 1.4 |
-| rocker_x1.stl | 380 | 104 | 22.0 |
+| rocker_x1.stl | 530 | 104 | 26.0 |
 | sled_x3.stl | 0 | 4 | 0.0 |
 | start_gate_x1.stl | 100 | 18 | 4.1 |
 | tongue_x1.stl | 7 | 62 | 2.0 |

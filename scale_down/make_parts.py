@@ -53,21 +53,22 @@ R_HEAD = seat(HEAD_D)             # 11.05
 POD_Z = HEAD_Z + R_HEAD           # 58.80: axle above the strip on a rail
 
 # wagon (pod frame)
-PL_T, GAP = 3.5, 9.0
-Y_IN, Y_OUT = GAP / 2, GAP / 2 + PL_T              # 4.5, 8.0
+PL_T, GAP = 3.6, 9.2                               # plate thickness a multiple of the 0.2 mm layer; gap = wheel 8 + two 0.4 bosses + 0.2 play each side
+Y_IN, Y_OUT = GAP / 2, GAP / 2 + PL_T              # 4.6, 8.2
 PL_X, PL_ZB, PL_ZT = 32.0, -20.0, 20.0
 AX_X = 20.0
 LIP_TOP = -12.6                                    # 0.4 mm under the head, 2.4 mm under the wire
-SLOT_W = 2.6                                      # lips: 0.3 mm each side of the 2 mm web; they reach 0.45 under the head
-BOSS_D, BOSS_H = 8.0, 0.3
-PEG_D, PEG_X, PEG_Z = 5.0, 24.0, 15.0
-ARM_Y0, ARM_Y1 = Y_OUT, Y_OUT + 6.0                # 8, 14
+SLOT_W = 3.0                                      # lips: 0.5 mm each side of the 2 mm web (a printed blade is not straight to 0.3); they reach 0.25 under the head
+BOSS_D, BOSS_H = 8.0, 0.4                          # two layers
+PEG_D, PEG_X, PEG_Z = 5.0, 24.0, 16.0
+ARM_Y0, ARM_Y1 = Y_OUT, Y_OUT + 6.0                # 8.1, 14.1
 ARM_X, ARM_ZT = 30.0, 8.0
 BX, BY0, BY1 = 32.0, 4.0, ARM_Y1
 BZB = 12.0 - POD_Z                                 # basket floor 12 mm above the strip
 BZT = BZB + 24.0
 BWALL, BFLOOR = 1.6, 2.4
-PIN_SPAN = 2 * ARM_Y1                              # 28
+PIN_SPAN = 2 * ARM_Y1                              # 28.2
+PEG_SHOULDER_D = 7.6                               # collar on each spacer peg that sets the plate gap; 0.7 clear of the wheel
 
 # turnout
 PIVOT = (40.0, 0.0)
@@ -93,11 +94,11 @@ RING_R0, RING_R1, RING_T = 49.5, 75.0, 3.0
 TOOTH_R0, TOOTH_R1, TOOTH_Z0, TOOTH_Z1, TOOTH_W = 51.5, 73.0, 2.5, 8.5, 2.0
 TEETH_T = [-2 * THETA, -THETA, 0.0, THETA]             # tongue angle at which each tooth rests on finger A
 STEP_B = 1.5 * THETA               # finger B sits one and a half steps ahead of finger A
-BEAM_X0, BEAM_X1, BEAM_Z0, BEAM_Z1 = 15.7, 19.7, 10.0, 17.0
+BEAM_X0, BEAM_X1, BEAM_Z0, BEAM_Z1 = 15.7, 19.7, 11.0, 17.0   # 2.5 mm over the teeth: bridge sag
 BEAM_Y0, BEAM_Y1 = -26.5, 20.0
 ROCK_X = 15.3                      # rocker half-length along its axis
-ARM_IN, ARM_OUT, CUP_Y, CUP_D = -24.0, 51.0, 34.0, 22.0
-THREAD_HOLE_Y = 48.0
+ARM_IN, ARM_OUT, CUP_Y, CUP_D = -24.0, 53.0, 36.0, 26.0       # cup takes a 1-rupee coin or M8 washers
+THREAD_HOLE_Y = 50.0
 REST_STOP_Y, LIMIT_STOP_Y = 24.0, -20.0
 # tongue spring
 TAB_X0, TAB_X1, TAB_Y0, TAB_Y1, TAB_H = 22.0, 38.0, -15.0, -4.0, 6.0
@@ -108,7 +109,7 @@ SPRING_T, SPRING_H = 2.0, 5.0
 GANTRY_X, GANTRY_Z = 220.0, 100.0
 FLAP_LEN, FLAP_Y, HUB_Y = 30.0, 50.0, 57.0
 POST_Y = (60.0, 66.0)
-CRANK_R, CRANK_Y = 15.0, (52.0, 57.0)
+CRANK_R, CRANK_Y = 16.0, (52.0, 57.0)                  # with the thread hole at 50: 11 deg of tilt at 1.5 mm slack
 # the wire under the yard
 HO_L, GROOVE_END, DIVE_ANG = 170.0, 45.0, 51.0
 WIRE_C = HEAD_TOP - 0.15           # wire centre in the handover groove (wheel height is the same on wire and head)
@@ -259,11 +260,12 @@ def wheel():
 
 def axle_pin():
     """Along +z: head z -2..0 against the right pannier, shank 28 mm through arm, plate, boss,
-    wheel, boss, plate and arm, then a split snap bump 0.2 mm clear of the far face."""
+    wheel, boss, plate and arm, then a split snap bump 0.7 mm clear of the far face. The plate
+    gap is set by the peg shoulders, not by this pin, so the slack does not reach the lips."""
     L = PIN_SPAN
     p = cyl(L + 2.0, AXLE_D) + cyl(2.0, 8.0).translate([0, 0, -2.0])
-    p += cyl(1.2, AXLE_D + 0.7).translate([0, 0, L + 0.2])
-    p -= box(1.0, AXLE_D + 2, 8.0, (-0.5, -(AXLE_D + 2) / 2, L + 2.0 - 8.0))
+    p += cyl(1.2, AXLE_D + 0.7).translate([0, 0, L + 0.7])                 # 0.7 clear of the far face: room for five parts' thickness
+    p -= box(1.0, AXLE_D + 2, 8.5, (-0.5, -(AXLE_D + 2) / 2, L + 2.0 - 8.5))
     return p
 
 
@@ -290,6 +292,7 @@ def trolley_plate():
         p += cyl_y(Y_IN - BOSS_H, Y_IN + 0.5, BOSS_D, x, 0)                    # thrust boss
         p -= cyl_y(Y_IN - 2, Y_OUT + 2, AXLE_D + 2 * CLR, x, 0)
     p += cyl_y(Y_IN - GAP - 3.0, Y_IN + 0.5, PEG_D, PEG_X, PEG_Z)               # spacer peg: across the gap, 3 mm into the other plate
+    p += cyl_y(Y_IN - GAP, Y_IN + 0.5, PEG_SHOULDER_D, PEG_X, PEG_Z)           # shoulder: the other plate's inner face lands on it
     p -= cyl_y(Y_IN - 1, Y_OUT + 1, PEG_D + 2 * CLR, -PEG_X, PEG_Z)             # hole for the other plate's peg
     return p
 
@@ -308,9 +311,9 @@ def pannier():
     b -= box(2 * BX - 2 * BWALL, BY1 - BY0 - 2 * BWALL, BZT - BZB, (-BX + BWALL, BY0 + BWALL, BZB + BFLOOR))
     for s in (1, -1):                                   # 3 mm lead-in under both ends of the floor
         b -= section([(s * BX, BZB - 1), (s * (BX - 4.0), BZB - 1), (s * BX, BZB + 3.0)], "xz", BY0 - 1, BY1 + 1)
-    arm = box(2 * ARM_X, ARM_Y1 - ARM_Y0, ARM_ZT - PL_ZB, (-ARM_X, ARM_Y0, PL_ZB))
-    arm += box(2 * ARM_X, 3.0, PL_ZB - BZT + 0.5, (-ARM_X, ARM_Y1 - 3.0, BZT - 0.5))
-    arm += section([(ARM_Y0, PL_ZB), (ARM_Y1 - 3.0, PL_ZB), (ARM_Y1 - 3.0, PL_ZB - 3.0)], "yz", -ARM_X, ARM_X)   # 45-degree support
+    # arm, its 45-degree support and the wall that joins it to the basket, as one profile (no coplanar seams)
+    arm = section([(ARM_Y0, PL_ZB), (ARM_Y0, ARM_ZT), (ARM_Y1, ARM_ZT), (ARM_Y1, BZT - 0.5), (ARM_Y1 - 3.0, BZT - 0.5), (ARM_Y1 - 3.0, PL_ZB - 3.0)],
+                  "yz", -ARM_X, ARM_X)
     for x in (-AX_X, AX_X):
         arm -= tear_y(ARM_Y0 - 1, ARM_Y1 + 1, AXLE_D + 2 * CLR, x, 0)
     return b + arm
@@ -517,7 +520,7 @@ def turnout_base():
         y0, y1 = sorted((s * POST_Y[0], s * POST_Y[1]))
         post = box(8, y1 - y0, GANTRY_Z + 5.0, (GANTRY_X - 4, y0, 0))
         post -= cyl_y(y0 - 1, y1 + 1, AXLE_D + 2 * CLR, GANTRY_X, GANTRY_Z)
-        post -= box(AXLE_D - 0.6, y1 - y0 + 2, 10, (GANTRY_X - (AXLE_D - 0.6) / 2, y0 - 1, GANTRY_Z))
+        post -= box(AXLE_D - 0.4, y1 - y0 + 2, 10, (GANTRY_X - (AXLE_D - 0.4) / 2, y0 - 1, GANTRY_Z))   # 0.2 per side: PLA prongs across their layers
         p += post
     p += spring_socket()
     p -= underside_groove(-1, PLATE_L + 1, wire_y)                             # the wire runs on under the plate
@@ -774,8 +777,8 @@ def gate_lever():
     wy = 4.6
     hub = cyl_y(-wy / 2, wy / 2, 7.0, GPX, GPZ)
     arm = section([(GPX - 2, GPZ), (GPX + 2, GPZ), (GPX + 8, top - 2), (GPX + 4, top + 2)], "xz", -wy / 2, wy / 2)
-    arm += box(peg_x + PEG_D / 2 + 4.6 - (GPX + 4), wy, 4.0, (GPX + 4, -wy / 2, top - 2))
-    hx0 = peg_x + PEG_D / 2 + 0.6
+    arm += box(peg_x + PEG_SHOULDER_D / 2 + 4.6 - (GPX + 4), wy, 4.0, (GPX + 4, -wy / 2, top - 2))
+    hx0 = peg_x + PEG_SHOULDER_D / 2 + 0.6
     hook = section([(hx0, peg_z - 2.0), (hx0 + 4.0 - 2.0, peg_z - 2.0), (hx0 + 4.0, peg_z), (hx0 + 4.0, top + 2), (hx0, top + 2)], "xz", -wy / 2, wy / 2)
     lv = hub + arm + hook
     lv -= tear_y(-wy, wy, GATE_PIN_D + 2 * CLR, GPX, GPZ)

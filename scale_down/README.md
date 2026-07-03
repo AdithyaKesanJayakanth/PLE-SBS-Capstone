@@ -70,7 +70,7 @@ With a 2 m tie point the height is not the limit, the floor is. The worked examp
 | 1:35 | 8.6 m | 1.29 m | 10.7 m | 4.0 s | 4.1 m/s |
 | 1:25 | 12.0 m | 1.80 m | 14.8 m | 4.8 s | 4.6 m/s |
 
-Recommendation: stay at 1:50 (the printed parts as they are), tie the wire about 0.96 m above the floor for the to-scale run, and use the rest of the 2 m for an experiment the paper could not do on a real pad: keep the span at 6 m and raise the tie point in steps (0.5, 0.7, 0.9, 1.2, 1.5, 1.9 m). Each step is a different crew access height at the same span, which is one row of Figure 4's sizing map (25 to 97 m full size). Measure the arrival speed and whether the comb stops the pod inside its bay; the slope where it no longer does is the model's "stop too hard" edge, and the shallowest slope where a light pod still reaches the yard is its "stall" edge.
+Recommendation: stay at 1:50 (the printed parts as they are), tie the wire about 0.96 m above the floor for the to-scale run, and use the rest of the 2 m for an experiment the paper could not do on a real pad: keep the span at 6 m and raise the tie point in steps (0.5, 0.7, 0.9, 1.2, 1.5, 1.9 m). Each step is a different crew access height at the same span, which is one row of Figure 4's sizing map (25 to 97 m full size). Start at the lowest tie point. Measure the arrival speed and whether the comb stops the pod inside its bay; the slope where it no longer does is the model's "stop too hard" edge, and the shallowest slope where a light pod still reaches the yard is its "stall" edge.
 
 If the floor is shorter than 7.7 m, shorten the span and accept a steeper wire; a 4 m span with a 0.9 m drop is about 1 in 4.4, the left side of the band in Figure 4, and the pods will arrive faster than scale.
 
@@ -78,7 +78,7 @@ If the floor is shorter than 7.7 m, shorten the span and accept a steeper wire; 
 
 1. **Print the coupon and settle `CLR`.** See BOM section 4.
 2. **Build one wagon.** Lay a plate peg-up, drop a wheel over each axle hole, put the second plate on (turned 180°, its peg into the first plate's hole). Hang a pannier on each side with its arm against the plate, then push each axle pin through from the right: pannier arm, plate, wheel, plate, arm, until the split end snaps. Put the same coins in both panniers.
-3. **Lay the yard.** Handover first, then lower the turnout plate's entry slot onto the handover's tab, then along each lane lead, comb, chain bed, bumper. Always lower the piece with the slot onto the piece with the tab. Weight the turnout plate and the handover with books.
+3. **Lay the yard.** Handover first, then lower the turnout plate's entry slot onto the handover's tab, then along each lane lead, comb, chain bed, bumper. Always lower the piece with the slot onto the piece with the tab. Weight the turnout plate and the handover with books: the wire's two bends in the handover each carry about 50 N, and they lift its downstream end by about 5 N. Slacken the wire between sessions so the PLA does not creep.
 4. **Fit the points.** Follow BOM section 7, steps 3 to 7: tongue (it slides under the end of the entry rail onto its post), spring, rocker bridge, rocker with about 15 g in its cup, flap, thread. Lift the flap by hand twice and watch the tongue step R, C, L; then reset it to R.
 5. **Lay the sleds and chains.** In each chain bed, the sled in the trough just past the start, open side up with a few coins in it. Tie the chain's end link to the hole in the sled's back wall with thread and lay the chain behind it, in the trough that runs along the brake comb.
 6. **Rig the wire.** At the window: three turns round the hook's capstan post, the tail along the pocket floor, the wedge pushed in from the open end until it grips (about 8 mm of it stays out), then hang the hook. At the floor: lay the wire in the groove on the handover's head, down the dive slot, along the groove under the handover and the turnout, and on to the furniture leg. Pull it to the sag in BOM section 1 and tie it off.
@@ -87,8 +87,8 @@ If the floor is shorter than 7.7 m, shorten the span and accept a steeper wire; 
 
 ## Tuning
 
-- **Too fast into the bumper:** more coins (the comb's friction grows with weight), or more coins in the sled.
-- **Stops in the lead or the comb:** fewer coins, or snip every second comb leaf.
+- **Too fast into the bumper:** lower the tie point. The comb's drag is set by its leaves' spring, not by the pod's weight, so ballast does not help; adding coins only adds energy to stop. With all five engaged leaves the comb drags about 1.7 N, which takes 0.3 J out of a pod over its 190 mm. A 300 g pod carries 0.34 J at 1.5 m/s and 1.8 J at 3.5 m/s, and the bumper can take about 0.5 J before its plates go past their elastic limit. So start at a 0.3 m drop and raise it in steps, watching where the comb stops being enough: that edge is itself a result.
+- **Stops in the lead or the comb:** more drop, or snip every second comb leaf.
 - **Pod stalls on the wire:** more drop or less sag; the real system has the same problem, that is the point of Figure 4 in the paper.
 - **Points do not step:** the thread is too slack (more than 1.5 mm) or the cup has too few coins to bring finger A back down; shorten the thread or add a coin.
 - **Tongue stops short of a lane:** a seam bump on a tooth or a finger; scrape it, then graphite.

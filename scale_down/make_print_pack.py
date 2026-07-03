@@ -47,6 +47,7 @@ SETTINGS = {
     "wheel_x6": MECH, "axle_pin_x6": MECH, "gate_key_x1": MECH, "gate_pin_x1": MECH, "wedge_x1": MECH, "rocker_pin_x1": MECH, "gantry_axle_x1": MECH,
     "chain_11_links_x3": dict(FLEX, sparse_infill_density="100%", brim_type="no_brim"), "bias_spring_x1": dict(FLEX, sparse_infill_density="100%"),
     "trolley_plate_x6": BODY, "pannier_x6": BODY, "rocker_x1": dict(BODY, base="fine"), "flap_x1": BODY, "sled_x3": BODY,
+    "rocker_bridge_x1": SUPPORTED,
     "turnout_base_x1": RAIL, "tongue_x1": RAIL, "handover_x1": RAIL,
     "lead_rail_230_x3": RAIL, "brake_comb_190_x3": RAIL, "chain_bed_190_x3": RAIL,
     "bumper_x3": FLEX, "window_hook_x1": BODY, "start_gate_x1": BODY, "gate_lever_x1": BODY,
