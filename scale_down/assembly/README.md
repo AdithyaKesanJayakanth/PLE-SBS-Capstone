@@ -20,11 +20,11 @@ Two identical plates, two wheels, two identical panniers and two printed axle pi
 
 ![3. Plate L on top, turned end for end: its peg goes into plate R's hole and plate R's peg into its hole.](steps/wagon_03_plate_L.png)
 
-![4. Stand the sandwich up. Hold a pannier against each plate, arm holes in line with the axle holes.](steps/wagon_04_panniers.png)
+![4. Keep the stack lying flat on the table (the picture is tilted to show the holes). Put a pannier against each plate, arm holes in line with the axle holes.](steps/wagon_04_panniers.png)
 
-![5. Push the front axle pin through from the right until the split end clicks out of the far pannier.](steps/wagon_05_pin_front.png)
+![5. Push the front axle pin down through pannier, plate, wheel, plate and pannier until the split end clicks out of the far side.](steps/wagon_05_pin_front.png)
 
-![6. Same for the rear pin. The wheels now spin freely with 0.2 mm side play.](steps/wagon_06_pin_rear.png)
+![6. Same for the rear pin. The peg shoulders set the plate gap; the wheels spin with 0.2 mm side play.](steps/wagon_06_pin_rear.png)
 
 ![7. Hang it on the wire: lower it so the wire passes up between the baskets, through the slot between the lips, into the wheel grooves.](steps/wagon_07_on_wire.png)
 
@@ -64,7 +64,7 @@ Always lower the piece with the slot onto the piece with the tab. The tongue goe
 
 ![16. Thread from the crank's hole to the hole at the end of the rocker's arm, straight but not lifting the rocker (0 to 1.5 mm slack).](steps/yard_16_thread.png)
 
-![17. In each chain bed: the sled in the trough just past the start, coins in it, the chain in the trough ahead of it.](steps/yard_17_sleds.png)
+![17. In each chain bed: the sled in the trough just past the start, a few M4 nuts in it, the chain tied to its back and laid in the trough behind it.](steps/yard_17_sleds.png)
 
 ![18. Lay the wire: in the groove on the handover's head, down the dive slot, along the groove under the handover and the turnout, on to the furniture leg.](steps/yard_18_wire.png)
 

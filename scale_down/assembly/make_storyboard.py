@@ -332,7 +332,7 @@ def wagon_sequence():
     placed_["pod_plate_L"] = I4
     mv = [("pod_pannier_R", Tr(0, 45, 0), I4), ("pod_pannier_L", Tr(0, -45, 0), I4)]
     path_check("both panniers held against the outer faces of the plates", mv, placed_)
-    animate(seq, placed_, mv, 14, ["wagon_out"], "4. Stand the sandwich up. Hold a pannier against each plate, arm holes in line with the axle holes.", still="wagon_04_panniers")
+    animate(seq, placed_, mv, 14, ["wagon_out"], "4. Keep the stack lying flat on the table (the picture is tilted to show the holes). Put a pannier against each plate, arm holes in line with the axle holes.", still="wagon_04_panniers")
     placed_.update({"pod_pannier_R": I4, "pod_pannier_L": I4})
     mv = [("pod_pin_front", Tr(0, 42, 0), I4), ("pod_pin_rear", Tr(0, 42, 0), I4)]
     ok = path_check("axle pins pushed in from the right: arm, plate, wheel, plate, arm",
@@ -341,9 +341,9 @@ def wagon_sequence():
     LOCAL["_pin_shank"] = P.cyl(P.PIN_SPAN + 2.0, P.AXLE_D).rotate([90, 0, 0]).translate([0, P.ARM_Y1, 0])
     for x in (-P.AX_X, P.AX_X):
         path_check(f"axle pin shank alone at x = {x:+.0f} (snap bump removed)", [("_pin_shank", Tr(x, 42, 0), Tr(x, 0, 0))], placed_, n=60)
-    animate(seq, placed_, [mv[0]], 16, ["wagon_out"], "5. Push the front axle pin through from the right until the split end clicks out of the far pannier.", still="wagon_05_pin_front")
+    animate(seq, placed_, [mv[0]], 16, ["wagon_out"], "5. Push the front axle pin down through pannier, plate, wheel, plate and pannier until the split end clicks out of the far side.", still="wagon_05_pin_front")
     placed_["pod_pin_front"] = I4
-    animate(seq, placed_, [mv[1]], 16, ["wagon_out"], "6. Same for the rear pin. The wheels now spin freely with 0.2 mm side play.", still="wagon_06_pin_rear")
+    animate(seq, placed_, [mv[1]], 16, ["wagon_out"], "6. Same for the rear pin. The peg shoulders set the plate gap; the wheels spin with 0.2 mm side play.", still="wagon_06_pin_rear")
     placed_["pod_pin_rear"] = I4
     # onto the wire
     LOCAL["_wire_short"] = P.cyl_x(-120, 120, P.WIRE_D, 0, -P.R_WIRE)
@@ -494,7 +494,7 @@ def yard_sequence():
                 OBJ[nm] = dict(OBJ[nm0])
             mv.append((nm, bay_M(k, 420, 30), bay_M(k, 420)))
     path_check("sleds and chains laid in the chain-bed troughs", mv, placed_)
-    animate(seq, dict(placed_), mv, 10, ["yard"], "17. In each chain bed: the sled in the trough just past the start, coins in it, the chain in the trough ahead of it.",
+    animate(seq, dict(placed_), mv, 10, ["yard"], "17. In each chain bed: the sled in the trough just past the start, a few M4 nuts in it, the chain tied to its back and laid in the trough behind it.",
             still="yard_17_sleds", thread=th)
     for nm, _, M1 in mv:
         placed_[nm] = M1
