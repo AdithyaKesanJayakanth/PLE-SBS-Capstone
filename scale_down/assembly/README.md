@@ -2,6 +2,8 @@
 
 Screenshots rendered by FreeCAD from the part files (`freecad_render.py`), placed by `make_storyboard.py`. Every move shown here was collision-checked: `path_check_report.md` (exact booleans) and `freecad_motion_report.md` (FreeCAD's own booleans).
 
+Full video of assembly, fitting and the three-wagon run: `video/phase1_full.mp4` (about four minutes).
+
 - Insertion paths clear: 31 of 31
 - Three-wagon run: 0 clashes
 - FreeCAD motion check: 0 unexplained overlaps over 512 frames

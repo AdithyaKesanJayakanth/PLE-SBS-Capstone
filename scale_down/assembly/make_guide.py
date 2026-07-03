@@ -77,6 +77,7 @@ def write_readme(st, f):
     lines = ["# Phase 1: step-by-step assembly, checked in FreeCAD", "",
              "Screenshots rendered by FreeCAD from the part files (`freecad_render.py`), placed by `make_storyboard.py`. "
              "Every move shown here was collision-checked: `path_check_report.md` (exact booleans) and `freecad_motion_report.md` (FreeCAD's own booleans).", "",
+             "Full video of assembly, fitting and the three-wagon run: `video/phase1_full.mp4` (about four minutes).", "",
              f"- Insertion paths clear: {f['paths_clear']} of {f['paths_total']}",
              f"- Three-wagon run: {f['run_clash']} clashes",
              f"- FreeCAD motion check: {f['motion_bad'] if f['motion_bad'] is not None else 'running'} unexplained overlaps over {f['motion_frames'] or '?'} frames", "",
@@ -165,7 +166,11 @@ def write_html(st, f):
                        (("—" if mb is None else mb) + (f" in {f['motion_frames']} frames" if f["motion_frames"] else ""), "FreeCAD motion check: unexplained overlaps")):
         out.append(f'<div class="fact"><b>{e(big)}</b><span>{e(small)}</span></div>')
     out.append("</div>")
-    out.append("<nav>" + "".join(f'<a href="#{k}">{e(t)}</a>' for k, t, *_ in SECTIONS) + '<a href="#print">What to print</a><a href="#checks">How it was checked</a></nav>')
+    out.append("<nav>" + '<a href="#full">Full video</a>' + "".join(f'<a href="#{k}">{e(t)}</a>' for k, t, *_ in SECTIONS) + '<a href="#print">What to print</a><a href="#checks">How it was checked</a></nav>')
+    if (HERE / "video" / "phase1_full.mp4").exists():
+        out.append('<section id="full"><h2>The whole of phase 1 in one video</h2><p>Assembly step by step, fitting the moving parts, each moving part through its positions, '
+                   'and three wagons down the wire into their bays. About four minutes; the five sections below show the same steps as still images.</p>'
+                   '<video controls muted playsinline preload="metadata" src="video/phase1_full.mp4" poster="img/run_1_R_stopped.jpg"></video></section>')
     out.append('<div class="note"><b>No screws.</b> Nothing in phase 1 is bought except the 1.5 mm wire. The wagon is held together by its two printed '
                '4 mm axle pins; the rocker, the flap and the gate lever turn on printed pins too. Each pin has a split end that squeezes through the holes and clicks out of the far side.</div>')
     for key, title, video, intro in SECTIONS:
