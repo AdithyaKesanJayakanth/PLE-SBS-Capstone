@@ -43,7 +43,7 @@ That is the whole shopping list.
 
 ## 3. Printed parts (phase 1, version 2)
 
-Files are in `stl/`, each already in its print orientation, written by `make_parts.py`; `parts.csv` is the same list. Grams are OrcaSlicer's for the P1S profiles (`print_pack/README.md` has the times): **1,074 g in all, about 31.8 hours**. If you printed version 1, `print_pack/phase1/reprint_v2/README.md` lists the 19 files to print now (about 876 g) and the 7 you already have.
+Files are in `stl/`, each already in its print orientation, written by `make_parts.py`; `parts.csv` is the same list. Grams are OrcaSlicer's for the P1S profiles (`print_pack/README.md` has the times): **1,074 g in all, about 31.8 hours**. If you printed version 1, `print_pack/phase1/reprint_v2/README.md` lists the 19 files to print now in two sets, set 1 (wagon, points, handover, 423 g) and set 2 (bays, hook, gate, 456 g), and the 7 you already have.
 
 | File | Qty | Filament | Colour | g (slicer) | Size on the bed (mm) | What it is |
 |---|---:|---|---|---:|---|---|

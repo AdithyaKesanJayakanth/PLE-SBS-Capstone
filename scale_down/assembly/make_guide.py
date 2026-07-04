@@ -187,12 +187,18 @@ def write_html(st, f):
             out.append(f'<figure><img loading="lazy" src="img/{name}.jpg" alt="{e(cap)}"><figcaption>{label}{e(text)}</figcaption></figure>')
         out.append("</div></section>")
     rows, keep = reprint_rows()
-    out.append('<section id="print"><h2>What to print</h2><p>If you printed version 1, print these files from '
-               "<code>print_pack/phase1/reprint_v2/</code> (sliced for the P1S), and keep the parts in the second table.</p>")
-    out.append('<div class="tablewrap"><table><thead><tr><th>File</th><th>Qty</th><th>Filament</th><th>Colour</th><th>g</th><th>Time</th><th>Why it changed</th></tr></thead><tbody>')
+    out.append('<section id="print"><h2>What to print</h2><p>If you printed version 1, print these files, sliced for the P1S. They come in two sets: '
+               "<strong>set 1</strong> (parts 1 to 12: wagon, points, handover) in <code>print_pack/phase1_reprint_v2_set1.zip</code>, and "
+               "<strong>set 2</strong> (parts 13 to 19: bays, window hook, start gate) in <code>..._set2.zip</code>. Print set 1 first and get a wagon "
+               "rolling and the points stepping before set 2. Keep the parts in the second table.</p>")
+    out.append('<div class="tablewrap"><table><thead><tr><th>#</th><th>Set</th><th>File</th><th>Qty</th><th>Filament</th><th>Colour</th><th>g</th><th>Time</th><th>Why it changed</th></tr></thead><tbody>')
     for r in rows:
-        cls = ["", "num", "", "", "num", "num", ""]
-        out.append("<tr>" + "".join(f'<td class="{c}">{e(v.replace("**", ""))}</td>' for c, v in zip(cls, r)) + "</tr>")
+        if not r[0].isdigit():
+            continue
+        setno = "1" if int(r[0]) <= 12 else "2"
+        cls = ["num", "num", "", "num", "", "", "num", "num", ""]
+        vals = [r[0], setno] + r[1:]
+        out.append("<tr>" + "".join(f'<td class="{c}">{e(v.replace("**", ""))}</td>' for c, v in zip(cls, vals)) + "</tr>")
     out.append("</tbody></table></div>")
     out.append('<div class="tablewrap"><table><thead><tr><th>Keep from version 1</th><th>Used as</th></tr></thead><tbody>')
     for r in keep:

@@ -7,7 +7,7 @@ A working tabletop model of the slidewire and of my add-on, the switch yard: one
 - Fit and motion check: `check/assembly_check.py` puts every part in its working position and measures exact overlaps, drives a wagon down all three lanes and simulates the escapement through a full fill; the result is `check/assembly_report.md`. `check/freecad_export.py` and `check/freecad_check.py` repeat the clash check in FreeCAD (`check/freecad_report.md`) and save `check/phase1_assembly.FCStd` to open in FreeCAD.
 - Step-by-step assembly, checked in FreeCAD: [assembly/README.md](assembly/README.md) has every step as a FreeCAD screenshot, and `assembly/video/` has the animations (wagon, yard, wire ends, and three wagons landing and switching). Every move in them was collision-checked: `assembly/path_check_report.md` and `assembly/freecad_motion_report.md`.
 - Sketches: `sketch_1_room_layout.png` to `sketch_7_wheel.png`, drawn from the part geometry by `make_drawings.py`
-- Print pack for the P1S: `print_pack/phase1/` (`stl/`, `sheets/`, `sliced_p1s/`), with `print_pack/phase1/reprint_v2/` for anyone who printed version 1; `print_pack/README.md` has the slicer's grams and times. Built by `make_print_pack.py`.
+- Print pack for the P1S: `print_pack/phase1/` (`stl/`, `sheets/`, `sliced_p1s/`), with `print_pack/phase1/reprint_v2/` for anyone who printed version 1, split into `set1/` (wagon, points, handover) and `set2/` (bays, hook, gate), each with its own zip and parts PDF in `print_pack/`; `print_pack/README.md` has the slicer's grams and times. Built by `make_print_pack.py`.
 - Phase 2, the pad and rocket: `phase2_pad.md`, `BOM_phase2.md`, `stl_phase2/`, `render_pad*.png`
 
 ![Parts](parts_preview.png)

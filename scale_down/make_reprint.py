@@ -40,34 +40,76 @@ def secs(t):
     return int(h) * 3600 + int(m) * 60
 
 
+SETS = {
+    1: ("Set 1: wagon, points and handover", ["trolley_plate_x6", "pannier_x6", "axle_pin_x6", "turnout_base_x1", "tongue_x1", "rocker_bridge_x1",
+                                              "rocker_x1", "rocker_pin_x1", "bias_spring_x1", "flap_x1", "gantry_axle_x1", "handover_x1"]),
+    2: ("Set 2: bays, window hook and start gate", ["window_hook_x1", "brake_comb_190_x3", "chain_bed_190_x3", "sled_x3", "bumper_x3", "start_gate_x1", "gate_lever_x1"]),
+}
+
+
+def table(rows, names, with_set=False):
+    g = t = n = 0
+    lines = ["| # | File | Qty | Filament | Colour | g | Time | Why it changed |", "|---:|---|---:|---|---|---:|---|---|"]
+    for i, k in enumerate(names, 1):
+        r = rows[k]
+        g += float(r["grams_total"]); t += secs(r["time_total"]); n += int(r["qty"])
+        lines.append(f"| {i} | {k} | {r['qty']} | {r['material']} | {r['colour']} | {float(r['grams_total']):.1f} | {r['time_total']} | {WHY[k]} |")
+    lines.append(f"| | **Total** | **{n}** | | | **{g:.0f}** | **{t // 3600}h {t % 3600 // 60:02d}m** | |")
+    return lines, n, g, t
+
+
+def spools(rows, names):
+    c = {}
+    for k in names:
+        key = (rows[k]["material"], rows[k]["colour"])
+        c[key] = c.get(key, 0) + float(rows[k]["grams_total"])
+    return ["| Filament | Colour | g |", "|---|---|---:|"] + [f"| {m} | {col} | {v:.0f} |" for (m, col), v in sorted(c.items(), key=lambda kv: -kv[1])]
+
+
+KEEP_MD = ["## Keep these from the version-1 print (identical geometry, do not reprint)", "", "| Keep | Used as |", "|---|---|"] + \
+          [f"| {v} | {k} |" for k, v in REUSE.items()] + ["",
+          "Set aside, no longer used: indexer, star arms, the two v1 pannier types, v1 trolley plates, axle pins, start gates, gate levers, block marker flag, "
+          "handover, turnout plate, tongue, combs, chain beds, bumpers and window hook."]
+
+
 def main():
     rows = {r["file"][:-4]: r for r in csv.DictReader(open(PK / "index.csv")) if r["phase"] == "1"}
     assert set(WHY) | set(REUSE) == set(rows), set(rows) ^ (set(WHY) | set(REUSE))
+    assert set(SETS[1][1]) | set(SETS[2][1]) == set(WHY)
     if R.exists():
         shutil.rmtree(R)
-    (R / "stl").mkdir(parents=True)
-    (R / "sliced_p1s").mkdir()
-    g = t = n = 0
-    lines = []
-    for k in WHY:
-        r = rows[k]
-        shutil.copy(P1 / "stl" / f"{k}.stl", R / "stl")
-        shutil.copy(P1 / "sliced_p1s" / f"{k}.gcode.3mf", R / "sliced_p1s")
-        g += float(r["grams_total"]); t += secs(r["time_total"]); n += int(r["qty"])
-        lines.append(f"| {k} | {r['qty']} | {r['material']} | {r['colour']} | {float(r['grams_total']):.1f} | {r['time_total']} | {WHY[k]} |")
+    R.mkdir(parents=True)
+    for num, (title, names) in SETS.items():
+        d = R / f"set{num}"
+        (d / "stl").mkdir(parents=True)
+        (d / "sliced_p1s").mkdir()
+        for k in names:
+            shutil.copy(P1 / "stl" / f"{k}.stl", d / "stl")
+            shutil.copy(P1 / "sliced_p1s" / f"{k}.gcode.3mf", d / "sliced_p1s")
+        lines, n, g, t = table(rows, names)
+        md = [f"# Phase 1 version 2, {title}", "",
+              f"{len(names)} files, {n} pieces, {g:.0f} g, {t // 3600}h {t % 3600 // 60:02d}m of printing. Every file is in `stl/` (print orientation) and "
+              "`sliced_p1s/` (Bambu Lab P1S, 0.4 mm nozzle, quantity already on the plate). Pictures and details of every part: `phase1_reprint_v2_set{0}_parts.pdf`.".format(num), ""]
+        if num == 1:
+            md += ["Print this set first. Build one wagon with your existing wheels and roll it on an existing lead rail before printing the rest.", ""]
+        else:
+            md += ["Print this set once set 1 is assembled and the wagon rolls. These parts are the bays, the wire's top end and the start gate.", ""]
+        md += ["## Print these", ""] + lines + ["", "## Filament", ""] + spools(rows, names) + [""] + KEEP_MD
+        (d / "README.md").write_text("\n".join(md) + "\n")
+        print(f"set {num}: {len(names)} files, {n} pieces, {g:.0f} g, {t // 3600}h {t % 3600 // 60:02d}m")
+    # top-level summary, both sets
+    all_names = SETS[1][1] + SETS[2][1]
+    lines, n, g, t = table(rows, all_names)
     md = ["# Phase 1 version 2: what to print now", "",
           "The version-1 parts printed on 27 June 2026 did not fit. Version 2 was checked part against part in its working position, along every "
           "assembly path and through a run of three wagons (`../../check/assembly_report.md`, `../../assembly/path_check_report.md`), and again in "
           "FreeCAD (`../../check/freecad_report.md`, `../../assembly/freecad_motion_report.md`). Step-by-step pictures and animations: `../../assembly/`.", "",
-          f"## Print these ({len(WHY)} files)", "", "| File | Qty | Filament | Colour | g | Time | Why it changed |", "|---|---:|---|---|---:|---|---|"] + lines + [
-          f"| **Total** | **{n}** | | | **{g:.0f}** | **{t // 3600}h {t % 3600 // 60:02d}m** | |", "",
-          "Every file is in `stl/` (print orientation) and `sliced_p1s/` (P1S, 0.4 mm nozzle, quantity already on the plate).", "",
-          "## Keep these from the version-1 print (identical geometry, do not reprint)", "", "| Keep | Used as |", "|---|---|"] + \
-         [f"| {v} | {k} |" for k, v in REUSE.items()] + ["",
-          "Set aside, no longer used: indexer, star arms, the two v1 pannier types, v1 trolley plates, axle pins, start gates, gate levers, block marker flag, "
-          "handover, turnout plate, tongue, combs, chain beds, bumpers and window hook."]
+          f"The reprint is split in two: **set 1** (`set1/`, parts 1 to {len(SETS[1][1])}: wagon, points, handover) and **set 2** (`set2/`, parts "
+          f"{len(SETS[1][1]) + 1} to {len(all_names)}: bays, window hook, start gate). Each folder has its own STLs, sliced files, README and parts PDF; "
+          "the zips are `../../phase1_reprint_v2_set1.zip` and `..._set2.zip`.", "",
+          f"## Print these ({len(all_names)} files in two sets)", ""] + lines + ["", "## Filament, both sets", ""] + spools(rows, all_names) + [""] + KEEP_MD
     (R / "README.md").write_text("\n".join(md) + "\n")
-    print(n, "pieces", round(g), "g", f"{t // 3600}h {t % 3600 // 60:02d}m")
+    print("both:", n, "pieces", round(g), "g", f"{t // 3600}h {t % 3600 // 60:02d}m")
 
 
 if __name__ == "__main__":

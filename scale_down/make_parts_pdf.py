@@ -4,8 +4,9 @@ reprint set or kept from the first print.
 
 Run after make_print_pack.py, make_reprint.py and freecad_part_renders.py:
   .venv/bin/python scale_down/make_parts_pdf.py             -> print_pack/phase1_parts.pdf (all 26 parts)
-  .venv/bin/python scale_down/make_parts_pdf.py --reprint   -> print_pack/phase1_reprint_v2_parts.pdf (the 19 to print)
-Both are copied into print_pack/phase1/reprint_v2/.
+  .venv/bin/python scale_down/make_parts_pdf.py --set 1     -> print_pack/phase1_reprint_v2_set1_parts.pdf (wagon, points, handover)
+  .venv/bin/python scale_down/make_parts_pdf.py --set 2     -> print_pack/phase1_reprint_v2_set2_parts.pdf (bays, hook, gate)
+The set PDFs are also copied into print_pack/phase1/reprint_v2/setN/.
 """
 import csv
 import re
@@ -77,6 +78,7 @@ def load():
     rows = {r["file"][:-4]: r for r in csv.DictReader(open(PK / "index.csv")) if r["phase"] == "1"}
     notes = {r["file"][:-4]: r["note"] for r in csv.DictReader(open(HERE / "parts.csv"))}
     md = (P1 / "reprint_v2" / "README.md").read_text().splitlines()
+    md = [l for l in md if not l.startswith("| # ")]
     status, keep_as = {}, {}
     mode = None
     for l in md:
@@ -87,7 +89,7 @@ def load():
         elif l.startswith("| ") and not l.startswith(("| File", "| Keep", "|---", "| **")):
             c = [x.strip() for x in l.strip("|").split("|")]
             if mode == "print":
-                status[c[0]] = ("print", c[-1])
+                status[c[1]] = ("print", c[-1])
             elif mode == "keep":
                 status[c[1]] = ("keep", c[0])
     return rows, notes, status
@@ -130,14 +132,14 @@ def part_block(page, d, y, name, r, note, st):
     return hgt
 
 
-def cover(rows, status, reprint_only=False):
+def cover(rows, status, reprint_only=False, names=None, title=None, which=None):
     page = Image.new("RGB", (W, H), "white")
     d = ImageDraw.Draw(page)
     if reprint_only:
-        header(d, "Phase 1 reprint set: the 19 parts to print", "Version 2, checked in FreeCAD. Sliced files for the Bambu Lab P1S are in the same folder. The 7 parts from the first print that you keep are listed on the right.")
+        header(d, title or "Phase 1 reprint set: the parts to print", "Version 2, checked in FreeCAD. Sliced files for the Bambu Lab P1S are in the same folder. The 7 parts from the first print that you keep are listed on the right.")
     else:
         header(d, "All phase-1 parts: what to print, what to keep", "26 part files, 57 pieces. The 19 marked PRINT make the reprint set; the 7 marked KEEP are unchanged from the first print.")
-    pr = [n for n in ORDER if status[n][0] == "print"]
+    pr = [n for n in (names or ORDER) if status[n][0] == "print"]
     kp = [n for n in ORDER if status[n][0] == "keep"]
     g = sum(float(rows[n]["grams_total"]) for n in pr)
     pcs = sum(int(rows[n]["qty"]) for n in pr)
@@ -147,7 +149,7 @@ def cover(rows, status, reprint_only=False):
         secs += int(h) * 3600 + int(m) * 60
     y = 210
     for big, small in ((f"{len(pr)} files", "to print"), (f"{pcs} pieces", "on the bed"), (f"{g:.0f} g", "of filament"), (f"{secs // 3600}h {secs % 3600 // 60:02d}m", "of printing")):
-        d.text((M + 60, y), big, font=F_NUM, fill=ACCENT)
+        d.text((M + 60, y), big, font=F_NUM, fill=ACCENT)  # noqa
         d.text((M + 60, y + 44), small, font=F_S, fill=GREY)
         y += 100
     x0 = 560
@@ -171,9 +173,16 @@ def cover(rows, status, reprint_only=False):
     y += 20
     d.text((x0, y), "Print order", font=F_H2, fill=INK)
     y += 46
-    for ln in ["1. Wagon parts first (plates, panniers, pins, about 4.7 h). Build one wagon with your existing wheels and roll it on a lead rail.",
-               "2. Then the points: turnout plate, tongue, rocker bridge (with supports), rocker, pins, spring, flap, axle.",
-               "3. Then the bays and wire ends: combs, chain beds, sleds, bumpers, handover, window hook, start gate, lever."]:
+    order = {None: ["1. Set 1 first: wagon parts (plates, panniers, pins, about 4.7 h), then the points and the handover.",
+                    "2. Build one wagon with your existing wheels and roll it on an existing lead rail; work the points by hand.",
+                    "3. Set 2 when set 1 works: combs, chain beds, sleds, bumpers, window hook, start gate, lever."],
+             1: ["1. Wagon parts first: plates, panniers, pins (about 4.7 h). Build one wagon with your existing wheels and roll it on a lead rail.",
+                 "2. Then the points: turnout plate, tongue, rocker bridge (with supports), rocker, pins, spring, flap, axle; then the handover.",
+                 "3. Work the points by hand before printing set 2."],
+             2: ["1. Three each of comb, chain bed, sled and bumper; the sleds and bumpers can share plates with the small parts.",
+                 "2. Window hook (PETG), start gate and lever.",
+                 "3. Then rig the wire: hook at the window, handover on the floor, gate 0.3 m below the hook."]}
+    for ln in order[which]:
         for l2 in wrap(d, ln, F_S, W - x0 - M):
             d.text((x0, y), l2, font=F_S, fill=INK)
             y += 28
@@ -183,10 +192,16 @@ def cover(rows, status, reprint_only=False):
 
 def main():
     import sys
-    reprint_only = "--reprint" in sys.argv
+    from make_reprint import SETS
+    which = int(sys.argv[sys.argv.index("--set") + 1]) if "--set" in sys.argv else None
+    reprint_only = which is not None
     rows, notes, status = load()
-    names = [n for n in ORDER if not reprint_only or status[n][0] == "print"]
-    pages = [cover(rows, status, reprint_only)]
+    if which:
+        title, names = SETS[which]
+        title = f"Phase 1 reprint, {title[0].lower() + title[1:]}"
+    else:
+        title, names = None, list(ORDER)
+    pages = [cover(rows, status, reprint_only, names, title, which)]
     per = 3
     for i in range(0, len(names), per):
         page = Image.new("RGB", (W, H), "white")
@@ -197,9 +212,9 @@ def main():
             y += part_block(page, d, y, name, rows[name], notes[name], status[name])
         footer(d, len(pages) + 1)
         pages.append(page)
-    out = PK / ("phase1_reprint_v2_parts.pdf" if reprint_only else "phase1_parts.pdf")
+    out = PK / (f"phase1_reprint_v2_set{which}_parts.pdf" if which else "phase1_parts.pdf")
     pages[0].save(out, "PDF", resolution=150, save_all=True, append_images=pages[1:])
-    shutil.copy(out, P1 / "reprint_v2" / out.name)
+    shutil.copy(out, P1 / "reprint_v2" / (f"set{which}" if which else "") / out.name)
     print(f"wrote {out} ({len(pages)} pages, {out.stat().st_size / 1e6:.1f} MB)")
 
 
