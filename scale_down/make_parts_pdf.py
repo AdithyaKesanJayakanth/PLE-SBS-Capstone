@@ -3,8 +3,9 @@ quantity, filament type, colour, grams, print time, size on the bed, and whether
 reprint set or kept from the first print.
 
 Run after make_print_pack.py, make_reprint.py and freecad_part_renders.py:
-  .venv/bin/python scale_down/make_parts_pdf.py
--> scale_down/print_pack/phase1_parts.pdf (also copied into print_pack/phase1/reprint_v2/)
+  .venv/bin/python scale_down/make_parts_pdf.py             -> print_pack/phase1_parts.pdf (all 26 parts)
+  .venv/bin/python scale_down/make_parts_pdf.py --reprint   -> print_pack/phase1_reprint_v2_parts.pdf (the 19 to print)
+Both are copied into print_pack/phase1/reprint_v2/.
 """
 import csv
 import re
@@ -69,7 +70,7 @@ def header(d, title, sub=None):
 
 def footer(d, n):
     d.text((W - M - 60, H - 50), f"{n}", font=F_S, fill=GREY)
-    d.text((M, H - 50), "print_pack/phase1_parts.pdf · reprint files in print_pack/phase1/reprint_v2/", font=F_S, fill=GREY)
+    d.text((M, H - 50), "reprint files, sliced for the P1S: print_pack/phase1/reprint_v2/", font=F_S, fill=GREY)
 
 
 def load():
@@ -129,10 +130,13 @@ def part_block(page, d, y, name, r, note, st):
     return hgt
 
 
-def cover(rows, status):
+def cover(rows, status, reprint_only=False):
     page = Image.new("RGB", (W, H), "white")
     d = ImageDraw.Draw(page)
-    header(d, "All phase-1 parts: what to print, what to keep", "26 part files, 57 pieces. The 19 marked PRINT make the reprint set; the 7 marked KEEP are unchanged from the first print.")
+    if reprint_only:
+        header(d, "Phase 1 reprint set: the 19 parts to print", "Version 2, checked in FreeCAD. Sliced files for the Bambu Lab P1S are in the same folder. The 7 parts from the first print that you keep are listed on the right.")
+    else:
+        header(d, "All phase-1 parts: what to print, what to keep", "26 part files, 57 pieces. The 19 marked PRINT make the reprint set; the 7 marked KEEP are unchanged from the first print.")
     pr = [n for n in ORDER if status[n][0] == "print"]
     kp = [n for n in ORDER if status[n][0] == "keep"]
     g = sum(float(rows[n]["grams_total"]) for n in pr)
@@ -178,21 +182,24 @@ def cover(rows, status):
 
 
 def main():
+    import sys
+    reprint_only = "--reprint" in sys.argv
     rows, notes, status = load()
-    pages = [cover(rows, status)]
+    names = [n for n in ORDER if not reprint_only or status[n][0] == "print"]
+    pages = [cover(rows, status, reprint_only)]
     per = 3
-    for i in range(0, len(ORDER), per):
+    for i in range(0, len(names), per):
         page = Image.new("RGB", (W, H), "white")
         d = ImageDraw.Draw(page)
-        header(d, f"Parts {i + 1} to {min(i + per, len(ORDER))} of {len(ORDER)}")
+        header(d, f"{'Reprint parts' if reprint_only else 'Parts'} {i + 1} to {min(i + per, len(names))} of {len(names)}")
         y = 190
-        for name in ORDER[i:i + per]:
+        for name in names[i:i + per]:
             y += part_block(page, d, y, name, rows[name], notes[name], status[name])
         footer(d, len(pages) + 1)
         pages.append(page)
-    out = PK / "phase1_parts.pdf"
+    out = PK / ("phase1_reprint_v2_parts.pdf" if reprint_only else "phase1_parts.pdf")
     pages[0].save(out, "PDF", resolution=150, save_all=True, append_images=pages[1:])
-    shutil.copy(out, P1 / "reprint_v2" / "phase1_parts.pdf")
+    shutil.copy(out, P1 / "reprint_v2" / out.name)
     print(f"wrote {out} ({len(pages)} pages, {out.stat().st_size / 1e6:.1f} MB)")
 
 
