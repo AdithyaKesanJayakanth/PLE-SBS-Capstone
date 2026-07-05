@@ -24,6 +24,16 @@ A student engineering study of a gravity-driven slidewire escape system for crew
 
 Author: Adithya Kesan Jayakanth, Padma Seshadri Bala Bhavan, K.K. Nagar, Chennai. Mentor and guide: Mrs. Abhitha Peter, Class 12 physics teacher.
 
+## Where the idea came from
+
+PLE-SBS is inspired by the roller coaster. A roller coaster is a machine for giving people forces safely. In an earlier project I built "Safe Thrills", a Python model that designs the most thrilling coaster that stays within human g-force and jerk limits. The lesson that stuck: the ride is good because it runs close to what a body can take, and safe because it never crosses that line.
+
+After I presented my F1 airflow simulations and the roller-coaster model at ISRO's Satish Dhawan Space Centre, the Gaganyaan directors suggested, based on those two projects, the problem of getting a crew off a fuelled launch pad in an emergency. I started from NASA's slidewire baskets at Kennedy's Launch Complex 39 and measured my design against them.
+
+So this is a coaster designed for the worst day instead of the best one. Gravity drives it, a brake limits it, and 1.5 g is the line it must not cross (requirement R4). The brakes are eddy-current brakes of the kind used on roller coasters. The only score is how fast the last person is behind a blast door.
+
+The slidewire basket is NASA's idea. The sizing method for any pad, the finding that passive braking works only in a narrow band of geometry, and the switch yard are mine. ISRO suggested the problem; it did not assign, review or approve the design.
+
 ## Run the simulator
 
 Open `web/index.html` in a browser. No build step and no server are needed. Or serve the folder and open `http://localhost:8737/web/`:
