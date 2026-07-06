@@ -19,7 +19,7 @@ A student engineering study of a gravity-driven slidewire escape system for crew
 - **Paper** (≤ 7 pages): `paper/PLE-SBS.pdf`, editable copy `paper/PLE-SBS.docx`, source `paper/paper.md`
 - **Simulator**: `web/index.html`. Pick any rocket and pad, choose a single dock or a switch yard, a catch net or drag-chain bed, fail a magnetic brake, and watch the evacuation. A Materials & BOM tab lists what the chosen design is made of.
 - **Physics**: `sim/core.js`, one dependency-free file shared by the website and the paper's figures
-- **Scale model** (1:50, print-only, the wire is the only purchase): `scale_down/` has the 25 STL files, a fit-and-motion check (also run in FreeCAD), sketches, renders, BOM, build log and test results, including the one-wire switch yard with three self-indexing bays
+- **Scale model** (1:50, print-only, the wire is the only purchase): `scale_down/` has the 26 STL files, a fit-and-motion check (also run in FreeCAD), sketches, renders, BOM, build log and test results, including the one-wire switch yard with three self-indexing bays
 - **Poster** (A0 landscape): `PLESBS_Poster.pdf`, source `poster/PLESBS_Poster.tex`. Rebuild with `.venv/bin/python poster/make_poster_figs.py && (cd poster && tectonic PLESBS_Poster.tex) && cp poster/PLESBS_Poster.pdf .`
 
 Author: Adithya Kesan Jayakanth, Padma Seshadri Bala Bhavan, K.K. Nagar, Chennai. Mentor and guide: Mrs. Abhitha Peter, Class 12 physics teacher.
